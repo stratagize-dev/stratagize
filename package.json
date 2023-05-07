@@ -1,0 +1,31 @@
+{
+  "name": "strava-goals",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "generate:strava-client": "/usr/local/Cellar/swagger-codegen@2/2.4.31/bin/swagger-codegen generate -i https://developers.strava.com/swagger/swagger.json -l typescript-fetch -o src/shared/strava-client"
+  },
+  "dependencies": {
+    "@types/node": "18.16.3",
+    "@types/react": "18.2.5",
+    "@types/react-dom": "18.2.3",
+    "autoprefixer": "10.4.14",
+    "date-fns": "^2.30.0",
+    "eslint": "8.39.0",
+    "eslint-config-next": "13.4.0",
+    "next": "13.4.0",
+    "next-auth": "^4.22.1",
+    "postcss": "8.4.23",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "tailwindcss": "3.3.2",
+    "typescript": "5.0.4"
+  },
+  "devDependencies": {
+    "prettier": "^2.8.8"
+  }
+}
