@@ -1,8 +1,9 @@
-import { getServerCustomSession } from '@/shared/auth';
+'use client';
 import { SummaryActivity } from '@/shared/types/strava/SummaryActivity';
 import { formatDistance, startOfMonth } from 'date-fns';
 import ProgressCircle from '@/components/ProgressCircle';
 import HourlyGoal from '@/components/HourlyGoal';
+import { useState } from 'react';
 
 function get(seconds: number): string {
   const hours = Math.floor(seconds / 3600);
@@ -10,18 +11,21 @@ function get(seconds: number): string {
 
   return hours + ' hours ' + minutes + ' minutes';
 }
-export default async function Stats() {
-  const session = await getServerCustomSession();
 
-  const allSummaryActivity = (await getData(session?.accessToken)) ?? [];
+interface Props {
+  activityStats: SummaryActivity[];
+}
+export default function Stats({ activityStats }: Props) {
+  const [annualHourGoal, setAnnualHourGoal] = useState(100);
 
-  const totalMovingTimeSeconds = allSummaryActivity.reduce(
+  const totalMovingTimeSeconds = activityStats.reduce(
     (previousValue, currentValue) =>
       previousValue + (currentValue.moving_time ?? 0),
     0
   );
+  const YearlyGoalHours = 500;
 
-  const secondsPerDay = (500 * 3060) / 365;
+  const secondsPerDay = (annualHourGoal * 3060) / 365;
   const dayOfMonth = new Date().getDate();
 
   const expectedSeconds = Math.floor(dayOfMonth * secondsPerDay);
@@ -37,7 +41,13 @@ export default async function Stats() {
   return (
     <>
       <div className="max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">
-        <HourlyGoal defaultValue={100} onYearGoalChange={v => alert(v)} />
+        <HourlyGoal
+          value={annualHourGoal}
+          onYearGoalChange={hours => {
+            console.debug('setting hours', { hours });
+            setAnnualHourGoal(hours);
+          }}
+        />
 
         <div className="grid items-center lg:grid-cols-12 gap-6 lg:gap-12">
           <div className="lg:col-span-4">
@@ -84,7 +94,7 @@ export default async function Stats() {
           </div>
         </div>
         <ul>
-          <li>goal time: 500 hours for year</li>
+          <li>goal time: {annualHourGoal} hours for year</li>
           <li>total moving time for month: {get(totalMovingTimeSeconds)}</li>
           <li>expected time for today: {get(expectedSeconds)}</li>
           <li>{differenceString}</li>

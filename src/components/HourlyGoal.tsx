@@ -1,17 +1,25 @@
 'use client';
 
+import { ChangeEventHandler, useState } from 'react';
+
 interface Props {
-  defaultValue?: number;
+  value: number;
   onYearGoalChange?: (value: number) => void;
 }
-const HourlyGoal = ({ defaultValue = 100, onYearGoalChange }: Props) => {
+const HourlyGoal = ({ value, onYearGoalChange }: Props) => {
+  // const [value, setValue] = useState(50);
+
   return (
     <input
       type="range"
       min="0"
       max="1000"
-      value={defaultValue}
+      value={value}
+      step={1}
       className="range range-primary"
+      // onChange={event => {
+      //   setValue(Number(event?.target.value));
+      // }}
       onChange={event => onYearGoalChange?.(Number(event.target.value))}
     />
   );

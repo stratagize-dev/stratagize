@@ -1,15 +1,23 @@
 import { startOfMonth } from 'date-fns';
 import { SummaryActivity } from '@/shared/types/strava/SummaryActivity';
 
-export const getActivityDataFromFirstOfMonth = async (accessToken: string | undefined) => getActivityData(accessToken, startOfMonth(new Date()));
+export const getActivityDataFromFirstOfMonth = async (
+  accessToken: string | undefined
+) => getActivityData(accessToken, startOfMonth(new Date()));
 
-export async function getActivityData(accessToken: string | undefined, after : Date) {
+export async function getActivityData(
+  accessToken: string | undefined,
+  after: Date
+) {
+  if (!accessToken) return [];
+
   const firstDayOfMonth = startOfMonth(new Date());
+
   if (accessToken) {
     const url = new URL('https://www.strava.com/api/v3/athlete/activities');
 
     const searchParams = new URLSearchParams();
-    searchParams.append('after', (after.getTime() /1000).toString())
+    searchParams.append('after', (after.getTime() / 1000).toString());
 
     const res = await fetch(
       'https://www.strava.com/api/v3/athlete/activities?after=' +
@@ -29,6 +37,10 @@ export async function getActivityData(accessToken: string | undefined, after : D
       throw new Error('Failed to fetch data');
     }
 
-    return (await res.json()) as SummaryActivity[];
+    const result = (await res.json()) as SummaryActivity[];
+
+    return result;
   }
+
+  return [];
 }
