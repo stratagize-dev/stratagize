@@ -3,5 +3,4 @@
  * @export
  * @interface LatLng
  */
-export interface LatLng extends Array<number> {
-}
+export interface LatLng extends Array<number> {}
