@@ -4,6 +4,24 @@ import { ActivityType } from '@/shared/types/strava/ActivityType';
 import { SportType } from '@/shared/types/strava/sportType';
 import { LatLng } from '@/shared/types/strava/latLng';
 import { PolylineMap } from '@/shared/types/strava/PolylineMap';
+import exp from 'constants';
+import { startOfMonth } from 'date-fns';
+
+export const calculateMovingTime = (activities: SummaryActivity[]): number =>
+  activities.reduce(
+    (previousValue, currentValue) =>
+      previousValue + (currentValue.moving_time ?? 0),
+    0
+  );
+
+export const fromBeginningOfMonth = (
+  activities: SummaryActivity[]
+): SummaryActivity[] =>
+  activities.filter(activity =>
+    activity.start_date_local
+      ? activity.start_date_local > startOfMonth(new Date())
+      : false
+  );
 
 /**
  *
@@ -94,7 +112,7 @@ export interface SummaryActivity extends MetaActivity {
    * @type {Date}
    * @memberof SummaryActivity
    */
-  startDateLocal?: Date;
+  start_date_local?: Date;
   /**
    * The timezone of the activity
    * @type {string}

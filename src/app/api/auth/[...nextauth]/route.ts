@@ -40,7 +40,7 @@ export const authOptions: AuthOptions = {
       return customJWT;
     },
     async session({ session, token, newSession, user }) {
-      console.debug('session', { session, token, newSession, user });
+      // console.debug('session', { session, token, newSession, user });
       // Send properties to the client, like an access_token and user id from a provider.
       const customSession: CustomSession = {
         ...session,

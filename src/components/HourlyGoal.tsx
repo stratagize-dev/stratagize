@@ -11,7 +11,7 @@ const HourlyGoal = ({ value, onYearGoalChange }: Props) => {
 
   return (
     <input
-      type="range"
+      // type="range"
       min="0"
       max="1000"
       value={value}
