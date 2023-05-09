@@ -1,3 +1,5 @@
+// noinspection JSUnusedGlobalSymbols
+
 import NextAuth from 'next-auth';
 import StravaProvider from 'next-auth/providers/strava';
 import { AuthOptions } from 'next-auth/src';
@@ -39,8 +41,7 @@ export const authOptions: AuthOptions = {
 
       return customJWT;
     },
-    async session({ session, token, newSession, user }) {
-      // console.debug('session', { session, token, newSession, user });
+    async session({ session, token }) {
       // Send properties to the client, like an access_token and user id from a provider.
       const customSession: CustomSession = {
         ...session,

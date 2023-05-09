@@ -1,7 +1,5 @@
 'use client';
 
-import { useState } from 'react';
-
 interface Props {
   percentageComplete: number;
 }
@@ -15,7 +13,7 @@ const ProgressCircle = ({ percentageComplete }: Props) => {
           cy="145"
           r="120"
           stroke="currentColor"
-          stroke-width="30"
+          strokeWidth="30"
           fill="transparent"
           className="text-gray-700"
         />
@@ -25,10 +23,10 @@ const ProgressCircle = ({ percentageComplete }: Props) => {
           cy="145"
           r="120"
           stroke="currentColor"
-          stroke-width="30"
+          strokeWidth="30"
           fill="transparent"
-          stroke-dasharray={circumference}
-          stroke-dashoffset={
+          strokeDasharray={circumference}
+          strokeDashoffset={
             circumference - (percentageComplete / 100) * circumference
           }
           className="text-orange-500"

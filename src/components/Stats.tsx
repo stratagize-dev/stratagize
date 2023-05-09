@@ -1,23 +1,11 @@
 'use client';
-import {
-  calculateMovingTime,
-  fromBeginningOfMonth,
-  SummaryActivity
-} from '@/shared/types/strava/SummaryActivity';
-import { formatDistance, startOfMonth } from 'date-fns';
+import { SummaryActivity } from '@/shared/types/strava/SummaryActivity';
 import HourlyGoal from '@/components/HourlyGoal';
 import MessageBlock from '@/components/MessageBlock';
 import useActivityStats from '@/hooks/useActivityStats';
 import { useAtom } from 'jotai';
 import { annualHourGoalAtom } from '@/shared/atoms';
 import ProgressCircle from '@/components/ProgressCircle';
-
-function get(seconds: number): string {
-  const hours = Math.floor(seconds / 3600);
-  const minutes = Math.floor((seconds % 3600) / 60);
-
-  return hours + ' hours ' + minutes + ' minutes';
-}
 
 interface Props {
   activityStats: SummaryActivity[];
@@ -81,18 +69,6 @@ export default function Stats({ activityStats }: Props) {
             </div>
           </div>
         </div>
-        {/*<ul className="mt-4">*/}
-        {/*  <li>goal time: {annualHourGoal} hours for year</li>*/}
-        {/*  <li>{year.percentageComplete}% Complete</li>*/}
-        {/*  <li>{year.totalMovingTime().human} total moving time for year</li>*/}
-        {/*  <li>{year.timeAhead().human} ahead</li>*/}
-        {/*  <li>{month.totalMovingTime().human} total moving time for month</li>*/}
-        {/*  <li>*/}
-        {/*    {month.timeAhead().human}*/}
-        {/*    {month.timeAhead().duration.isAhead ? 'ahead' : 'behind'} for month*/}
-        {/*  </li>*/}
-
-        {/*</ul>*/}
       </div>
 
       <ProgressCircle percentageComplete={year.percentageComplete} />

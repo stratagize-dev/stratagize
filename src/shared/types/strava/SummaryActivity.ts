@@ -4,7 +4,6 @@ import { ActivityType } from '@/shared/types/strava/ActivityType';
 import { SportType } from '@/shared/types/strava/sportType';
 import { LatLng } from '@/shared/types/strava/latLng';
 import { PolylineMap } from '@/shared/types/strava/PolylineMap';
-import exp from 'constants';
 import { startOfMonth } from 'date-fns';
 
 export const calculateMovingTime = (activities: SummaryActivity[]): number =>
