@@ -3,23 +3,22 @@ import {
   fromBeginningOfMonth,
   SummaryActivity
 } from '@/shared/types/strava/SummaryActivity';
-import { addSeconds, formatDuration, intervalToDuration } from 'date-fns';
-import { secondsToHours } from '@/shared/utils';
+import { getDayOfYear } from 'date-fns';
+import { HourDuration } from '@/shared/types/hourDuration';
+import { secondsToHourDuration } from '@/shared/utils';
 
 const hoursToSeconds = (hours: number) => hours * 3060;
 
-type Time = () => { seconds: number; human: string };
+type Time = () => { seconds: number; duration: HourDuration; human: string };
 
 const time =
-  (i: number): Time =>
+  (seconds: number): Time =>
   () => {
-    const now = new Date();
+    const duration = secondsToHourDuration(seconds);
     return {
-      seconds: i,
-      human: formatDuration(
-        intervalToDuration({ start: now, end: addSeconds(now, i) }),
-        { format: ['days', 'hours', 'minutes', 'seconds'] }
-      )
+      seconds,
+      duration,
+      human: `${duration.hours} h ${duration.minutes} m`
     };
   };
 
@@ -29,34 +28,47 @@ const useActivityStats = (
 ): {
   year: {
     totalMovingTime: Time;
-    percentageComplete: number;
+    expected: Time;
     timeAhead: Time;
+    percentageComplete: number;
   };
   month: {
-    timeAhead: number;
+    totalMovingTime: Time;
+    expected: Time;
+    timeAhead: Time;
   };
 } => {
-  const totalMovingTimeSeconds = calculateMovingTime(activityStats);
+  const secondsPerDay = (targetGoalHours * 3600) / 365;
+  const today = new Date();
 
+  // Yearly calculations
+  const totalMovingTimeSeconds = calculateMovingTime(activityStats);
+  const expectedSeconds = Math.floor(getDayOfYear(today) * secondsPerDay);
+  const timeAheadForYear = Math.abs(totalMovingTimeSeconds - expectedSeconds);
+  const percentageComplete = Math.round(
+    (totalMovingTimeSeconds / hoursToSeconds(targetGoalHours)) * 100
+  );
+
+  // Current Month calculations
   const totalMovingTimeSecondsForMonth = calculateMovingTime(
     fromBeginningOfMonth(activityStats)
   );
-
-  const percentageComplete =
-    (totalMovingTimeSeconds / hoursToSeconds(targetGoalHours)) * 100;
-
-  const foo = {
+  const expectedSecondsForMonth = Math.floor(today.getDate() * secondsPerDay);
+  const timeAheadForMonth =
+    totalMovingTimeSecondsForMonth - expectedSecondsForMonth;
+  return {
     year: {
       totalMovingTime: time(totalMovingTimeSeconds),
-      percentageComplete,
-      timeAhead: time(0)
+      expected: time(expectedSeconds),
+      timeAhead: time(timeAheadForYear),
+      percentageComplete
     },
     month: {
-      timeAhead: 0
+      totalMovingTime: time(totalMovingTimeSecondsForMonth),
+      expected: time(expectedSecondsForMonth),
+      timeAhead: time(timeAheadForMonth)
     }
   };
-
-  return foo;
 };
 
 export default useActivityStats;

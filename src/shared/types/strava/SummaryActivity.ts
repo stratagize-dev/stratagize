@@ -16,12 +16,14 @@ export const calculateMovingTime = (activities: SummaryActivity[]): number =>
 
 export const fromBeginningOfMonth = (
   activities: SummaryActivity[]
-): SummaryActivity[] =>
-  activities.filter(activity =>
-    activity.start_date_local
-      ? activity.start_date_local > startOfMonth(new Date())
-      : false
-  );
+): SummaryActivity[] => {
+  const startOfMonthDate = startOfMonth(new Date());
+  return activities.filter(activity => {
+    return activity.start_date_local
+      ? new Date(activity.start_date_local) > startOfMonthDate
+      : false;
+  });
+};
 
 /**
  *
@@ -112,7 +114,7 @@ export interface SummaryActivity extends MetaActivity {
    * @type {Date}
    * @memberof SummaryActivity
    */
-  start_date_local?: Date;
+  start_date_local?: string;
   /**
    * The timezone of the activity
    * @type {string}
