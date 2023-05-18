@@ -6,7 +6,7 @@ import { getActivityDataFromFirstOfYear } from '@/shared/data/getActivityData';
 
 export default async function Home() {
   const session = await getServerCustomSession();
-
+  // console.debug('session', session);
   if (!session) {
     redirect('/api/auth/signin');
   }

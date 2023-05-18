@@ -3,70 +3,70 @@ import {
   fromBeginningOfMonth,
   SummaryActivity
 } from '@/shared/types/strava/SummaryActivity';
-import { getDayOfYear } from 'date-fns';
-import { HourDuration } from '@/shared/types/hourDuration';
-import { secondsToHourDuration } from '@/shared/utils';
-
-const hoursToSeconds = (hours: number) => hours * 3060;
-
-type Time = () => { seconds: number; duration: HourDuration; human: string };
-
-const time =
-  (seconds: number): Time =>
-  () => {
-    const duration = secondsToHourDuration(seconds);
-    return {
-      seconds,
-      duration,
-      human: `${duration.hours} h ${duration.minutes} m`
-    };
-  };
+import { getDayOfYear, getDaysInYear, hoursToSeconds } from 'date-fns';
+import { ActivityStatsResult } from '@/hooks/types';
+import { time } from '@/shared/types/time';
 
 const useActivityStats = (
   targetGoalHours: number,
+  today: Date,
   activityStats: SummaryActivity[]
-): {
-  year: {
-    totalMovingTime: Time;
-    expected: Time;
-    timeAhead: Time;
-    percentageComplete: number;
-  };
-  month: {
-    totalMovingTime: Time;
-    expected: Time;
-    timeAhead: Time;
-  };
-} => {
-  const secondsPerDay = (targetGoalHours * 3600) / 365;
-  const today = new Date();
+): ActivityStatsResult => {
+  const daysInYear = getDaysInYear(today); // either 365 or 366
+  const dayOfYear = getDayOfYear(today); // e.g. 52nd day of year
+  const daysRemaining = daysInYear - dayOfYear;
+  const dayOfMonth = today.getDate();
+  const targetGoalSeconds = hoursToSeconds(targetGoalHours);
+  const secondsPerDay = Math.floor(targetGoalSeconds / daysInYear);
 
   // Yearly calculations
   const totalMovingTimeSeconds = calculateMovingTime(activityStats);
-  const expectedSeconds = Math.floor(getDayOfYear(today) * secondsPerDay);
-  const timeAheadForYear = Math.abs(totalMovingTimeSeconds - expectedSeconds);
+  const expectedSecondsPerDay = dayOfYear * secondsPerDay;
+  const timeAheadForYear = totalMovingTimeSeconds - expectedSecondsPerDay;
+  const percentageAhead = Math.round(
+    (timeAheadForYear / expectedSecondsPerDay) * 100
+  );
+
   const percentageComplete = Math.round(
     (totalMovingTimeSeconds / hoursToSeconds(targetGoalHours)) * 100
   );
+  const averageDailySeconds = totalMovingTimeSeconds / dayOfYear;
+  const projectedTotal = averageDailySeconds * daysInYear;
+
+  const secondsPerDayToComplete =
+    (targetGoalSeconds - totalMovingTimeSeconds) / daysRemaining;
 
   // Current Month calculations
+
   const totalMovingTimeSecondsForMonth = calculateMovingTime(
     fromBeginningOfMonth(activityStats)
   );
-  const expectedSecondsForMonth = Math.floor(today.getDate() * secondsPerDay);
+  const expectedSecondsForMonth = dayOfMonth * secondsPerDay;
   const timeAheadForMonth =
     totalMovingTimeSecondsForMonth - expectedSecondsForMonth;
+  const averageDailySecondsForMonth =
+    totalMovingTimeSecondsForMonth / dayOfMonth;
+  const percentageAheadForMonth = Math.round(
+    (timeAheadForMonth / expectedSecondsForMonth) * 100
+  );
   return {
+    requiredActivityPerDay: time(secondsPerDay),
+    secondsPerDayToComplete: time(secondsPerDayToComplete),
     year: {
       totalMovingTime: time(totalMovingTimeSeconds),
-      expected: time(expectedSeconds),
+      expectedTotal: time(expectedSecondsPerDay),
       timeAhead: time(timeAheadForYear),
-      percentageComplete
+      actualDailyAverage: time(averageDailySeconds),
+      projectedTotal: time(projectedTotal),
+      percentageComplete,
+      percentageAhead
     },
     month: {
       totalMovingTime: time(totalMovingTimeSecondsForMonth),
-      expected: time(expectedSecondsForMonth),
-      timeAhead: time(timeAheadForMonth)
+      expectedTotal: time(expectedSecondsForMonth),
+      timeAhead: time(timeAheadForMonth),
+      averageDaily: time(averageDailySecondsForMonth),
+      percentageAhead: percentageAheadForMonth
     }
   };
 };

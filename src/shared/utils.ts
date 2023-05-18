@@ -1,10 +1,9 @@
 import { HourDuration } from '@/shared/types/hourDuration';
-
-export const secondsToHours = (seconds: number): number => seconds / 3060;
+import { secondsToHours } from 'date-fns';
 
 export const secondsToHourDuration = (totalSeconds: number): HourDuration => {
   const absoluteSeconds = Math.abs(totalSeconds);
-  const hours = Math.floor(absoluteSeconds / 3600);
+  const hours = Math.floor(secondsToHours(absoluteSeconds));
   const minutes = Math.floor((absoluteSeconds % 3600) / 60);
   const seconds = absoluteSeconds % 60;
 

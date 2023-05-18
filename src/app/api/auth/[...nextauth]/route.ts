@@ -1,42 +1,60 @@
 // noinspection JSUnusedGlobalSymbols
 
-import NextAuth from 'next-auth';
+import NextAuth, { TokenSet } from 'next-auth';
 import StravaProvider from 'next-auth/providers/strava';
 import { AuthOptions } from 'next-auth';
 import { CustomJWT } from '@/shared/types/auth/CustomJWT';
 import CustomSession from '@/shared/types/auth/CustomSession';
 
+const clientId = '78158';
+const clientSecret = '518b64884cb8adc8d6ccf9602d2a101d8018a8bd';
 export const authOptions: AuthOptions = {
   providers: [
     StravaProvider({
-      clientId: '78158',
-      clientSecret: '518b64884cb8adc8d6ccf9602d2a101d8018a8bd',
+      clientId: process.env.CLIENT_ID ?? '',
+      clientSecret: process.env.CLIENT_SECRET ?? '',
       authorization: {
         params: {
           scope: 'profile:read_all,activity:read_all'
         }
       }
-      // profile: (profile, tokens) => {
-      //     //console.debug({tokens, profile})
-      //     return {
-      //         id: profile.id,
-      //         name: profile.firstname + ' ' + profile.lastname,
-      //         email: profile.email,
-      //         image: profile.profile_medium,
-      //         // Add your custom properties here
-      //     }
-      // },
     })
   ],
   callbacks: {
     async jwt({ token, account }) {
-      // console.debug({token, account})
       const customJWT: CustomJWT = {
         ...token
       };
       if (account) {
         customJWT.accessToken = account.access_token;
         customJWT.refreshToken = account.refresh_token;
+      }
+
+      if (Date.now() < Number(token.exp) * 1000) {
+        try {
+          const response = await fetch('https://www.strava.com/oauth/token', {
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({
+              client_id: clientId,
+              client_secret: clientSecret,
+              grant_type: 'refresh_token',
+              refresh_token: customJWT.refreshToken ?? ''
+            }),
+            method: 'POST'
+          });
+
+          const tokens: TokenSet = await response.json();
+
+          if (!response.ok) throw tokens;
+
+          customJWT.accessToken = tokens.access_token;
+          customJWT.exp = Math.floor(
+            Date.now() / 1000 + (tokens.expires_at ?? 0)
+          );
+          customJWT.refreshToken = tokens.refresh_token;
+        } catch (e) {
+          console.error(e);
+        }
       }
 
       return customJWT;

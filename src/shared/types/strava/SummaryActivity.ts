@@ -18,8 +18,8 @@ export const fromBeginningOfMonth = (
 ): SummaryActivity[] => {
   const startOfMonthDate = startOfMonth(new Date());
   return activities.filter(activity => {
-    return activity.start_date_local
-      ? new Date(activity.start_date_local) > startOfMonthDate
+    return activity.start_date
+      ? new Date(activity.start_date) > startOfMonthDate //BUG startOfMonthDate
       : false;
   });
 };
@@ -107,7 +107,7 @@ export interface SummaryActivity extends MetaActivity {
    * @type {Date}
    * @memberof SummaryActivity
    */
-  startDate?: Date;
+  start_date?: string;
   /**
    * The time at which the activity was started in the local timezone.
    * @type {Date}
