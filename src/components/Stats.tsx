@@ -57,10 +57,12 @@ export default function Stats({ activityStats }: Props) {
             period="year"
             messageBlocks={[
               {
+                id: 'year.timeAhead',
                 header: year.timeAhead().human,
                 message: 'time ahead for year'
               },
               {
+                id: 'year.actualDailyAverage',
                 header: year.actualDailyAverage().human,
                 message: 'average daily activity time'
               }
@@ -73,12 +75,14 @@ export default function Stats({ activityStats }: Props) {
             period="month"
             messageBlocks={[
               {
+                id: 'month.timeAhead',
                 header: month.timeAhead().human,
                 message: `time ${
                   month.timeAhead().duration.isAhead ? 'ahead' : 'behind'
                 } for month`
               },
               {
+                id: 'month.averageDaily',
                 header: month.averageDaily().human,
                 message: 'average daily activity time'
               }
