@@ -1,12 +1,13 @@
 'use client';
 import { SummaryActivity } from '@/shared/types/strava/SummaryActivity';
-import HourlyGoal from '@/components/HourlyGoal';
+import AnnualGoal from '@/components/AnnualGoal';
 import MessageBlock from '@/components/MessageBlock';
 import useActivityStats from '@/hooks/useActivityStats';
 import { useAtom } from 'jotai';
 import { annualHourGoalAtom } from '@/shared/atoms';
 import ProgressCircle from '@/components/ProgressCircle';
 import { StatsRow } from '@/components/StatsRow';
+import HorizontalSpacer from '@/components/HorizontalSpacer';
 
 interface Props {
   activityStats: SummaryActivity[];
@@ -14,41 +15,45 @@ interface Props {
 export default function Stats({ activityStats }: Props) {
   const [annualHourGoal, setAnnualHourGoal] = useAtom(annualHourGoalAtom);
 
-  console.debug('annualHourGoal', { annualHourGoal });
   const { secondsPerDayToComplete, requiredActivityPerDay, year, month } =
     useActivityStats(annualHourGoal, new Date(), activityStats);
 
   return (
     <>
       <div className="max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">
-        <HourlyGoal
-          value={annualHourGoal}
-          onYearGoalChange={hours => {
-            setAnnualHourGoal(hours);
-          }}
-        />
-
-        <div className="py-8 flex justify-start items-center ">
-          <ProgressCircle percentageComplete={year.percentageComplete} />
-          <div className="pl-8">
+        <div className="pb-4">
+          <AnnualGoal
+            value={annualHourGoal}
+            onYearGoalChange={hours => {
+              setAnnualHourGoal(hours);
+            }}
+          />
+        </div>
+        <HorizontalSpacer />
+        <div className="grid gap-4 place-items-center grid-cols-2 md:grid-cols-3 lg:grid-cols-5 mb-4">
+          <div className="col-span-2 md:col-span-3 lg:col-span-2">
+            <ProgressCircle percentageComplete={year.percentageComplete} />
+          </div>
+          <div className="col-span-1 md:col-span-1 lg:col-span-1">
             <MessageBlock
               header={year.projectedTotal().human}
               message={'Projected total'}
             />
           </div>
-          <div className="pl-8">
+          <div className="col-span-1 md:col-span-1 lg:col-span-1">
             <MessageBlock
               header={requiredActivityPerDay().human}
               message={'Per day'}
             />
           </div>
-          <div className="pl-8">
+          <div className="col-span-2 md:col-span-1 lg:col-span-1">
             <MessageBlock
               header={secondsPerDayToComplete().human}
               message={'Per day to complete'}
             />
           </div>
         </div>
+        <HorizontalSpacer />
         <div className="grid items-center lg:grid-cols-12 gap-6 lg:gap-16">
           <StatsRow
             title={year.totalMovingTime().human}

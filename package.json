@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "test:e2e": "playwright test",
     "generate:strava-client": "/usr/local/Cellar/swagger-codegen@2/2.4.31/bin/swagger-codegen generate -i https://developers.strava.com/swagger/swagger.json -l typescript-fetch -o src/shared/strava-client"
   },
   "dependencies": {
@@ -27,6 +28,7 @@
     "typescript": "5.0.4"
   },
   "devDependencies": {
+    "@playwright/test": "^1.34.1",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",
     "@types/cookie": "^0.5.1",
