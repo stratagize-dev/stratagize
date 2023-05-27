@@ -4,25 +4,44 @@ import { ActivityType } from '@/shared/types/strava/ActivityType';
 import { SportType } from '@/shared/types/strava/sportType';
 import { LatLng } from '@/shared/types/strava/latLng';
 import { PolylineMap } from '@/shared/types/strava/PolylineMap';
-import { startOfMonth } from 'date-fns';
+import { startOfMonth, startOfToday } from 'date-fns';
 
-export const calculateMovingTime = (activities: SummaryActivity[]): number =>
-  activities.reduce(
+export const calculateMovingTime = (
+  activities: SummaryActivity[],
+  filter?: (activities: SummaryActivity[]) => SummaryActivity[]
+): number => {
+  const filterToApply = filter ? filter : (act: SummaryActivity[]) => act;
+
+  return filterToApply(activities).reduce(
     (previousValue, currentValue) =>
       previousValue + (currentValue.moving_time ?? 0),
     0
   );
+};
+// export const calculateMovingTime = (activities: SummaryActivity[]): number =>
+//   activities.reduce(
+//     (previousValue, currentValue) =>
+//       previousValue + (currentValue.moving_time ?? 0),
+//     0
+//   );
 
-export const fromBeginningOfMonth = (
-  activities: SummaryActivity[]
+const filterFromDate = (
+  activities: SummaryActivity[],
+  fromDate: Date
 ): SummaryActivity[] => {
-  const startOfMonthDate = startOfMonth(new Date());
   return activities.filter(activity => {
     return activity.start_date
-      ? new Date(activity.start_date) > startOfMonthDate //BUG startOfMonthDate
+      ? new Date(activity.start_date) > fromDate //BUG startOfMonthDate
       : false;
   });
 };
+
+export const fromToday = (activities: SummaryActivity[]): SummaryActivity[] =>
+  filterFromDate(activities, startOfToday());
+
+export const fromBeginningOfMonth = (
+  activities: SummaryActivity[]
+): SummaryActivity[] => filterFromDate(activities, startOfMonth(new Date()));
 
 /**
  *

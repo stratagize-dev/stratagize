@@ -12,10 +12,11 @@ import HorizontalSpacer from '@/components/HorizontalSpacer';
 interface Props {
   activityStats: SummaryActivity[];
 }
+
 export default function Stats({ activityStats }: Props) {
   const [annualHourGoal, setAnnualHourGoal] = useAtom(annualHourGoalAtom);
 
-  const { secondsPerDayToComplete, requiredActivityPerDay, year, month } =
+  const { secondsPerDayToComplete, requiredActivityPerDay, year, month, day } =
     useActivityStats(annualHourGoal, new Date(), activityStats);
 
   return (
@@ -90,6 +91,21 @@ export default function Stats({ activityStats }: Props) {
                 id: 'month.averageDaily',
                 header: month.averageDaily().human,
                 message: 'average daily activity time'
+              }
+            ]}
+          />
+          <StatsRow
+            title={day.totalMovingTime().human}
+            subTitle="total moving time for the day"
+            percentage={day.percentageAhead}
+            period="day"
+            messageBlocks={[
+              {
+                id: 'day.timeAhead',
+                header: day.timeAhead().human,
+                message: `time ${
+                  day.timeAhead().duration.isAhead ? 'ahead' : 'behind'
+                } for day`
               }
             ]}
           />

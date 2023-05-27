@@ -35,4 +35,9 @@ export type ActivityStatsResult = {
     averageDaily: Time;
     percentageAhead: number;
   };
+  day: {
+    totalMovingTime: Time;
+    timeAhead: Time;
+    percentageAhead: number;
+  };
 };

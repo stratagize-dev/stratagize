@@ -6,7 +6,7 @@ interface Props {
   title: string;
   subTitle: string;
   percentage: number;
-  period: 'year' | 'month';
+  period: 'year' | 'month' | 'day';
   messageBlocks: { id: string; header: string; message: string }[];
 }
 export const StatsRow = ({

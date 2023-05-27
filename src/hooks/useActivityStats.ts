@@ -1,6 +1,7 @@
 import {
   calculateMovingTime,
   fromBeginningOfMonth,
+  fromToday,
   SummaryActivity
 } from '@/shared/types/strava/SummaryActivity';
 import { getDayOfYear, getDaysInYear, hoursToSeconds } from 'date-fns';
@@ -36,10 +37,12 @@ const useActivityStats = (
   const secondsPerDayToComplete =
     (targetGoalSeconds - totalMovingTimeSeconds) / daysRemaining;
 
-  // Current Month calculations
-
+  /**
+   * Current Month calculations
+   */
   const totalMovingTimeSecondsForMonth = calculateMovingTime(
-    fromBeginningOfMonth(activityStats)
+    activityStats,
+    fromBeginningOfMonth
   );
   const expectedSecondsForMonth = dayOfMonth * secondsPerDay;
   const timeAheadForMonth =
@@ -49,6 +52,19 @@ const useActivityStats = (
   const percentageAheadForMonth = Math.round(
     (timeAheadForMonth / expectedSecondsForMonth) * 100
   );
+
+  /**
+   * Current Day calculations
+   */
+  const totalMovingTimeSecondsForDay = calculateMovingTime(
+    activityStats,
+    fromToday
+  );
+  const timeAheadForDay = totalMovingTimeSecondsForDay - secondsPerDay;
+  const percentageAheadForDay = Math.round(
+    (timeAheadForDay / secondsPerDay) * 100
+  );
+
   return {
     requiredActivityPerDay: time(secondsPerDay),
     secondsPerDayToComplete: time(secondsPerDayToComplete),
@@ -67,6 +83,11 @@ const useActivityStats = (
       timeAhead: time(timeAheadForMonth),
       averageDaily: time(averageDailySecondsForMonth),
       percentageAhead: percentageAheadForMonth
+    },
+    day: {
+      totalMovingTime: time(totalMovingTimeSecondsForDay),
+      timeAhead: time(timeAheadForDay),
+      percentageAhead: percentageAheadForDay
     }
   };
 };
