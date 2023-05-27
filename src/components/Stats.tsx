@@ -55,61 +55,59 @@ export default function Stats({ activityStats }: Props) {
           </div>
         </div>
         <HorizontalSpacer />
-        <div className="grid items-center lg:grid-cols-12 gap-6 lg:gap-16">
-          <StatsRow
-            title={year.totalMovingTime().human}
-            subTitle="total moving time for the year"
-            percentage={year.percentageAhead}
-            period="year"
-            messageBlocks={[
-              {
-                id: 'year.timeAhead',
-                header: year.timeAhead().human,
-                message: 'time ahead for year'
-              },
-              {
-                id: 'year.actualDailyAverage',
-                header: year.actualDailyAverage().human,
-                message: 'average daily activity time'
-              }
-            ]}
-          />
-          <StatsRow
-            title={month.totalMovingTime().human}
-            subTitle="total moving time for the month"
-            percentage={month.percentageAhead}
-            period="month"
-            messageBlocks={[
-              {
-                id: 'month.timeAhead',
-                header: month.timeAhead().human,
-                message: `time ${
-                  month.timeAhead().duration.isAhead ? 'ahead' : 'behind'
-                } for month`
-              },
-              {
-                id: 'month.averageDaily',
-                header: month.averageDaily().human,
-                message: 'average daily activity time'
-              }
-            ]}
-          />
-          <StatsRow
-            title={day.totalMovingTime().human}
-            subTitle="total moving time for the day"
-            percentage={day.percentageAhead}
-            period="day"
-            messageBlocks={[
-              {
-                id: 'day.timeAhead',
-                header: day.timeAhead().human,
-                message: `time ${
-                  day.timeAhead().duration.isAhead ? 'ahead' : 'behind'
-                } for day`
-              }
-            ]}
-          />
-        </div>
+        <StatsRow
+          title={year.totalMovingTime().human}
+          subTitle="total moving time for the year"
+          percentage={year.percentageAhead}
+          period="year"
+          messageBlocks={[
+            {
+              id: 'year.timeAhead',
+              header: year.timeAhead().human,
+              message: 'time ahead for year'
+            },
+            {
+              id: 'year.actualDailyAverage',
+              header: year.actualDailyAverage().human,
+              message: 'average daily activity time'
+            }
+          ]}
+        />
+        <StatsRow
+          title={month.totalMovingTime().human}
+          subTitle="total moving time for the month"
+          percentage={month.percentageAhead}
+          period="month"
+          messageBlocks={[
+            {
+              id: 'month.timeAhead',
+              header: month.timeAhead().human,
+              message: `time ${
+                month.timeAhead().duration.isAhead ? 'ahead' : 'behind'
+              } for month`
+            },
+            {
+              id: 'month.averageDaily',
+              header: month.averageDaily().human,
+              message: 'average daily activity time'
+            }
+          ]}
+        />
+        <StatsRow
+          title={day.totalMovingTime().human}
+          subTitle="total moving time for the day"
+          percentage={day.percentageAhead}
+          period="day"
+          messageBlocks={[
+            {
+              id: 'day.timeAhead',
+              header: day.timeAhead().human,
+              message: `time ${
+                day.timeAhead().duration.isAhead ? 'ahead' : 'behind'
+              } for day`
+            }
+          ]}
+        />
       </div>
     </>
   );
