@@ -8,6 +8,7 @@ import { annualHourGoalAtom } from '@/shared/atoms';
 import ProgressCircle from '@/components/ProgressCircle';
 import { StatsRow } from '@/components/StatsRow';
 import HorizontalSpacer from '@/components/HorizontalSpacer';
+import SportsBreakdown from '@/components/SportsBreakdown';
 
 interface Props {
   activityStats: SummaryActivity[];
@@ -19,6 +20,7 @@ export default function Stats({ activityStats }: Props) {
   const { secondsPerDayToComplete, requiredActivityPerDay, year, month, day } =
     useActivityStats(annualHourGoal, new Date(), activityStats);
 
+  // console.debug(year.sportStatistics);
   return (
     <>
       <div className="max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">
@@ -108,6 +110,9 @@ export default function Stats({ activityStats }: Props) {
             }
           ]}
         />
+        <div className="flex  justify-center">
+          <SportsBreakdown sportStatistics={year.sportStatistics} />
+        </div>
       </div>
     </>
   );

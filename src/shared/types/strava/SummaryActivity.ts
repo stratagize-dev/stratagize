@@ -5,25 +5,37 @@ import { SportType } from '@/shared/types/strava/sportType';
 import { LatLng } from '@/shared/types/strava/latLng';
 import { PolylineMap } from '@/shared/types/strava/PolylineMap';
 import { startOfMonth, startOfToday } from 'date-fns';
+import { ActivityTotals } from '@/shared/ActivityTotals';
+import { InternalSportType } from '@/hooks/types';
 
 export const calculateMovingTime = (
   activities: SummaryActivity[],
   filter?: (activities: SummaryActivity[]) => SummaryActivity[]
-): number => {
+): ActivityTotals => {
   const filterToApply = filter ? filter : (act: SummaryActivity[]) => act;
 
-  return filterToApply(activities).reduce(
-    (previousValue, currentValue) =>
-      previousValue + (currentValue.moving_time ?? 0),
-    0
-  );
+  const accumulator: ActivityTotals = {
+    totalMovingTime: 0,
+    totalCount: 0,
+    sports: { unknown: { totalTimeSeconds: 0, count: 0 } }
+  };
+
+  return filterToApply(activities).reduce((runningTotal, currentActivity) => {
+    const sportType: InternalSportType =
+      currentActivity.sport_type ?? 'unknown';
+    const movingTime = currentActivity.moving_time ?? 0;
+    if (!runningTotal.sports[sportType]) {
+      runningTotal.sports[sportType] = { count: 0, totalTimeSeconds: 0 };
+    }
+
+    runningTotal.sports[sportType].totalTimeSeconds += movingTime;
+    runningTotal.sports[sportType].count++;
+    runningTotal.totalCount++;
+    runningTotal.totalMovingTime += movingTime;
+
+    return runningTotal;
+  }, accumulator);
 };
-// export const calculateMovingTime = (activities: SummaryActivity[]): number =>
-//   activities.reduce(
-//     (previousValue, currentValue) =>
-//       previousValue + (currentValue.moving_time ?? 0),
-//     0
-//   );
 
 const filterFromDate = (
   activities: SummaryActivity[],
@@ -120,7 +132,7 @@ export interface SummaryActivity extends MetaActivity {
    * @type {SportType}
    * @memberof SummaryActivity
    */
-  sportType?: SportType;
+  sport_type?: SportType;
   /**
    * The time at which the activity was started.
    * @type {Date}

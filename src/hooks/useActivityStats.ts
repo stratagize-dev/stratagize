@@ -5,7 +5,11 @@ import {
   SummaryActivity
 } from '@/shared/types/strava/SummaryActivity';
 import { getDayOfYear, getDaysInYear, hoursToSeconds } from 'date-fns';
-import { ActivityStatsResult } from '@/hooks/types';
+import {
+  ActivityStatsResult,
+  InternalSportType,
+  SportsStatistic
+} from '@/hooks/types';
 import { time } from '@/shared/types/time';
 
 const useActivityStats = (
@@ -21,7 +25,8 @@ const useActivityStats = (
   const secondsPerDay = Math.floor(targetGoalSeconds / daysInYear);
 
   // Yearly calculations
-  const totalMovingTimeSeconds = calculateMovingTime(activityStats);
+  const { totalMovingTime: totalMovingTimeSeconds, sports } =
+    calculateMovingTime(activityStats);
   const expectedSecondsPerDay = dayOfYear * secondsPerDay;
   const timeAheadForYear = totalMovingTimeSeconds - expectedSecondsPerDay;
   const percentageAhead = Math.round(
@@ -37,13 +42,22 @@ const useActivityStats = (
   const secondsPerDayToComplete =
     (targetGoalSeconds - totalMovingTimeSeconds) / daysRemaining;
 
+  const sportStatistics: SportsStatistic[] = [];
+  for (const sportsType in sports) {
+    const sportsStats = sports[sportsType];
+    sportStatistics.push({
+      sportType: sportsType as InternalSportType,
+      totalMovingTime: time(sportsStats.totalTimeSeconds),
+      percentage: (sportsStats.totalTimeSeconds / totalMovingTimeSeconds) * 100,
+      activityCount: sportsStats.count
+    });
+  }
+
   /**
    * Current Month calculations
    */
-  const totalMovingTimeSecondsForMonth = calculateMovingTime(
-    activityStats,
-    fromBeginningOfMonth
-  );
+  const { totalMovingTime: totalMovingTimeSecondsForMonth } =
+    calculateMovingTime(activityStats, fromBeginningOfMonth);
   const expectedSecondsForMonth = dayOfMonth * secondsPerDay;
   const timeAheadForMonth =
     totalMovingTimeSecondsForMonth - expectedSecondsForMonth;
@@ -56,7 +70,7 @@ const useActivityStats = (
   /**
    * Current Day calculations
    */
-  const totalMovingTimeSecondsForDay = calculateMovingTime(
+  const { totalMovingTime: totalMovingTimeSecondsForDay } = calculateMovingTime(
     activityStats,
     fromToday
   );
@@ -75,7 +89,8 @@ const useActivityStats = (
       actualDailyAverage: time(averageDailySeconds),
       projectedTotal: time(projectedTotal),
       percentageComplete,
-      percentageAhead
+      percentageAhead,
+      sportStatistics
     },
     month: {
       totalMovingTime: time(totalMovingTimeSecondsForMonth),

@@ -1,4 +1,13 @@
 import { Time } from '@/shared/types/time';
+import { SportType } from '@/shared/types/strava/sportType';
+
+export type InternalSportType = SportType | 'unknown';
+export interface SportsStatistic {
+  sportType: InternalSportType;
+  totalMovingTime: Time;
+  percentage: number;
+  activityCount: number;
+}
 
 export type ActivityStatsResult = {
   /**
@@ -24,6 +33,7 @@ export type ActivityStatsResult = {
     projectedTotal: Time;
     percentageComplete: number;
     percentageAhead: number;
+    sportStatistics: SportsStatistic[];
   };
   month: {
     totalMovingTime: Time;
