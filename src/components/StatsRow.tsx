@@ -6,7 +6,7 @@ import HorizontalSpacer from '@/components/HorizontalSpacer';
 interface Props {
   title: string;
   subTitle: string;
-  percentage: number;
+  percentage?: number;
   period: 'year' | 'month' | 'day';
   messageBlocks: { id: string; header: string; message: string }[];
 }
@@ -26,15 +26,17 @@ export const StatsRow = ({
           <div className="lg:pr-6 xl:pr-12">
             <p className="text-6xl font-bold leading-10 text-orange-500">
               {title}
-              <span className="ml-4 inline-flex items-center gap-x-1 bg-gray-200 font-medium text-gray-800 text-xs leading-4 rounded-full py-0.5 px-2 dark:bg-gray-800 dark:text-gray-300">
-                {percentage >= 0 ? (
-                  <ArrowUpRightCircleFill />
-                ) : (
-                  <ArrowDownRightCircleFill />
-                )}
-                {symbol(percentage)}
-                {percentage}% this {period}
-              </span>
+              {percentage && (
+                <span className="ml-4 inline-flex items-center gap-x-1 bg-gray-200 font-medium text-gray-800 text-xs leading-4 rounded-full py-0.5 px-2 dark:bg-gray-800 dark:text-gray-300">
+                  {percentage >= 0 ? (
+                    <ArrowUpRightCircleFill />
+                  ) : (
+                    <ArrowDownRightCircleFill />
+                  )}
+                  {symbol(percentage)}
+                  {percentage}% this {period}
+                </span>
+              )}
             </p>
             <p className="mt-2 sm:mt-3 text-gray-500">{subTitle}</p>
           </div>

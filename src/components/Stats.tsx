@@ -14,13 +14,19 @@ interface Props {
   activityStats: SummaryActivity[];
 }
 
+function humanDay(days: number) {
+  return days > 1 ? `${days} days` : `${days} day`;
+}
+
 export default function Stats({ activityStats }: Props) {
   const [annualHourGoal, setAnnualHourGoal] = useAtom(annualHourGoalAtom);
 
-  const { secondsPerDayToComplete, requiredActivityPerDay, year, month, day } =
-    useActivityStats(annualHourGoal, new Date(), activityStats);
+  const { requiredActivityPerDay, year, month, day } = useActivityStats(
+    annualHourGoal,
+    new Date(),
+    activityStats
+  );
 
-  // console.debug(year.sportStatistics);
   return (
     <>
       <div className="max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">
@@ -51,7 +57,7 @@ export default function Stats({ activityStats }: Props) {
           </div>
           <div className="col-span-2 md:col-span-1 lg:col-span-1">
             <MessageBlock
-              header={secondsPerDayToComplete().human}
+              header={year.secondsPerDayToComplete().human}
               message={'Per day to complete'}
             />
           </div>
@@ -59,54 +65,66 @@ export default function Stats({ activityStats }: Props) {
         <HorizontalSpacer />
         <StatsRow
           title={year.totalMovingTime().human}
-          subTitle="total moving time for the year"
+          subTitle="Total moving time for the year"
           percentage={year.percentageAhead}
           period="year"
           messageBlocks={[
             {
               id: 'year.timeAhead',
               header: year.timeAhead().human,
-              message: 'time ahead for year'
+              message: 'Time ahead for year'
             },
             {
               id: 'year.actualDailyAverage',
               header: year.actualDailyAverage().human,
-              message: 'average daily activity time'
+              message: 'Average daily activity time'
             }
           ]}
         />
         <StatsRow
           title={month.totalMovingTime().human}
-          subTitle="total moving time for the month"
+          subTitle="Total moving time for the month"
           percentage={month.percentageAhead}
           period="month"
           messageBlocks={[
             {
               id: 'month.timeAhead',
               header: month.timeAhead().human,
-              message: `time ${
+              message: `Time ${
                 month.timeAhead().duration.isAhead ? 'ahead' : 'behind'
               } for month`
             },
             {
               id: 'month.averageDaily',
               header: month.averageDaily().human,
-              message: 'average daily activity time'
+              message: 'Average daily activity time'
             }
           ]}
         />
         <StatsRow
           title={day.totalMovingTime().human}
-          subTitle="total moving time for the day"
+          subTitle="Total moving time for the day"
           percentage={day.percentageAhead}
           period="day"
           messageBlocks={[
             {
               id: 'day.timeAhead',
               header: day.timeAhead().human,
-              message: `time ${
+              message: `Time ${
                 day.timeAhead().duration.isAhead ? 'ahead' : 'behind'
               } for day`
+            }
+          ]}
+        />
+        <StatsRow
+          title={humanDay(year.streaks.maxStreakDays)}
+          subTitle="Max activity streak"
+          period="year"
+          messageBlocks={[
+            {
+              id: 'year.streaks.currentStreakDays',
+              header: humanDay(year.streaks.currentStreakDays),
+              message: 'Current activity streak'
             }
           ]}
         />
