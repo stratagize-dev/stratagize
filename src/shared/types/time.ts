@@ -14,6 +14,9 @@ export const time =
     return {
       seconds,
       duration,
-      human: `${duration.hours} h ${duration.minutes} m`
+      human:
+        duration.hours > 0
+          ? `${duration.hours} h ${duration.minutes} m`
+          : `${duration.minutes} m`
     };
   };

@@ -4,10 +4,60 @@ import { ActivityType } from '@/shared/types/strava/ActivityType';
 import { SportType } from '@/shared/types/strava/sportType';
 import { LatLng } from '@/shared/types/strava/latLng';
 import { PolylineMap } from '@/shared/types/strava/PolylineMap';
-import { startOfMonth, startOfToday } from 'date-fns';
+import {
+  getDayOfYear,
+  startOfMonth,
+  startOfToday,
+  startOfYear
+} from 'date-fns';
 import { ActivityTotals } from '@/shared/ActivityTotals';
 import { InternalSportType } from '@/hooks/types';
 
+export const calculateActivityStreak = (
+  activities: SummaryActivity[],
+  filter?: (activities: SummaryActivity[]) => SummaryActivity[]
+) => {
+  const filterActivities = filter ? filter : (act: SummaryActivity[]) => act;
+
+  let maxStreak = 0;
+  let currentStreak = 0;
+  let previousDay = 0;
+  let currentStreakStartDate: Date | undefined = undefined;
+  let maxStreakStartDate: Date | undefined = undefined;
+  let activeDayCount = 0;
+  filterActivities(activities).forEach(summaryActivity => {
+    if (!summaryActivity.start_date) {
+      return;
+    }
+    const activityDate = new Date(summaryActivity.start_date);
+    const activityDay = getDayOfYear(activityDate);
+
+    if (activityDay === previousDay) return; // multiple activities for the same day
+
+    activeDayCount++;
+
+    if (activityDay - previousDay === 1) {
+      currentStreak++;
+    } else {
+      currentStreak = 1;
+      currentStreakStartDate = activityDate;
+    }
+
+    if (currentStreak > maxStreak) {
+      maxStreak = currentStreak;
+      maxStreakStartDate = currentStreakStartDate;
+    }
+    previousDay = activityDay;
+  });
+
+  return {
+    activeDayCount,
+    maxStreak,
+    maxStreakStartDate,
+    currentStreak,
+    currentStreakStartDate
+  };
+};
 export const calculateMovingTime = (
   activities: SummaryActivity[],
   filter?: (activities: SummaryActivity[]) => SummaryActivity[]
@@ -54,6 +104,10 @@ export const fromToday = (activities: SummaryActivity[]): SummaryActivity[] =>
 export const fromBeginningOfMonth = (
   activities: SummaryActivity[]
 ): SummaryActivity[] => filterFromDate(activities, startOfMonth(new Date()));
+
+export const fromBeginningOfYear = (
+  activities: SummaryActivity[]
+): SummaryActivity[] => filterFromDate(activities, startOfYear(new Date()));
 
 /**
  *

@@ -1,109 +1,36 @@
-import {
-  calculateMovingTime,
-  fromBeginningOfMonth,
-  fromToday,
-  SummaryActivity
-} from '@/shared/types/strava/SummaryActivity';
-import { getDayOfYear, getDaysInYear, hoursToSeconds } from 'date-fns';
-import {
-  ActivityStatsResult,
-  InternalSportType,
-  SportsStatistic
-} from '@/hooks/types';
+import { SummaryActivity } from '@/shared/types/strava/SummaryActivity';
+import { ActivityStatsResult } from '@/hooks/types';
 import { time } from '@/shared/types/time';
+import useAnnualActivityStats from '@/hooks/useAnnualActivityStats';
+import useMonthlyActivityStats from '@/hooks/useMonthlyActivityStats';
+import useDailyActivityStats from '@/hooks/useDailyActivityStats';
+import useCommon from '@/hooks/useCommon';
 
 const useActivityStats = (
   targetGoalHours: number,
   today: Date,
   activityStats: SummaryActivity[]
 ): ActivityStatsResult => {
-  const daysInYear = getDaysInYear(today); // either 365 or 366
-  const dayOfYear = getDayOfYear(today); // e.g. 52nd day of year
-  const daysRemaining = daysInYear - dayOfYear;
-  const dayOfMonth = today.getDate();
-  const targetGoalSeconds = hoursToSeconds(targetGoalHours);
-  const secondsPerDay = Math.floor(targetGoalSeconds / daysInYear);
+  const { secondsPerDay } = useCommon(targetGoalHours, today);
 
   // Yearly calculations
-  const { totalMovingTime: totalMovingTimeSeconds, sports } =
-    calculateMovingTime(activityStats);
-  const expectedSecondsPerDay = dayOfYear * secondsPerDay;
-  const timeAheadForYear = totalMovingTimeSeconds - expectedSecondsPerDay;
-  const percentageAhead = Math.round(
-    (timeAheadForYear / expectedSecondsPerDay) * 100
-  );
-
-  const percentageComplete = Math.round(
-    (totalMovingTimeSeconds / hoursToSeconds(targetGoalHours)) * 100
-  );
-  const averageDailySeconds = totalMovingTimeSeconds / dayOfYear;
-  const projectedTotal = averageDailySeconds * daysInYear;
-
-  const secondsPerDayToComplete =
-    (targetGoalSeconds - totalMovingTimeSeconds) / daysRemaining;
-
-  const sportStatistics: SportsStatistic[] = [];
-  for (const sportsType in sports) {
-    const sportsStats = sports[sportsType];
-    sportStatistics.push({
-      sportType: sportsType as InternalSportType,
-      totalMovingTime: time(sportsStats.totalTimeSeconds),
-      percentage: (sportsStats.totalTimeSeconds / totalMovingTimeSeconds) * 100,
-      activityCount: sportsStats.count
-    });
-  }
+  const year = useAnnualActivityStats(targetGoalHours, today, activityStats);
 
   /**
    * Current Month calculations
    */
-  const { totalMovingTime: totalMovingTimeSecondsForMonth } =
-    calculateMovingTime(activityStats, fromBeginningOfMonth);
-  const expectedSecondsForMonth = dayOfMonth * secondsPerDay;
-  const timeAheadForMonth =
-    totalMovingTimeSecondsForMonth - expectedSecondsForMonth;
-  const averageDailySecondsForMonth =
-    totalMovingTimeSecondsForMonth / dayOfMonth;
-  const percentageAheadForMonth = Math.round(
-    (timeAheadForMonth / expectedSecondsForMonth) * 100
-  );
+  const month = useMonthlyActivityStats(targetGoalHours, today, activityStats);
 
   /**
    * Current Day calculations
    */
-  const { totalMovingTime: totalMovingTimeSecondsForDay } = calculateMovingTime(
-    activityStats,
-    fromToday
-  );
-  const timeAheadForDay = totalMovingTimeSecondsForDay - secondsPerDay;
-  const percentageAheadForDay = Math.round(
-    (timeAheadForDay / secondsPerDay) * 100
-  );
+  const day = useDailyActivityStats(targetGoalHours, today, activityStats);
 
   return {
     requiredActivityPerDay: time(secondsPerDay),
-    secondsPerDayToComplete: time(secondsPerDayToComplete),
-    year: {
-      totalMovingTime: time(totalMovingTimeSeconds),
-      expectedTotal: time(expectedSecondsPerDay),
-      timeAhead: time(timeAheadForYear),
-      actualDailyAverage: time(averageDailySeconds),
-      projectedTotal: time(projectedTotal),
-      percentageComplete,
-      percentageAhead,
-      sportStatistics
-    },
-    month: {
-      totalMovingTime: time(totalMovingTimeSecondsForMonth),
-      expectedTotal: time(expectedSecondsForMonth),
-      timeAhead: time(timeAheadForMonth),
-      averageDaily: time(averageDailySecondsForMonth),
-      percentageAhead: percentageAheadForMonth
-    },
-    day: {
-      totalMovingTime: time(totalMovingTimeSecondsForDay),
-      timeAhead: time(timeAheadForDay),
-      percentageAhead: percentageAheadForDay
-    }
+    year,
+    month,
+    day
   };
 };
 

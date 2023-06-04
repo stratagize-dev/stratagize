@@ -14,8 +14,9 @@ export type ActivityStatsResult = {
    * The required activity each day to achieve the annual goal
    */
   requiredActivityPerDay: Time;
-  secondsPerDayToComplete: Time;
+
   year: {
+    secondsPerDayToComplete: Time;
     totalMovingTime: Time;
     /**
      * The expected total amount of time for the current day of the year
@@ -34,6 +35,22 @@ export type ActivityStatsResult = {
     percentageComplete: number;
     percentageAhead: number;
     sportStatistics: SportsStatistic[];
+    activeDays: {
+      /**
+       * number of active days in the year
+       */
+      active: number;
+      /**
+       * current day of the year
+       */
+      total: number;
+    };
+    streaks: {
+      currentStreakDays: number;
+      currentStreakStartDate: Date | undefined;
+      maxStreakDays: number;
+      maxStreakStartDate: Date | undefined;
+    };
   };
   month: {
     totalMovingTime: Time;
