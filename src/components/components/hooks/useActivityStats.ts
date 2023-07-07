@@ -4,7 +4,7 @@ import calculateAnnualActivityStats from '@/components/components/hooks/utils/ca
 import calculateMonthlyActivityStats from '@/components/components/hooks/utils/calculateMonthlyActivityStats';
 import calculateDailyActivityStats from '@/components/components/hooks/utils/calculateDailyActivityStats';
 import calculateCommon from '@/components/components/hooks/utils/calculateCommon';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { ActivitySummary } from '@/shared/types/ActivitySummary';
 
 const useActivityStats = (
