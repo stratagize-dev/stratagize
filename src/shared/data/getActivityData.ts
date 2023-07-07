@@ -1,5 +1,5 @@
 import { startOfYear } from 'date-fns';
-import { SummaryActivity } from '@/shared/types/strava/SummaryActivity';
+import { ActivitySummary } from '@/shared/types/ActivitySummary';
 
 async function fetchData(page: number, url: URL, accessToken: string) {
   url.searchParams.set('page', page.toString());
@@ -18,7 +18,7 @@ async function fetchData(page: number, url: URL, accessToken: string) {
     throw new Error('Failed to fetch data');
   }
 
-  return (await res.json()) as SummaryActivity[];
+  return (await res.json()) as ActivitySummary[];
 }
 export const getActivityDataFromFirstOfYear = async (
   accessToken: string | undefined
@@ -36,7 +36,7 @@ export async function getActivityData(
     url.searchParams.append('after', (after.getTime() / 1000).toString());
     url.searchParams.append('per_page', '100');
 
-    let allActivities: SummaryActivity[] = [];
+    let allActivities: ActivitySummary[] = [];
     let page = 1;
     let perPage = 100;
     let totalRecords = perPage;

@@ -1,18 +1,18 @@
-import {
-  calculateActivityStreak,
-  calculateMovingTime,
-  fromBeginningOfYear,
-  SummaryActivity
-} from '@/shared/types/strava/SummaryActivity';
 import { hoursToSeconds } from 'date-fns';
 import {
   ActivityStatsResult,
   InternalSportType,
   SportsStatistic
-} from '@/hooks/types';
+} from '@/components/components/hooks/types';
 import { time } from '@/shared/types/time';
-import useCommon from '@/hooks/useCommon';
+import calculateCommon from '@/components/components/hooks/utils/calculateCommon';
 import { SportType } from '@/shared/types/strava/sportType';
+import { ActivitySummary } from '@/shared/types/ActivitySummary';
+import {
+  calculateActivityStreak,
+  calculateMovingTime,
+  fromBeginningOfYear
+} from '@/shared/utils';
 
 function calculateSportsStatistics(
   sports: Record<
@@ -37,10 +37,10 @@ function calculateSportsStatistics(
   return sportStatistics;
 }
 
-const useAnnualActivityStats = (
+const calculateAnnualActivityStats = (
   targetGoalHours: number,
   today: Date,
-  activityStats: SummaryActivity[]
+  activityStats: ActivitySummary[]
 ): ActivityStatsResult['year'] => {
   const {
     dayOfYear,
@@ -48,7 +48,7 @@ const useAnnualActivityStats = (
     daysInYear,
     targetGoalSeconds,
     daysRemaining
-  } = useCommon(targetGoalHours, today);
+  } = calculateCommon(targetGoalHours, today);
 
   const { totalMovingTime: totalMovingTimeSeconds, sports } =
     calculateMovingTime(activityStats);
@@ -103,4 +103,4 @@ const useAnnualActivityStats = (
   };
 };
 
-export default useAnnualActivityStats;
+export default calculateAnnualActivityStats;
