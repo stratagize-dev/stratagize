@@ -11,8 +11,8 @@ const useActivityStats = (
   targetGoalHours: number,
   today: Date,
   activityStats: ActivitySummary[]
-): ActivityStatsResult => {
-  const result = useMemo(() => {
+): ActivityStatsResult =>
+  useMemo(() => {
     const { secondsPerDay } = calculateCommon(targetGoalHours, today);
 
     // Yearly calculations
@@ -47,14 +47,5 @@ const useActivityStats = (
       day
     };
   }, [targetGoalHours, today, activityStats]);
-
-  console.debug('stuart', 'calculationg', {
-    targetGoalHours,
-    today,
-    activityStats,
-    result
-  });
-  return result;
-};
 
 export default useActivityStats;

@@ -17,8 +17,11 @@ const createActivities = (startDate: Date, endDate: Date, seconds: number) => {
   let currentDate = new Date(startDate);
   while (currentDate <= endDate) {
     let newObject: ActivitySummary = {
-      moving_time: seconds,
-      start_date_local: currentDate.toString()
+      id: 1,
+      athleteId: 2,
+      startDate: currentDate.toString(),
+      movingTime: seconds,
+      startDateLocal: currentDate.toString()
     };
     activities.push(newObject);
     currentDate = addDays(currentDate, 1);
@@ -32,18 +35,27 @@ const oneHourADayActivities = createActivities(
 );
 const activities: ActivitySummary[] = [
   {
-    moving_time: TwentyNineMinutesInSeconds,
-    start_date_local:
+    id: 1,
+    athleteId: 2,
+    startDate: new Date().toString(),
+    movingTime: TwentyNineMinutesInSeconds,
+    startDateLocal:
       'Sun Jan 1 2023 16:00:19 GMT+1200 (New Zealand Standard Time)'
   },
   {
-    moving_time: FiftyEightMinutes,
-    start_date_local:
+    id: 1,
+    athleteId: 2,
+    startDate: new Date().toString(),
+    movingTime: FiftyEightMinutes,
+    startDateLocal:
       'Mon May 1 2023 16:00:19 GMT+1200 (New Zealand Standard Time)'
   },
   {
-    moving_time: OneHourTwentyFiveMinutes,
-    start_date_local:
+    id: 1,
+    athleteId: 2,
+    startDate: new Date().toString(),
+    movingTime: OneHourTwentyFiveMinutes,
+    startDateLocal:
       'Thu May 18 2023 16:00:19 GMT+1200 (New Zealand Standard Time)'
   }
 ];

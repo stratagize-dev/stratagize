@@ -9,7 +9,6 @@ import { PolylineMap } from '@/shared/types/strava/PolylineMap';
  *
  * @export
  * @interface SummaryActivity
- * @deprecated
  */
 export interface SummaryActivity extends MetaActivity {
   /**

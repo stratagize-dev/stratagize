@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation';
 import SignOutButton from '@/components/SignOutButton';
 import { getServerCustomSession } from '@/shared/auth';
 
-import FooBaa from '@/components/FooBaa';
+import ClientSidePage from '@/components/ClientSidePage';
 
 export default async function Home() {
   const session = await getServerCustomSession();
@@ -18,7 +18,7 @@ export default async function Home() {
         </div>
         <SignOutButton />
       </div>
-      <FooBaa session={session} />
+      <ClientSidePage session={session} />
     </>
   );
 }

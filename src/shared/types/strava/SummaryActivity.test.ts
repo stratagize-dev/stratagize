@@ -6,22 +6,23 @@ describe('fromBeginningOfMonth', () => {
   it('1 should return activities from the beginning of the current month', () => {
     const activities: ActivitySummary[] = [
       {
+        athleteId: 1,
         // resource_state: 2,
-        athlete: {
-          id: 324132
-          // resource_state: 1
-        },
+        // athlete: {
+        //   id: 324132
+        //   // resource_state: 1
+        // },
         name: 'Afternoon Trail Run',
         // distance: 8974,
-        moving_time: 3585,
+        movingTime: 3585,
         // elapsed_time: 3639,
         // total_elevation_gain: 133,
         // type: 'Run',
-        sport_type: SportType.TrailRun,
+        sportType: SportType.TrailRun,
         // workout_type: 0,
         id: 8981301507,
-        start_date: '2023-04-30T03:33:33Z',
-        start_date_local: '2023-04-30T15:33:33Z'
+        startDate: '2023-04-30T03:33:33Z',
+        startDateLocal: '2023-04-30T15:33:33Z'
         // timezone: '(GMT+12:00) Pacific/Auckland',
         // utc_offset: 43200,
         // location_city: null,
@@ -69,22 +70,19 @@ describe('fromBeginningOfMonth', () => {
   it('should return activities from the beginning of the current month', () => {
     const activities: ActivitySummary[] = [
       {
-        start_date_local: new Date().toISOString()
+        name: 'foo',
+        athleteId: 1,
+        movingTime: 10,
+        id: 1,
+        startDate: new Date().toISOString()
       },
       {
-        start_date_local: new Date('2022-01-01').toISOString()
+        name: 'foo',
+        athleteId: 1,
+        movingTime: 10,
+        id: 1,
+        startDate: new Date('2022-01-01').toISOString()
       }
-    ];
-    const result = fromBeginningOfMonth(activities);
-    expect(result).toEqual([activities[0]]);
-  });
-
-  it('should exclude activities without a start_date_local property', () => {
-    const activities: ActivitySummary[] = [
-      {
-        start_date_local: new Date().toISOString()
-      },
-      {}
     ];
     const result = fromBeginningOfMonth(activities);
     expect(result).toEqual([activities[0]]);

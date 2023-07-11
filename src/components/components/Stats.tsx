@@ -1,14 +1,14 @@
 'use client';
 import AnnualGoal from '@/components/components/components/AnnualGoal';
 import MessageBlock from '@/components/components/components/MessageBlock';
-import useActivityStats from '@/components/components/hooks/useActivityStats';
+import useProcessActivityData from '@/components/components/hooks/useActivityStats';
 import { useAtom } from 'jotai';
 import { annualHourGoalAtom } from '@/components/components/state/atoms';
 import ProgressCircle from '@/components/components/components/ProgressCircle';
 import { StatsRow } from '@/components/components/components/StatsRow';
 import HorizontalSpacer from '@/components/components/components/HorizontalSpacer';
 import SportsBreakdown from '@/components/components/components/SportsBreakdown';
-import useGetActivityDataFromFirstOfYear from '@/components/components/hooks/useGetActivityDataFromFirstOfYear';
+import useGetActivityData from '@/components/components/hooks/useGetActivityData';
 import { useMemo } from 'react';
 import LoadingDiv from '@/components/LoadingDiv';
 
@@ -19,16 +19,15 @@ function humanDay(days: number) {
 export default function Stats() {
   const [annualHourGoal, setAnnualHourGoal] = useAtom(annualHourGoalAtom);
 
-  const { data: activityStats, loading } = useGetActivityDataFromFirstOfYear();
+  const { data: activityStats, loading } = useGetActivityData();
 
   const today = useMemo(() => new Date(), []);
-  const { requiredActivityPerDay, year, month, day } = useActivityStats(
+  const { requiredActivityPerDay, year, month, day } = useProcessActivityData(
     annualHourGoal,
     today,
     activityStats
   );
 
-  console.debug('stuart', 'rendering stats', { year });
   return (
     <>
       <div className="max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">

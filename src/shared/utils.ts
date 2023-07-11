@@ -37,10 +37,10 @@ export const calculateActivityStreak = (
   let maxStreakStartDate: Date | undefined = undefined;
   let activeDayCount = 0;
   filterActivities(activities).forEach(summaryActivity => {
-    if (!summaryActivity.start_date) {
+    if (!summaryActivity.startDate) {
       return;
     }
-    const activityDate = new Date(summaryActivity.start_date);
+    const activityDate = new Date(summaryActivity.startDate);
     const activityDay = getDayOfYear(activityDate);
 
     if (activityDay === previousDay) return; // multiple activities for the same day
@@ -82,9 +82,8 @@ export const calculateMovingTime = (
   };
 
   return filterToApply(activities).reduce((runningTotal, currentActivity) => {
-    const sportType: InternalSportType =
-      currentActivity.sport_type ?? 'unknown';
-    const movingTime = currentActivity.moving_time ?? 0;
+    const sportType: InternalSportType = currentActivity.sportType ?? 'unknown';
+    const movingTime = currentActivity.movingTime ?? 0;
     if (!runningTotal.sports[sportType]) {
       runningTotal.sports[sportType] = { count: 0, totalTimeSeconds: 0 };
     }
@@ -103,8 +102,8 @@ const filterFromDate = (
   fromDate: Date
 ): ActivitySummary[] => {
   return activities.filter(activity => {
-    return activity.start_date
-      ? new Date(activity.start_date) > fromDate //BUG startOfMonthDate
+    return activity.startDate
+      ? new Date(activity.startDate) > fromDate //BUG startOfMonthDate
       : false;
   });
 };
