@@ -1,23 +1,20 @@
-import {
-  calculateMovingTime,
-  fromToday,
-  SummaryActivity
-} from '@/shared/types/strava/SummaryActivity';
-import { ActivityStatsResult } from '@/hooks/types';
+import { ActivityStatsResult } from '@/components/components/hooks/types';
 import { time } from '@/shared/types/time';
-import useCommon from '@/hooks/useCommon';
+import calculateCommon from '@/components/components/hooks/utils/calculateCommon';
+import { ActivitySummary } from '@/shared/types/ActivitySummary';
+import { calculateMovingTime, fromToday } from '@/shared/utils';
 
-const useDailyActivityStats = (
+const calculateDailyActivityStats = (
   targetGoalHours: number,
   today: Date,
-  activityStats: SummaryActivity[]
+  activityStats: ActivitySummary[]
 ): ActivityStatsResult['day'] => {
   const { totalMovingTime: totalMovingTimeSecondsForDay } = calculateMovingTime(
     activityStats,
     fromToday
   );
 
-  const { secondsPerDay } = useCommon(targetGoalHours, today);
+  const { secondsPerDay } = calculateCommon(targetGoalHours, today);
 
   const timeAheadForDay = totalMovingTimeSecondsForDay - secondsPerDay;
   const percentageAheadForDay = Math.round(
@@ -31,4 +28,4 @@ const useDailyActivityStats = (
   };
 };
 
-export default useDailyActivityStats;
+export default calculateDailyActivityStats;

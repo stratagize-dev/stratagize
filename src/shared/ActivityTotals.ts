@@ -1,4 +1,4 @@
-import { InternalSportType } from '@/hooks/types';
+import { InternalSportType } from '@/components/components/hooks/types';
 
 export interface ActivityTotals {
   totalMovingTime: number;

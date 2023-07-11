@@ -1,18 +1,14 @@
 import { redirect } from 'next/navigation';
 import SignOutButton from '@/components/SignOutButton';
 import { getServerCustomSession } from '@/shared/auth';
-import Stats from '@/components/Stats';
-import { getActivityDataFromFirstOfYear } from '@/shared/data/getActivityData';
+
+import ClientSidePage from '@/components/ClientSidePage';
 
 export default async function Home() {
   const session = await getServerCustomSession();
   if (!session) {
     redirect('/api/auth/signin');
   }
-
-  const activityStats = await getActivityDataFromFirstOfYear(
-    session?.accessToken
-  );
 
   return (
     <>
@@ -22,7 +18,7 @@ export default async function Home() {
         </div>
         <SignOutButton />
       </div>
-      <Stats activityStats={activityStats ?? []} />
+      <ClientSidePage session={session} />
     </>
   );
 }

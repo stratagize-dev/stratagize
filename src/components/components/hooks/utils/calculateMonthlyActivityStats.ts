@@ -1,18 +1,15 @@
-import {
-  calculateMovingTime,
-  fromBeginningOfMonth,
-  SummaryActivity
-} from '@/shared/types/strava/SummaryActivity';
-import { ActivityStatsResult } from '@/hooks/types';
+import { ActivityStatsResult } from '@/components/components/hooks/types';
 import { time } from '@/shared/types/time';
-import useCommon from '@/hooks/useCommon';
+import calculateCommon from '@/components/components/hooks/utils/calculateCommon';
+import { ActivitySummary } from '@/shared/types/ActivitySummary';
+import { calculateMovingTime, fromBeginningOfMonth } from '@/shared/utils';
 
-const useMonthlyActivityStats = (
+const calculateMonthlyActivityStats = (
   targetGoalHours: number,
   today: Date,
-  activityStats: SummaryActivity[]
+  activityStats: ActivitySummary[]
 ): ActivityStatsResult['month'] => {
-  const { dayOfMonth, secondsPerDay } = useCommon(targetGoalHours, today);
+  const { dayOfMonth, secondsPerDay } = calculateCommon(targetGoalHours, today);
 
   const { totalMovingTime: totalMovingTimeSecondsForMonth } =
     calculateMovingTime(activityStats, fromBeginningOfMonth);
@@ -34,4 +31,4 @@ const useMonthlyActivityStats = (
   };
 };
 
-export default useMonthlyActivityStats;
+export default calculateMonthlyActivityStats;

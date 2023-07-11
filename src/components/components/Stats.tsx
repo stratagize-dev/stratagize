@@ -1,29 +1,30 @@
 'use client';
-import { SummaryActivity } from '@/shared/types/strava/SummaryActivity';
-import AnnualGoal from '@/components/AnnualGoal';
-import MessageBlock from '@/components/MessageBlock';
-import useActivityStats from '@/hooks/useActivityStats';
+import AnnualGoal from '@/components/components/components/AnnualGoal';
+import MessageBlock from '@/components/components/components/MessageBlock';
+import useProcessActivityData from '@/components/components/hooks/useActivityStats';
 import { useAtom } from 'jotai';
-import { annualHourGoalAtom } from '@/shared/atoms';
-import ProgressCircle from '@/components/ProgressCircle';
-import { StatsRow } from '@/components/StatsRow';
-import HorizontalSpacer from '@/components/HorizontalSpacer';
-import SportsBreakdown from '@/components/SportsBreakdown';
-
-interface Props {
-  activityStats: SummaryActivity[];
-}
+import { annualHourGoalAtom } from '@/components/components/state/atoms';
+import ProgressCircle from '@/components/components/components/ProgressCircle';
+import { StatsRow } from '@/components/components/components/StatsRow';
+import HorizontalSpacer from '@/components/components/components/HorizontalSpacer';
+import SportsBreakdown from '@/components/components/components/SportsBreakdown';
+import useGetActivityData from '@/components/components/hooks/useGetActivityData';
+import { useMemo } from 'react';
+import LoadingDiv from '@/components/LoadingDiv';
 
 function humanDay(days: number) {
   return days == 1 ? `${days} day` : `${days} days`;
 }
 
-export default function Stats({ activityStats }: Props) {
+export default function Stats() {
   const [annualHourGoal, setAnnualHourGoal] = useAtom(annualHourGoalAtom);
 
-  const { requiredActivityPerDay, year, month, day } = useActivityStats(
+  const { data: activityStats, loading } = useGetActivityData();
+
+  const today = useMemo(() => new Date(), []);
+  const { requiredActivityPerDay, year, month, day } = useProcessActivityData(
     annualHourGoal,
-    new Date(),
+    today,
     activityStats
   );
 
@@ -39,7 +40,10 @@ export default function Stats({ activityStats }: Props) {
           />
         </div>
         <HorizontalSpacer />
-        <div className="grid gap-4 place-items-center grid-cols-2 md:grid-cols-3 lg:grid-cols-5 mb-4">
+        <LoadingDiv
+          loading={loading}
+          className={`grid gap-4 place-items-center grid-cols-2 md:grid-cols-3 lg:grid-cols-5 mb-4 `}
+        >
           <div className="col-span-2 md:col-span-3 lg:col-span-2">
             <ProgressCircle percentageComplete={year.percentageComplete} />
           </div>
@@ -61,9 +65,10 @@ export default function Stats({ activityStats }: Props) {
               message={'Per day to complete'}
             />
           </div>
-        </div>
+        </LoadingDiv>
         <HorizontalSpacer />
         <StatsRow
+          loading={loading}
           title={year.totalMovingTime().human}
           subTitle="Total moving time for the year"
           percentage={year.percentageAhead}
@@ -82,6 +87,7 @@ export default function Stats({ activityStats }: Props) {
           ]}
         />
         <StatsRow
+          loading={loading}
           title={month.totalMovingTime().human}
           subTitle="Total moving time for the month"
           percentage={month.percentageAhead}
@@ -102,6 +108,7 @@ export default function Stats({ activityStats }: Props) {
           ]}
         />
         <StatsRow
+          loading={loading}
           title={day.totalMovingTime().human}
           subTitle="Total moving time for the day"
           percentage={day.percentageAhead}
@@ -117,6 +124,7 @@ export default function Stats({ activityStats }: Props) {
           ]}
         />
         <StatsRow
+          loading={loading}
           title={humanDay(year.streaks.maxStreakDays)}
           subTitle="Max activity streak"
           period="year"
@@ -127,7 +135,7 @@ export default function Stats({ activityStats }: Props) {
               message: 'Current activity streak'
             },
             {
-              id: 'year.streaks.currentStreakDays',
+              id: 'year.streaks.activeDays',
               header: `${year.activeDays.active}/${humanDay(
                 year.activeDays.total
               )}`,
@@ -135,9 +143,9 @@ export default function Stats({ activityStats }: Props) {
             }
           ]}
         />
-        <div className="flex  justify-center">
+        <LoadingDiv loading={loading} className="flex  justify-center">
           <SportsBreakdown sportStatistics={year.sportStatistics} />
-        </div>
+        </LoadingDiv>
       </div>
     </>
   );
