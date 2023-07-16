@@ -20,7 +20,7 @@ function mergeData(
 
   const mergedArray = [...existingActivities];
 
-    newActivities.forEach(( newActivity) => {
+  newActivities.forEach(( newActivity) => {
 
      const indexOfActivity = existingActivities.findIndex(existingActivity => existingActivity.id === newActivity.id)
 
