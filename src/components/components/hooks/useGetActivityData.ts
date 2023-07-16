@@ -17,18 +17,24 @@ function mergeData(
   existingActivities: ActivitySummary[],
   newActivities: ActivitySummary[]
 ) {
-  return existingActivities.reduce((workingArray, existingActivity) => {
-    const newActivityToMerge = newActivities.find(
-      newActivity => newActivity.id === existingActivity.id
-    );
 
-    if (newActivityToMerge) {
-      workingArray.push(newActivityToMerge);
-    } else {
-      workingArray.push(existingActivity);
-    }
-    return workingArray;
-  }, [] as ActivitySummary[]);
+  const mergedArray = [...existingActivities];
+
+    newActivities.forEach(( newActivity) => {
+
+     const indexOfActivity = existingActivities.findIndex(existingActivity => existingActivity.id === newActivity.id)
+
+     if(indexOfActivity === -1){
+       // doesn't exist just add it
+       mergedArray.push(newActivity)
+     }
+     else{
+        mergedArray[indexOfActivity] = newActivity
+     }
+
+  });
+
+  return mergedArray;
 }
 
 export default function useGetActivityData() {
