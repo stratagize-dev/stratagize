@@ -63,11 +63,20 @@ export const authOptions: AuthOptions = {
       // Send properties to the client, like an access_token and user id from a provider.
       const customSession: CustomSession = {
         ...session,
+        athleteId: token.sub,
         accessToken: token.accessToken as string,
         refreshToken: token.refreshToken as string
       };
       return customSession;
     }
+  },
+  events: {
+    signIn: message => console.debug('event', 'signIn', { message }),
+    signOut: message => console.debug('event', 'signOut', { message }),
+    createUser: message => console.debug('event', 'createUser', { message }),
+    updateUser: message => console.debug('event', 'updateUser', { message }),
+    linkAccount: message => console.debug('event', 'linkAccount', { message }),
+    session: message => console.debug('event', 'session', { message })
   }
 };
 

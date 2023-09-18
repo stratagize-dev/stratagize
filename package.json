@@ -8,18 +8,21 @@
     "start": "next start",
     "lint": "next lint",
     "test:e2e": "playwright test",
-    "generate:strava-client": "/usr/local/Cellar/swagger-codegen@2/2.4.31/bin/swagger-codegen generate -i https://developers.strava.com/swagger/swagger.json -l typescript-fetch -o src/shared/strava-client"
+    "generate:strava-client": "/usr/local/Cellar/swagger-codegen@2/2.4.31/bin/swagger-codegen generate -i https://developers.strava.com/swagger/swagger.json -l typescript-fetch -o src/shared/strava-client",
+    "db:local:generate:types": "supabase gen types typescript --local  > database.types.ts",
+    "db:local:start": "supabase start",
+    "db:local:stop": "supabase stop",
+    "db:local:migrate": "supabase db reset"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.33.1",
     "@types/node": "18.16.3",
     "@types/react": "18.2.5",
     "@types/react-dom": "18.2.3",
-    "@vercel/kv": "^0.2.2",
     "autoprefixer": "10.4.14",
     "date-fns": "^2.30.0",
     "eslint": "8.39.0",
     "eslint-config-next": "13.4.0",
-    "firebase-admin": "^11.10.1",
     "jotai": "^2.1.0",
     "next": "13.4.0",
     "next-auth": "^4.22.1",
@@ -36,6 +39,7 @@
     "@types/cookie": "^0.5.1",
     "jest": "^29.5.0",
     "jest-environment-jsdom": "^29.5.0",
-    "prettier": "^2.8.8"
+    "prettier": "^2.8.8",
+    "supabase": "^1.93.0"
   }
 }

@@ -1,6 +1,7 @@
 import { startOfYear } from 'date-fns';
 import { ActivitySummary } from '@/shared/types/ActivitySummary';
 import { SummaryActivity } from '@/shared/types/strava/SummaryActivity';
+import {  SportType , Activity} from '@/shared/types/Activity';
 
 async function fetchData(
   page: number,
@@ -10,7 +11,6 @@ async function fetchData(
 ) {
   url.searchParams.set('page', page.toString());
 
-  console.debug('stuart', url.search);
   const res = await fetch(url, {
     headers: {
       Authorization: 'Bearer ' + accessToken,
@@ -34,12 +34,13 @@ async function fetchData(
   return (await res.json()) as SummaryActivity[];
 }
 
+
 export const getActivityDataFromFirstOfYear = async (
   accessToken: string | undefined,
   signal: AbortSignal
-) => getActivityData(accessToken, signal, startOfYear(new Date()));
+) => getSummaryActivityData(accessToken, signal, startOfYear(new Date()));
 
-export async function getActivityData(
+export async function getSummaryActivityData(
   accessToken: string | undefined,
   signal: AbortSignal,
   after: Date
@@ -79,6 +80,47 @@ export async function getActivityData(
             };
             return x;
           })
+      );
+      totalRecords = activities.length;
+      page++;
+    }
+
+    return allActivities;
+  }
+
+  return [];
+}
+
+export const loadActivityDataFromFirstOfYear = async (
+  accessToken: string | undefined,
+) => loadActivityData(accessToken, startOfYear(new Date()));
+export async function loadActivityData(
+  accessToken: string | undefined,
+  after: Date
+): Promise<SummaryActivity[]> {
+  if (!accessToken) return [];
+
+  if (accessToken) {
+    const url = new URL('https://www.strava.com/api/v3/athlete/activities');
+
+    url.searchParams.append('after', (after.getTime() / 1000).toString());
+    url.searchParams.append('per_page', '100');
+
+    let allActivities: Activity[] = [];
+    let page = 1;
+    let perPage = 100;
+    let totalRecords = perPage;
+
+    while (totalRecords === perPage) {
+      const activities = await fetchData(page, url, accessToken);
+      allActivities = allActivities.concat(
+        activities
+          .filter(
+            x =>
+              x.id !== undefined &&
+              x.athlete?.id !== undefined &&
+              x.start_date !== undefined
+          )
       );
       totalRecords = activities.length;
       page++;

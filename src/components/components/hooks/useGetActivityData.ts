@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import {
-  getActivityData,
+  getSummaryActivityData,
   getActivityDataFromFirstOfYear
-} from '@/shared/data/getActivityData';
+} from '@/shared/data/Strava/getSummaryActivityData';
 import { ActivitySummary } from '@/shared/types/ActivitySummary';
 import { useSession } from 'next-auth/react';
 import CustomSession from '@/shared/types/auth/CustomSession';
@@ -98,7 +98,7 @@ export default function useGetActivityData() {
         } else {
           const twoWeeksPrior = subWeeks(lastActivityDate, 2);
           setLoading(true);
-          getActivityData(session?.accessToken, signal, twoWeeksPrior).then(
+          getSummaryActivityData(session?.accessToken, signal, twoWeeksPrior).then(
             latestActivities =>
               handleLatestActivities({
                 latestActivities,
