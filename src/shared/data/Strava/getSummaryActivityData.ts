@@ -1,7 +1,6 @@
 import { startOfYear } from 'date-fns';
 import { ActivitySummary } from '@/shared/types/ActivitySummary';
 import { SummaryActivity } from '@/shared/types/strava/SummaryActivity';
-import {  SportType , Activity} from '@/shared/types/Activity';
 
 async function fetchData(
   page: number,
@@ -33,7 +32,6 @@ async function fetchData(
 
   return (await res.json()) as SummaryActivity[];
 }
-
 
 export const getActivityDataFromFirstOfYear = async (
   accessToken: string | undefined,
@@ -92,7 +90,7 @@ export async function getSummaryActivityData(
 }
 
 export const loadActivityDataFromFirstOfYear = async (
-  accessToken: string | undefined,
+  accessToken: string | undefined
 ) => loadActivityData(accessToken, startOfYear(new Date()));
 export async function loadActivityData(
   accessToken: string | undefined,
@@ -114,13 +112,12 @@ export async function loadActivityData(
     while (totalRecords === perPage) {
       const activities = await fetchData(page, url, accessToken);
       allActivities = allActivities.concat(
-        activities
-          .filter(
-            x =>
-              x.id !== undefined &&
-              x.athlete?.id !== undefined &&
-              x.start_date !== undefined
-          )
+        activities.filter(
+          x =>
+            x.id !== undefined &&
+            x.athlete?.id !== undefined &&
+            x.start_date !== undefined
+        )
       );
       totalRecords = activities.length;
       page++;
