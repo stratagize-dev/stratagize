@@ -1,6 +1,8 @@
 import { startOfYear } from 'date-fns';
 import { ActivitySummary } from '@/shared/types/ActivitySummary';
 import { SummaryActivity } from '@/shared/types/strava/SummaryActivity';
+import { StravaEndpoints } from '@/shared/external/Strava/endpoints';
+import { ActivitiesApiFp } from '@/shared/strava-client';
 
 async function fetchData(
   page: number,
@@ -46,6 +48,8 @@ export async function getSummaryActivityData(
   if (!accessToken) return [];
 
   if (accessToken) {
+    const activitiesApi = ActivitiesApiFp({ accessToken: accessToken });
+
     const url = new URL('https://www.strava.com/api/v3/athlete/activities');
 
     url.searchParams.append('after', (after.getTime() / 1000).toString());
@@ -57,7 +61,14 @@ export async function getSummaryActivityData(
     let totalRecords = perPage;
 
     while (totalRecords === perPage) {
-      const activities = await fetchData(page, url, accessToken, signal);
+      const activities = await activitiesApi.getLoggedInAthleteActivities(
+        undefined,
+        after.getTime() / 1000,
+        page,
+        perPage
+      )();
+
+      // const activities = await fetchData(page, url, accessToken, signal);
       allActivities = allActivities.concat(
         activities
           .filter(
@@ -99,7 +110,7 @@ export async function loadActivityData(
   if (!accessToken) return [];
 
   if (accessToken) {
-    const url = new URL('https://www.strava.com/api/v3/athlete/activities');
+    const url = StravaEndpoints.athlete.activities;
 
     url.searchParams.append('after', (after.getTime() / 1000).toString());
     url.searchParams.append('per_page', '100');

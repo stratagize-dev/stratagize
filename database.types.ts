@@ -72,16 +72,43 @@ export interface Database {
           created_at: string
           hour_goal: number
           id: number
+          is_onboarded: boolean
+          refresh_token: string | null
         }
         Insert: {
           created_at?: string
           hour_goal: number
           id: number
+          is_onboarded: boolean
+          refresh_token?: string | null
         }
         Update: {
           created_at?: string
           hour_goal?: number
           id?: number
+          is_onboarded?: boolean
+          refresh_token?: string | null
+        }
+        Relationships: []
+      }
+      strava_events: {
+        Row: {
+          created_at: string | null
+          data: Json
+          id: number
+          is_processed: boolean
+        }
+        Insert: {
+          created_at?: string | null
+          data: Json
+          id?: number
+          is_processed?: boolean
+        }
+        Update: {
+          created_at?: string | null
+          data?: Json
+          id?: number
+          is_processed?: boolean
         }
         Relationships: []
       }
@@ -144,6 +171,7 @@ export interface Database {
         | "Windsurf"
         | "Workout"
         | "Yoga"
+        | "Unknown"
     }
     CompositeTypes: {
       [_ in never]: never

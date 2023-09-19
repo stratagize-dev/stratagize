@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import {
   getSummaryActivityData,
   getActivityDataFromFirstOfYear
-} from '@/shared/data/Strava/getSummaryActivityData';
+} from '@/shared/external/Strava/getSummaryActivityData';
 import { ActivitySummary } from '@/shared/types/ActivitySummary';
 import { useSession } from 'next-auth/react';
 import CustomSession from '@/shared/types/auth/CustomSession';
@@ -17,21 +17,19 @@ function mergeData(
   existingActivities: ActivitySummary[],
   newActivities: ActivitySummary[]
 ) {
-
   const mergedArray = [...existingActivities];
 
-  newActivities.forEach(( newActivity) => {
+  newActivities.forEach(newActivity => {
+    const indexOfActivity = existingActivities.findIndex(
+      existingActivity => existingActivity.id === newActivity.id
+    );
 
-     const indexOfActivity = existingActivities.findIndex(existingActivity => existingActivity.id === newActivity.id)
-
-     if(indexOfActivity === -1){
-       // doesn't exist just add it
-       mergedArray.push(newActivity)
-     }
-     else{
-        mergedArray[indexOfActivity] = newActivity
-     }
-
+    if (indexOfActivity === -1) {
+      // doesn't exist just add it
+      mergedArray.push(newActivity);
+    } else {
+      mergedArray[indexOfActivity] = newActivity;
+    }
   });
 
   return mergedArray;
@@ -98,12 +96,15 @@ export default function useGetActivityData() {
         } else {
           const twoWeeksPrior = subWeeks(lastActivityDate, 2);
           setLoading(true);
-          getSummaryActivityData(session?.accessToken, signal, twoWeeksPrior).then(
-            latestActivities =>
-              handleLatestActivities({
-                latestActivities,
-                shouldMergeData: true
-              })
+          getSummaryActivityData(
+            session?.accessToken,
+            signal,
+            twoWeeksPrior
+          ).then(latestActivities =>
+            handleLatestActivities({
+              latestActivities,
+              shouldMergeData: true
+            })
           );
         }
       }

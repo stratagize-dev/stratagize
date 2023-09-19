@@ -1,13 +1,13 @@
 // noinspection JSUnusedGlobalSymbols
 
-import NextAuth, { TokenSet } from 'next-auth';
+import NextAuth from 'next-auth';
 import StravaProvider from 'next-auth/providers/strava';
 import { AuthOptions } from 'next-auth';
 import { CustomJWT } from '@/shared/types/auth/CustomJWT';
 import CustomSession from '@/shared/types/auth/CustomSession';
+import { updateAthleteSession } from '@/shared/services/athleteService';
+import { refreshToken } from '@/shared/external/Strava/token/refreshToken';
 
-const clientId = '78158';
-const clientSecret = '518b64884cb8adc8d6ccf9602d2a101d8018a8bd';
 export const authOptions: AuthOptions = {
   providers: [
     StravaProvider({
@@ -32,26 +32,10 @@ export const authOptions: AuthOptions = {
 
       if (Date.now() < Number(token.exp) * 1000) {
         try {
-          const response = await fetch('https://www.strava.com/oauth/token', {
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams({
-              client_id: clientId,
-              client_secret: clientSecret,
-              grant_type: 'refresh_token',
-              refresh_token: customJWT.refreshToken ?? ''
-            }),
-            method: 'POST'
-          });
-
-          const tokens: TokenSet = await response.json();
-
-          if (!response.ok) throw tokens;
-
-          customJWT.accessToken = tokens.access_token;
-          customJWT.exp = Math.floor(
-            Date.now() / 1000 + (tokens.expires_at ?? 0)
-          );
-          customJWT.refreshToken = tokens.refresh_token;
+          const result = await refreshToken(customJWT.refreshToken ?? '');
+          customJWT.accessToken = result.accessToken;
+          customJWT.exp = result.expiry;
+          customJWT.refreshToken = result.refreshToken;
         } catch (e) {
           console.error(e);
         }
@@ -76,7 +60,14 @@ export const authOptions: AuthOptions = {
     createUser: message => console.debug('event', 'createUser', { message }),
     updateUser: message => console.debug('event', 'updateUser', { message }),
     linkAccount: message => console.debug('event', 'linkAccount', { message }),
-    session: message => console.debug('event', 'session', { message })
+    session: async message => {
+      const customSession = message.session as CustomSession;
+
+      if (customSession.athleteId && customSession.refreshToken) {
+        const athleteId = parseInt(customSession.athleteId);
+        await updateAthleteSession(athleteId, customSession.refreshToken);
+      }
+    }
   }
 };
 

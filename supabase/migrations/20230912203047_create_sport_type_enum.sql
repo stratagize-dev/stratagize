@@ -48,5 +48,6 @@ CREATE type sport_type as ENUM  (
             'Wheelchair',
             'Windsurf',
             'Workout',
-            'Yoga'
+            'Yoga',
+            'Unknown'
     )
