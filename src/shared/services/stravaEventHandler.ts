@@ -3,9 +3,12 @@ import { getAthlete } from '@/shared/services/athleteService';
 import { refreshToken } from '@/shared/external/Strava/token/refreshToken';
 import { logDatabaseError } from '@/shared/error';
 import { activityService } from '@/shared/services/activityService';
-import { ActivitiesApiFp } from '@/shared/strava-client';
+import { ActivitiesApiFp, DetailedActivity } from '@/shared/strava-client';
 
-async function createNewActivity(activityEvent: StravaEvent) {
+async function upsertActivity(
+  activityEvent: StravaEvent,
+  operation: (activity: DetailedActivity) => Promise<void>
+) {
   const { data: athlete } = await getAthlete(activityEvent.owner_id);
 
   if (athlete?.refresh_token) {
@@ -20,40 +23,45 @@ async function createNewActivity(activityEvent: StravaEvent) {
         activityEvent.object_id
       )(fetch);
 
-      await activityService().insertDetailedActivity(detailedActivity);
+      return operation(detailedActivity);
     }
   }
 
-  // TODO: Implement
+  // TODO: Implement something if
 }
 
-function updateExistingActivity(activityEvent: StravaEvent) {}
+const createNewActivity = async (activityEvent: StravaEvent) =>
+  upsertActivity(activityEvent, async activity => {
+    await activityService().insertDetailedActivity(activity);
+  });
 
-// function deleteActivity(activityEvent: StravaEvent) {
-//   return db
-//     .from('activities')
-//     .delete()
-//     .eq('id', activityEvent.object_id)
-//     .eq('athlete_id', activityEvent.owner_id);
-// }
+const updateExistingActivity = async (activityEvent: StravaEvent) =>
+  upsertActivity(activityEvent, async activity => {
+    await activityService().updateDetailedActivity(activity);
+  });
 
 async function handleActivityStravaEvent(activityEvent: StravaEvent) {
-  // switch (activityEvent.aspect_type) {
-  //   case 'create':
-  //     await createNewActivity(activityEvent);
-  //   case 'update':
-  //     updateExistingActivity(activityEvent);
-  //   case 'delete':
-  //     const { error } = await activityService().deleteActivity(
-  //       activityEvent.object_id
-  //     );
-  //     logDatabaseError('error deleting activity', error);
-  // }
+  switch (activityEvent.aspect_type) {
+    case 'create':
+      return createNewActivity(activityEvent);
+    case 'update':
+      return updateExistingActivity(activityEvent);
+    case 'delete':
+      const { error } = await activityService().deleteActivity(
+        activityEvent.object_id
+      );
+      logDatabaseError('error deleting activity', error);
+  }
 }
 
 export async function handleStravaEvent(event: StravaEvent) {
   if (event.object_type === 'activity') {
-    console.debug('new event received', { event });
-    await handleActivityStravaEvent(event);
+    // console.debug('new event received', { event });
+    //
+    // await stravaEventService().insert({
+    //   data: JSON.stringify(event),
+    //   is_processed: false
+    // });
+    return handleActivityStravaEvent(event);
   }
 }

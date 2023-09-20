@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json('success');
   } catch (e) {
     console.error('stuart', e);
-    return NextResponse.json(e);
+    return NextResponse.json(JSON.stringify(e));
   }
 }
 export async function GET(request: NextRequest) {

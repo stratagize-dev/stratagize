@@ -1,7 +1,6 @@
 import { db } from '@/shared/db';
 import { Athlete } from '@/shared/types/Athlete';
 import { logDatabaseError } from '@/shared/error';
-import { Activity } from '@/shared/types/Activity';
 
 const athletesTable = db.from('athletes');
 
@@ -22,7 +21,7 @@ export const updateAthleteSession = async (
 
     logDatabaseError('error updating refresh token', error);
   } else {
-    const { data, error } = await insertAthlete({
+    const { error } = await insertAthlete({
       id: athleteId,
       hour_goal: 365,
       is_onboarded: false,

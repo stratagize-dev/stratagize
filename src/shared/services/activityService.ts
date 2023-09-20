@@ -1,12 +1,13 @@
 import { db } from '@/shared/db';
 import { SummaryActivity } from '@/shared/types/strava/SummaryActivity';
 import { Activity, SportType } from '@/shared/types/Activity';
-import { DetailedActivity } from '@/shared/strava-client';
+import * as StravaApi from '@/shared/strava-client';
 import { logDatabaseError } from '@/shared/error';
 
 const deleteActivity = (activityId: number) => {
   return db.from('activities').delete().eq('id', activityId);
 };
+
 const getActivitiesForAthlete = async (athleteId: string) => {
   return db
     .from('activities')
@@ -29,20 +30,24 @@ const saveSummaryActivities = async (summaryActivities: SummaryActivity[]) => {
   return db.from('activities').insert<Activity.Insert>(activities).select();
 };
 
-const insertDetailedActivity = async (detailedActivity: DetailedActivity) => {
+const insertDetailedActivity = async (
+  detailedActivity: StravaApi.DetailedActivity
+) => {
+  const defaultDate = (date?: Date) => (date ? new Date(date) : new Date());
   const activity: Activity.Insert = {
     athlete_id: detailedActivity.athlete?.id ?? 0,
     name: detailedActivity.name ?? '',
     id: detailedActivity.id ?? 0,
-    moving_time: detailedActivity.movingTime ?? 0,
-    sport_type: detailedActivity.sportType
-      ? (detailedActivity.sportType.toString() as SportType)
-      : 'Unknown',
-    start_date: new Date().toISOString(), //  detailedActivity.startDate?.toISOString() ?? '',
-    start_date_local: new Date().toISOString() //detailedActivity.startDateLocal?.toISOString()
+    moving_time: detailedActivity.moving_time ?? 0,
+    sport_type:
+      detailedActivity.sport_type !== undefined
+        ? (StravaApi.SportType[detailedActivity.sport_type] as SportType)
+        : 'Unknown',
+    start_date: defaultDate(detailedActivity.start_date).toISOString(),
+    start_date_local: defaultDate(
+      detailedActivity.start_date_local
+    ).toISOString()
   };
-
-  console.debug('activity', activity);
 
   const { data, error } = await db
     .from('activities')
@@ -51,13 +56,43 @@ const insertDetailedActivity = async (detailedActivity: DetailedActivity) => {
 
   logDatabaseError('error inserting detailed activity', error);
 
-  console.debug('activity inserted', { data, error });
   return { activity: data, error };
+};
+
+const updateDetailedActivity = async (
+  detailedActivity: StravaApi.DetailedActivity
+) => {
+  const defaultDate = (date?: Date) => (date ? new Date(date) : new Date());
+  if (detailedActivity.id) {
+    const activity: Activity.Update = {
+      name: detailedActivity.name ?? '',
+      moving_time: detailedActivity.moving_time ?? 0,
+      sport_type:
+        detailedActivity.sport_type !== undefined
+          ? (StravaApi.SportType[detailedActivity.sport_type] as SportType)
+          : 'Unknown',
+      start_date: defaultDate(detailedActivity.start_date).toISOString(),
+      start_date_local: defaultDate(
+        detailedActivity.start_date_local
+      ).toISOString()
+    };
+
+    const { data, error } = await db
+      .from('activities')
+      .update<Activity.Update>(activity)
+      .eq('id', detailedActivity.id)
+      .select();
+
+    logDatabaseError('error updating detailed activity', error);
+
+    return { activity: data, error };
+  }
 };
 
 export const activityService = () => ({
   deleteActivity,
   getActivitiesForAthlete,
   saveSummaryActivities,
-  insertDetailedActivity
+  insertDetailedActivity,
+  updateDetailedActivity
 });
