@@ -1,38 +1,41 @@
 import { hoursToSeconds } from 'date-fns';
 import {
   ActivityStatsResult,
-  InternalSportType,
   SportsStatistic
 } from '@/components/components/hooks/types';
 import { time } from '@/shared/types/time';
 import calculateCommon from '@/components/components/hooks/utils/calculateCommon';
-import { SportType } from '@/shared/types/strava/sportType';
-import { ActivitySummary } from '@/shared/types/ActivitySummary';
 import {
   calculateActivityStreak,
   calculateMovingTime,
   fromBeginningOfYear
 } from '@/shared/utils';
-
+import { SportType } from '@/shared/types/Activity';
+import { SummaryActivity } from '@/shared/strava-client';
 function calculateSportsStatistics(
-  sports: Record<
-    SportType | 'unknown',
-    {
-      totalTimeSeconds: number;
-      count: number;
-    }
+  sports: Partial<
+    Record<
+      SportType,
+      {
+        totalTimeSeconds: number;
+        count: number;
+      }
+    >
   >,
   totalMovingTimeSeconds: number
 ) {
   const sportStatistics: SportsStatistic[] = [];
   for (const sportsType in sports) {
-    const sportsStats = sports[sportsType];
-    sportStatistics.push({
-      sportType: sportsType as InternalSportType,
-      totalMovingTime: time(sportsStats.totalTimeSeconds),
-      percentage: (sportsStats.totalTimeSeconds / totalMovingTimeSeconds) * 100,
-      activityCount: sportsStats.count
-    });
+    const sportsStats = sports[sportsType as SportType];
+    if (sportsStats) {
+      sportStatistics.push({
+        sportType: sportsType as SportType,
+        totalMovingTime: time(sportsStats.totalTimeSeconds),
+        percentage:
+          (sportsStats.totalTimeSeconds / totalMovingTimeSeconds) * 100,
+        activityCount: sportsStats.count
+      });
+    }
   }
   return sportStatistics;
 }
@@ -40,7 +43,7 @@ function calculateSportsStatistics(
 const calculateAnnualActivityStats = (
   targetGoalHours: number,
   today: Date,
-  activityStats: ActivitySummary[]
+  activityStats: SummaryActivity[]
 ): ActivityStatsResult['year'] => {
   const {
     dayOfYear,

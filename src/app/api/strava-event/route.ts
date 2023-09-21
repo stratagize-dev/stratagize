@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { StravaEvent } from '@/shared/types/strava/events/StravaEvent';
-import { getAthlete } from '@/shared/services/athleteService';
 import { refreshToken } from '@/shared/external/Strava/token/refreshToken';
 import { logDatabaseError } from '@/shared/error';
 import { activityService } from '@/shared/services/activityService';
 import { ActivitiesApiFp, DetailedActivity } from '@/shared/strava-client';
 import { Database } from '../../../../database.types';
+import athleteService from '@/shared/services/athleteService';
 interface WebhookPayload {
   type: 'INSERT';
   table: 'strava_events';
@@ -18,7 +18,9 @@ async function upsertActivity(
   activityEvent: StravaEvent,
   operation: (activity: DetailedActivity) => Promise<void>
 ) {
-  const { data: athlete } = await getAthlete(activityEvent.owner_id);
+  const { data: athlete } = await athleteService.getAthlete(
+    activityEvent.owner_id
+  );
 
   if (athlete?.refresh_token) {
     const tokenResult = await refreshToken(athlete.refresh_token);

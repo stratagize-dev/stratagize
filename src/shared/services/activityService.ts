@@ -1,10 +1,9 @@
 import { db } from '@/shared/db';
-import { SummaryActivity } from '@/shared/types/strava/SummaryActivity';
-import { Activity, SportType } from '@/shared/types/Activity';
 import * as StravaApi from '@/shared/strava-client';
+import { Activity, SportType } from '@/shared/types/Activity';
 import { logDatabaseError } from '@/shared/error';
 
-const defaultDate = (date?: Date) => (date ? new Date(date) : new Date());
+const defaultDate = (date?: string) => date ?? new Date().toISOString();
 
 const mapCommonFields = (detailedActivity: StravaApi.DetailedActivity) => ({
   name: detailedActivity.name ?? '',
@@ -13,10 +12,8 @@ const mapCommonFields = (detailedActivity: StravaApi.DetailedActivity) => ({
     detailedActivity.sport_type !== undefined
       ? (StravaApi.SportType[detailedActivity.sport_type] as SportType)
       : 'Unknown',
-  start_date: defaultDate(detailedActivity.start_date).toISOString(),
-  start_date_local: defaultDate(
-    detailedActivity.start_date_local
-  ).toISOString(),
+  start_date: defaultDate(detailedActivity.start_date),
+  start_date_local: defaultDate(detailedActivity.start_date_local),
   detailed_event: JSON.stringify(detailedActivity)
 });
 
@@ -32,7 +29,9 @@ const getActivitiesForAthlete = async (athleteId: string) => {
     .returns<Activity.Row[]>();
 };
 
-const saveSummaryActivities = async (summaryActivities: SummaryActivity[]) => {
+const saveSummaryActivities = async (
+  summaryActivities: StravaApi.SummaryActivity[]
+) => {
   const activities: Activity.Insert[] = summaryActivities.map(value => ({
     athlete_id: value.athlete?.id ?? 0,
     name: value.name ?? '',

@@ -1879,13 +1879,13 @@ export interface SummaryActivity extends MetaActivity {
    * @type {Date}
    * @memberof SummaryActivity
    */
-  start_date?: Date;
+  start_date?: string;
   /**
    * The time at which the activity was started in the local timezone.
    * @type {Date}
    * @memberof SummaryActivity
    */
-  start_date_local?: Date;
+  start_date_local?: string;
   /**
    * The timezone of the activity
    * @type {string}

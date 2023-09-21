@@ -5,12 +5,12 @@ import calculateMonthlyActivityStats from '@/components/components/hooks/utils/c
 import calculateDailyActivityStats from '@/components/components/hooks/utils/calculateDailyActivityStats';
 import calculateCommon from '@/components/components/hooks/utils/calculateCommon';
 import { useMemo } from 'react';
-import { ActivitySummary } from '@/shared/types/ActivitySummary';
+import { SummaryActivity } from '@/shared/strava-client';
 
 const useActivityStats = (
   targetGoalHours: number,
   today: Date,
-  activityStats: ActivitySummary[]
+  activityStats: SummaryActivity[]
 ): ActivityStatsResult =>
   useMemo(() => {
     const { secondsPerDay } = calculateCommon(targetGoalHours, today);

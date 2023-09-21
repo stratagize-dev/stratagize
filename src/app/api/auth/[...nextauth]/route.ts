@@ -5,7 +5,7 @@ import StravaProvider from 'next-auth/providers/strava';
 import { AuthOptions } from 'next-auth';
 import { CustomJWT } from '@/shared/types/auth/CustomJWT';
 import CustomSession from '@/shared/types/auth/CustomSession';
-import { updateAthleteSession } from '@/shared/services/athleteService';
+import athleteService from '@/shared/services/athleteService';
 import { refreshToken } from '@/shared/external/Strava/token/refreshToken';
 
 export const authOptions: AuthOptions = {
@@ -65,7 +65,10 @@ export const authOptions: AuthOptions = {
 
       if (customSession.athleteId && customSession.refreshToken) {
         const athleteId = parseInt(customSession.athleteId);
-        await updateAthleteSession(athleteId, customSession.refreshToken);
+        await athleteService.updateAthleteSession(
+          athleteId,
+          customSession.refreshToken
+        );
       }
     }
   }

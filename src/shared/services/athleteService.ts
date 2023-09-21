@@ -4,10 +4,10 @@ import { logDatabaseError } from '@/shared/error';
 
 const athletesTable = db.from('athletes');
 
-export const getAthlete = (athleteId: number) =>
+const getAthlete = (athleteId: number) =>
   db.from('athletes').select('*').eq('id', athleteId).single<Athlete.Row>();
 
-export const updateAthleteSession = async (
+const updateAthleteSession = async (
   athleteId: number,
   refreshToken: string
 ) => {
@@ -34,3 +34,11 @@ export const updateAthleteSession = async (
 
 const insertAthlete = async (athlete: Athlete.Insert) =>
   athletesTable.insert(athlete).select();
+
+const athleteService = {
+  getAthlete,
+  insertAthlete,
+  updateAthleteSession
+};
+
+export default athleteService;

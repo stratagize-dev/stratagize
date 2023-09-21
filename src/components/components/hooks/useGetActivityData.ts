@@ -3,7 +3,6 @@ import {
   getSummaryActivityData,
   getActivityDataFromFirstOfYear
 } from '@/shared/external/Strava/getSummaryActivityData';
-import { ActivitySummary } from '@/shared/types/ActivitySummary';
 import { useSession } from 'next-auth/react';
 import CustomSession from '@/shared/types/auth/CustomSession';
 import { useAtom } from 'jotai';
@@ -12,10 +11,10 @@ import {
   lastActivityDateAtom
 } from '@/components/components/state/atoms';
 import { startOfYear, subMonths, subWeeks } from 'date-fns';
-
+import { SummaryActivity } from '@/shared/strava-client';
 function mergeData(
-  existingActivities: ActivitySummary[],
-  newActivities: ActivitySummary[]
+  existingActivities: SummaryActivity[],
+  newActivities: SummaryActivity[]
 ) {
   const mergedArray = [...existingActivities];
 
@@ -50,10 +49,10 @@ export default function useGetActivityData() {
     shouldMergeData
   }: {
     shouldMergeData: boolean;
-    latestActivities: ActivitySummary[];
+    latestActivities: SummaryActivity[];
   }) => {
     const newLastActivityDateString =
-      latestActivities[latestActivities.length - 1].startDate;
+      latestActivities[latestActivities.length - 1].start_date;
 
     const activities = shouldMergeData
       ? mergeData(storedActivities, latestActivities)
@@ -113,7 +112,12 @@ export default function useGetActivityData() {
     return () => {
       controller?.abort();
     };
-  }, [session?.accessToken, lastActivityDateString]);
+  }, [
+    session?.accessToken,
+    lastActivityDateString,
+    handleLatestActivities,
+    hasFetchedLatestData
+  ]);
 
   return { data: storedActivities, loading };
 }

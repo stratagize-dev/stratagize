@@ -1,6 +1,6 @@
 import useActivityStats from '@/components/components/hooks/useActivityStats';
 import { addDays, startOfYear } from 'date-fns';
-import { ActivitySummary } from '@/shared/types/ActivitySummary';
+import * as StravaApi from '@/shared/strava-client';
 
 const targetGoalHours = 365;
 const OneHourInSeconds = 3600;
@@ -13,15 +13,15 @@ const today = new Date(
 );
 
 const createActivities = (startDate: Date, endDate: Date, seconds: number) => {
-  let activities: ActivitySummary[] = [];
+  let activities: StravaApi.SummaryActivity[] = [];
   let currentDate = new Date(startDate);
   while (currentDate <= endDate) {
-    let newObject: ActivitySummary = {
+    let newObject: StravaApi.SummaryActivity = {
       id: 1,
-      athleteId: 2,
-      startDate: currentDate.toString(),
-      movingTime: seconds,
-      startDateLocal: currentDate.toString()
+      athlete: { id: 2 },
+      start_date: currentDate.toString(),
+      moving_time: seconds,
+      start_date_local: currentDate.toString()
     };
     activities.push(newObject);
     currentDate = addDays(currentDate, 1);
@@ -33,29 +33,29 @@ const oneHourADayActivities = createActivities(
   today,
   OneHourInSeconds
 );
-const activities: ActivitySummary[] = [
+const activities: StravaApi.SummaryActivity[] = [
   {
     id: 1,
-    athleteId: 2,
-    startDate: new Date().toString(),
-    movingTime: TwentyNineMinutesInSeconds,
-    startDateLocal:
+    athlete: { id: 2 },
+    start_date: new Date().toISOString(),
+    moving_time: TwentyNineMinutesInSeconds,
+    start_date_local:
       'Sun Jan 1 2023 16:00:19 GMT+1200 (New Zealand Standard Time)'
   },
   {
     id: 1,
-    athleteId: 2,
-    startDate: new Date().toString(),
-    movingTime: FiftyEightMinutes,
-    startDateLocal:
+    athlete: { id: 2 },
+    start_date: new Date().toISOString(),
+    moving_time: FiftyEightMinutes,
+    start_date_local:
       'Mon May 1 2023 16:00:19 GMT+1200 (New Zealand Standard Time)'
   },
   {
     id: 1,
-    athleteId: 2,
-    startDate: new Date().toString(),
-    movingTime: OneHourTwentyFiveMinutes,
-    startDateLocal:
+    athlete: { id: 2 },
+    start_date: new Date().toISOString(),
+    moving_time: OneHourTwentyFiveMinutes,
+    start_date_local:
       'Thu May 18 2023 16:00:19 GMT+1200 (New Zealand Standard Time)'
   }
 ];

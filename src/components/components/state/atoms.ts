@@ -1,9 +1,8 @@
 import { atomWithStorage } from 'jotai/utils';
-import { ActivitySummary } from '@/shared/types/ActivitySummary';
-
+import { SummaryActivity } from '@/shared/strava-client';
 export const annualHourGoalAtom = atomWithStorage('annualHourGoalAtom', 365);
 
-export const activitiesAtom = atomWithStorage<ActivitySummary[]>(
+export const activitiesAtom = atomWithStorage<SummaryActivity[]>(
   'activitySummary',
   []
 );

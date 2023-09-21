@@ -6,10 +6,9 @@ import {
   startOfToday,
   startOfYear
 } from 'date-fns';
-import { ActivitySummary } from '@/shared/types/ActivitySummary';
 import { ActivityTotals } from '@/shared/ActivityTotals';
-import { InternalSportType } from '@/components/components/hooks/types';
-
+import * as StravaApi from '@/shared/strava-client';
+import { convertSportType, SportType } from '@/shared/types/Activity';
 export const secondsToHourDuration = (totalSeconds: number): HourDuration => {
   const absoluteSeconds = Math.abs(totalSeconds);
   const hours = Math.floor(secondsToHours(absoluteSeconds));
@@ -25,10 +24,14 @@ export const secondsToHourDuration = (totalSeconds: number): HourDuration => {
 };
 
 export const calculateActivityStreak = (
-  activities: ActivitySummary[],
-  filter?: (activities: ActivitySummary[]) => ActivitySummary[]
+  activities: StravaApi.SummaryActivity[],
+  filter?: (
+    activities: StravaApi.SummaryActivity[]
+  ) => StravaApi.SummaryActivity[]
 ) => {
-  const filterActivities = filter ? filter : (act: ActivitySummary[]) => act;
+  const filterActivities = filter
+    ? filter
+    : (act: StravaApi.SummaryActivity[]) => act;
 
   let maxStreak = 0;
   let currentStreak = 0;
@@ -37,10 +40,10 @@ export const calculateActivityStreak = (
   let maxStreakStartDate: Date | undefined = undefined;
   let activeDayCount = 0;
   filterActivities(activities).forEach(summaryActivity => {
-    if (!summaryActivity.startDate) {
+    if (!summaryActivity.start_date) {
       return;
     }
-    const activityDate = new Date(summaryActivity.startDate);
+    const activityDate = new Date(summaryActivity.start_date);
     const activityDay = getDayOfYear(activityDate);
 
     if (activityDay === previousDay) return; // multiple activities for the same day
@@ -70,26 +73,35 @@ export const calculateActivityStreak = (
   };
 };
 export const calculateMovingTime = (
-  activities: ActivitySummary[],
-  filter?: (activities: ActivitySummary[]) => ActivitySummary[]
+  activities: StravaApi.SummaryActivity[],
+  filter?: (
+    activities: StravaApi.SummaryActivity[]
+  ) => StravaApi.SummaryActivity[]
 ): ActivityTotals => {
-  const filterToApply = filter ? filter : (act: ActivitySummary[]) => act;
+  const filterToApply = filter
+    ? filter
+    : (act: StravaApi.SummaryActivity[]) => act;
 
   const accumulator: ActivityTotals = {
     totalMovingTime: 0,
     totalCount: 0,
-    sports: { unknown: { totalTimeSeconds: 0, count: 0 } }
+    sports: { Unknown: { totalTimeSeconds: 0, count: 0 } }
   };
 
   return filterToApply(activities).reduce((runningTotal, currentActivity) => {
-    const sportType: InternalSportType = currentActivity.sportType ?? 'unknown';
-    const movingTime = currentActivity.movingTime ?? 0;
-    if (!runningTotal.sports[sportType]) {
-      runningTotal.sports[sportType] = { count: 0, totalTimeSeconds: 0 };
+    const sportType: SportType = convertSportType(currentActivity.sport_type);
+    const movingTime = currentActivity.moving_time ?? 0;
+
+    let total = runningTotal.sports[sportType];
+
+    if (total === undefined) {
+      total = { count: 0, totalTimeSeconds: 0 };
     }
 
-    runningTotal.sports[sportType].totalTimeSeconds += movingTime;
-    runningTotal.sports[sportType].count++;
+    total.totalTimeSeconds += movingTime;
+    total.count++;
+
+    runningTotal.sports[sportType] = total;
     runningTotal.totalCount++;
     runningTotal.totalMovingTime += movingTime;
 
@@ -98,23 +110,26 @@ export const calculateMovingTime = (
 };
 
 const filterFromDate = (
-  activities: ActivitySummary[],
+  activities: StravaApi.SummaryActivity[],
   fromDate: Date
-): ActivitySummary[] => {
+): StravaApi.SummaryActivity[] => {
   return activities.filter(activity => {
-    return activity.startDate
-      ? new Date(activity.startDate) > fromDate //BUG startOfMonthDate
+    return activity.start_date
+      ? new Date(activity.start_date) > fromDate //BUG startOfMonthDate
       : false;
   });
 };
 
-export const fromToday = (activities: ActivitySummary[]): ActivitySummary[] =>
-  filterFromDate(activities, startOfToday());
+export const fromToday = (
+  activities: StravaApi.SummaryActivity[]
+): StravaApi.SummaryActivity[] => filterFromDate(activities, startOfToday());
 
 export const fromBeginningOfMonth = (
-  activities: ActivitySummary[]
-): ActivitySummary[] => filterFromDate(activities, startOfMonth(new Date()));
+  activities: StravaApi.SummaryActivity[]
+): StravaApi.SummaryActivity[] =>
+  filterFromDate(activities, startOfMonth(new Date()));
 
 export const fromBeginningOfYear = (
-  activities: ActivitySummary[]
-): ActivitySummary[] => filterFromDate(activities, startOfYear(new Date()));
+  activities: StravaApi.SummaryActivity[]
+): StravaApi.SummaryActivity[] =>
+  filterFromDate(activities, startOfYear(new Date()));
