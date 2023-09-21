@@ -6,3 +6,4 @@ create table
                              is_processed boolean not null default false,
                              constraint strava_events_pkey primary key (id)
 ) tablespace pg_default;
+

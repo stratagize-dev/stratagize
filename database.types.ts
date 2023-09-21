@@ -38,6 +38,7 @@ export interface Database {
         Row: {
           athlete_id: number
           created_at: string
+          detailed_event: Json | null
           id: number
           moving_time: number
           name: string
@@ -48,6 +49,7 @@ export interface Database {
         Insert: {
           athlete_id: number
           created_at?: string
+          detailed_event?: Json | null
           id: number
           moving_time: number
           name: string
@@ -58,6 +60,7 @@ export interface Database {
         Update: {
           athlete_id?: number
           created_at?: string
+          detailed_event?: Json | null
           id?: number
           moving_time?: number
           name?: string
@@ -65,7 +68,14 @@ export interface Database {
           start_date?: string
           start_date_local?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "activities_athlete_id_fkey"
+            columns: ["athlete_id"]
+            referencedRelation: "athletes"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       athletes: {
         Row: {

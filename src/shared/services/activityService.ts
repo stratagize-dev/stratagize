@@ -4,6 +4,22 @@ import { Activity, SportType } from '@/shared/types/Activity';
 import * as StravaApi from '@/shared/strava-client';
 import { logDatabaseError } from '@/shared/error';
 
+const defaultDate = (date?: Date) => (date ? new Date(date) : new Date());
+
+const mapCommonFields = (detailedActivity: StravaApi.DetailedActivity) => ({
+  name: detailedActivity.name ?? '',
+  moving_time: detailedActivity.moving_time ?? 0,
+  sport_type:
+    detailedActivity.sport_type !== undefined
+      ? (StravaApi.SportType[detailedActivity.sport_type] as SportType)
+      : 'Unknown',
+  start_date: defaultDate(detailedActivity.start_date).toISOString(),
+  start_date_local: defaultDate(
+    detailedActivity.start_date_local
+  ).toISOString(),
+  detailed_event: JSON.stringify(detailedActivity)
+});
+
 const deleteActivity = (activityId: number) => {
   return db.from('activities').delete().eq('id', activityId);
 };
@@ -33,20 +49,10 @@ const saveSummaryActivities = async (summaryActivities: SummaryActivity[]) => {
 const insertDetailedActivity = async (
   detailedActivity: StravaApi.DetailedActivity
 ) => {
-  const defaultDate = (date?: Date) => (date ? new Date(date) : new Date());
   const activity: Activity.Insert = {
     athlete_id: detailedActivity.athlete?.id ?? 0,
-    name: detailedActivity.name ?? '',
     id: detailedActivity.id ?? 0,
-    moving_time: detailedActivity.moving_time ?? 0,
-    sport_type:
-      detailedActivity.sport_type !== undefined
-        ? (StravaApi.SportType[detailedActivity.sport_type] as SportType)
-        : 'Unknown',
-    start_date: defaultDate(detailedActivity.start_date).toISOString(),
-    start_date_local: defaultDate(
-      detailedActivity.start_date_local
-    ).toISOString()
+    ...mapCommonFields(detailedActivity)
   };
 
   const { data, error } = await db
@@ -62,19 +68,9 @@ const insertDetailedActivity = async (
 const updateDetailedActivity = async (
   detailedActivity: StravaApi.DetailedActivity
 ) => {
-  const defaultDate = (date?: Date) => (date ? new Date(date) : new Date());
   if (detailedActivity.id) {
     const activity: Activity.Update = {
-      name: detailedActivity.name ?? '',
-      moving_time: detailedActivity.moving_time ?? 0,
-      sport_type:
-        detailedActivity.sport_type !== undefined
-          ? (StravaApi.SportType[detailedActivity.sport_type] as SportType)
-          : 'Unknown',
-      start_date: defaultDate(detailedActivity.start_date).toISOString(),
-      start_date_local: defaultDate(
-        detailedActivity.start_date_local
-      ).toISOString()
+      ...mapCommonFields(detailedActivity)
     };
 
     const { data, error } = await db
