@@ -17,7 +17,6 @@ export default async function Goal({ session }: Props) {
   if (activities) {
     return (
       <>
-        <div>Goal</div>
         <Stats activities={activities} />
       </>
     );

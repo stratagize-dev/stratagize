@@ -1,5 +1,5 @@
 import { ActivityTotals } from '@/shared/ActivityTotals';
-import { Activity, convertSportType, SportType } from '@/shared/types/Activity';
+import { Activity, SportType } from '@/shared/types/Activity';
 
 export const calculateMovingTime = (
   activities: Activity.Row[],
