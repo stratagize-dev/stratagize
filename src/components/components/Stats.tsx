@@ -9,14 +9,18 @@ import HorizontalSpacer from '@/components/components/components/HorizontalSpace
 import SportsBreakdown from '@/components/components/components/SportsBreakdown';
 import { Activity } from '@/shared/types/Activity';
 import statisticsService from '@/shared/services/statistics/statisticsService';
+import { useHydrateAtoms } from 'jotai/utils';
 function humanDay(days: number) {
   return days == 1 ? `${days} day` : `${days} days`;
 }
 
 interface Props {
+  goalHours: number;
   activities: Activity.Row[];
 }
-export default function Stats({ activities }: Props) {
+export default function Stats({ activities, goalHours }: Props) {
+  useHydrateAtoms([[annualHourGoalAtom, goalHours]]);
+
   const [annualHourGoal, setAnnualHourGoal] = useAtom(annualHourGoalAtom);
 
   const { day, month, requiredActivityPerDay, year } =

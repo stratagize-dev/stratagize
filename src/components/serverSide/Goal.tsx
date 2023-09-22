@@ -1,15 +1,13 @@
 import Stats from '@/components/components/Stats';
 import { activityService } from '@/shared/services/activityService';
-import CustomSession from '@/shared/types/auth/CustomSession';
+import { Athlete } from '@/shared/types/Athlete';
 
 interface Props {
-  session: CustomSession;
+  athlete: Athlete.Row;
 }
-export default async function Goal({ session }: Props) {
-  const athleteId = Number(session?.athleteId);
-
+export default async function Goal({ athlete }: Props) {
   const { data: activities, error } =
-    await activityService().getActivitiesForAthlete(athleteId);
+    await activityService().getActivitiesForAthlete(athlete.id);
 
   if (error) {
     return <>An error occured loading the activities</>;
@@ -17,7 +15,7 @@ export default async function Goal({ session }: Props) {
   if (activities) {
     return (
       <>
-        <Stats activities={activities} />
+        <Stats activities={activities} goalHours={athlete.hour_goal} />
       </>
     );
   } else {
