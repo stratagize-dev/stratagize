@@ -11,11 +11,14 @@ export default async function Goal({ session }: Props) {
   const { data: activities, error } =
     await activityService().getActivitiesForAthlete(athleteId);
 
+  if (error) {
+    return <>An error occured loading the activities</>;
+  }
   if (activities) {
     return (
       <>
         <div>Goal</div>
-        <Stats loading={false} activities={activities} />
+        <Stats activities={activities} />
       </>
     );
   } else {

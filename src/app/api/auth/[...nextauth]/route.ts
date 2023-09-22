@@ -5,7 +5,6 @@ import StravaProvider from 'next-auth/providers/strava';
 import { AuthOptions } from 'next-auth';
 import { CustomJWT } from '@/shared/types/auth/CustomJWT';
 import CustomSession from '@/shared/types/auth/CustomSession';
-import athleteRepository from '@/shared/repository/athleteRepository';
 import { refreshToken } from '@/shared/external/Strava/token/refreshToken';
 import sessionService from '@/shared/services/sessionService';
 

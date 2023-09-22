@@ -11,7 +11,7 @@ async function performOperationAndLogError<T>(
 ) {
   const result = await operation();
 
-  logDatabaseError('an error occured inserting athlete', result.error);
+  logDatabaseError(errorMessage, result.error);
 
   return result;
 }

@@ -1,6 +1,6 @@
 import { calculateCommon } from '@/shared/services/statistics';
 
-import { Time, time } from '@/shared/types/time';
+import { time } from '@/shared/types/time';
 import calculateAnnualActivityStats from '@/shared/services/statistics/calculateAnnualActivityStats';
 import { Activity } from '@/shared/types/Activity';
 import calculateMonthlyActivityStats from '@/shared/services/statistics/calculateMonthlyActivityStats';

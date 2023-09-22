@@ -3,9 +3,6 @@ import SignOutButton from '@/components/SignOutButton';
 import { getServerCustomSession } from '@/shared/auth';
 
 import Goal from '@/components/serverSide/Goal';
-import athleteRepository from '@/shared/repository/athleteRepository';
-import { useHydrateAtoms } from 'jotai/react/utils/useHydrateAtoms';
-import { annualHourGoalAtom } from '@/app/state/atoms';
 
 export default async function Home() {
   const session = await getServerCustomSession();

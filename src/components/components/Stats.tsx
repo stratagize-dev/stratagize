@@ -7,7 +7,6 @@ import ProgressCircle from '@/components/components/components/ProgressCircle';
 import { StatsRow } from '@/components/components/components/StatsRow';
 import HorizontalSpacer from '@/components/components/components/HorizontalSpacer';
 import SportsBreakdown from '@/components/components/components/SportsBreakdown';
-import LoadingDiv from '@/components/LoadingDiv';
 import { Activity } from '@/shared/types/Activity';
 import statisticsService from '@/shared/services/statistics/statisticsService';
 function humanDay(days: number) {
@@ -15,10 +14,9 @@ function humanDay(days: number) {
 }
 
 interface Props {
-  loading: boolean;
   activities: Activity.Row[];
 }
-export default function Stats({ loading, activities }: Props) {
+export default function Stats({ activities }: Props) {
   const [annualHourGoal, setAnnualHourGoal] = useAtom(annualHourGoalAtom);
 
   const { day, month, requiredActivityPerDay, year } =
@@ -36,8 +34,7 @@ export default function Stats({ loading, activities }: Props) {
           />
         </div>
         <HorizontalSpacer />
-        <LoadingDiv
-          loading={loading}
+        <div
           className={`grid gap-4 place-items-center grid-cols-2 md:grid-cols-3 lg:grid-cols-5 mb-4 `}
         >
           <div className="col-span-2 md:col-span-3 lg:col-span-2">
@@ -61,10 +58,9 @@ export default function Stats({ loading, activities }: Props) {
               message={'Per day to complete'}
             />
           </div>
-        </LoadingDiv>
+        </div>
         <HorizontalSpacer />
         <StatsRow
-          loading={loading}
           title={year.totalMovingTime().human}
           subTitle="Total moving time for the year"
           percentage={year.percentageAhead}
@@ -83,7 +79,6 @@ export default function Stats({ loading, activities }: Props) {
           ]}
         />
         <StatsRow
-          loading={loading}
           title={month.totalMovingTime().human}
           subTitle="Total moving time for the month"
           percentage={month.percentageAhead}
@@ -104,7 +99,6 @@ export default function Stats({ loading, activities }: Props) {
           ]}
         />
         <StatsRow
-          loading={loading}
           title={day.totalMovingTime().human}
           subTitle="Total moving time for the day"
           percentage={day.percentageAhead}
@@ -120,7 +114,6 @@ export default function Stats({ loading, activities }: Props) {
           ]}
         />
         <StatsRow
-          loading={loading}
           title={humanDay(year.streaks.maxStreakDays)}
           subTitle="Max activity streak"
           period="year"
@@ -139,9 +132,9 @@ export default function Stats({ loading, activities }: Props) {
             }
           ]}
         />
-        <LoadingDiv loading={loading} className="flex  justify-center">
+        <div className="flex  justify-center">
           <SportsBreakdown sportStatistics={year.sportStatistics} />
-        </LoadingDiv>
+        </div>
       </div>
     </>
   );

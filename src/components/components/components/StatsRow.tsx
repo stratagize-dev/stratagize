@@ -5,7 +5,6 @@ import HorizontalSpacer from '@/components/components/components/HorizontalSpace
 import LoadingDiv from '@/components/LoadingDiv';
 
 interface Props {
-  loading: boolean;
   title: string;
   subTitle: string;
   percentage?: number;
@@ -13,7 +12,6 @@ interface Props {
   messageBlocks: { id: string; header: string; message: string }[];
 }
 export const StatsRow = ({
-  loading,
   title,
   subTitle,
   percentage,
@@ -24,10 +22,7 @@ export const StatsRow = ({
 
   return (
     <>
-      <LoadingDiv
-        loading={loading}
-        className="grid items-center lg:grid-cols-12 gap-6 lg:gap-16 my-12"
-      >
+      <div className="grid items-center lg:grid-cols-12 gap-6 lg:gap-16 my-12">
         <div className="lg:col-span-4">
           <div className="lg:pr-6 xl:pr-12">
             <p className="text-6xl font-bold leading-10 text-orange-500">
@@ -58,7 +53,7 @@ export const StatsRow = ({
             ))}
           </div>
         </div>
-      </LoadingDiv>
+      </div>
       <HorizontalSpacer />
     </>
   );
