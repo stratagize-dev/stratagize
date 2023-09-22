@@ -21,11 +21,11 @@ const deleteActivity = (activityId: number) => {
   return db.from('activities').delete().eq('id', activityId);
 };
 
-const getActivitiesForAthlete = async (athleteId: string) => {
+const getActivitiesForAthlete = async (athleteId: number) => {
   return db
     .from('activities')
     .select('*')
-    .eq('athlete_id', Number(athleteId))
+    .eq('athlete_id', athleteId)
     .returns<Activity.Row[]>();
 };
 

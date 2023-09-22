@@ -2,13 +2,23 @@ import { redirect } from 'next/navigation';
 import SignOutButton from '@/components/SignOutButton';
 import { getServerCustomSession } from '@/shared/auth';
 
-import ClientSidePage from '@/components/ClientSidePage';
+import Goal from '@/components/serverSide/Goal';
+import athleteRepository from '@/shared/repository/athleteRepository';
+import { useHydrateAtoms } from 'jotai/react/utils/useHydrateAtoms';
+import { annualHourGoalAtom } from '@/app/state/atoms';
 
 export default async function Home() {
   const session = await getServerCustomSession();
   if (!session) {
     redirect('/api/auth/signin');
   }
+
+  // const athleteId = Number(session.athleteId);
+  // const { data: athlete } = await athleteRepository.get(athleteId);
+
+  // if (athlete) {
+  //   useHydrateAtoms([[annualHourGoalAtom, athlete.hour_goal]]);
+  // }
 
   return (
     <>
@@ -18,7 +28,7 @@ export default async function Home() {
         </div>
         <SignOutButton />
       </div>
-      <ClientSidePage session={session} />
+      <Goal session={session} />
     </>
   );
 }

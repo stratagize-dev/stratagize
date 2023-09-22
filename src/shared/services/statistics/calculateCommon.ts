@@ -1,6 +1,6 @@
 import { getDayOfYear, getDaysInYear, hoursToSeconds } from 'date-fns';
 
-export default function calculateCommon(targetGoalHours: number, today: Date) {
+export function calculateCommon(targetGoalHours: number, today: Date) {
   const daysInYear = getDaysInYear(today); // either 365 or 366
   const targetGoalSeconds = hoursToSeconds(targetGoalHours);
   const secondsPerDay = Math.floor(targetGoalSeconds / daysInYear);

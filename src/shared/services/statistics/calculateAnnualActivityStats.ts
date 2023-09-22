@@ -2,16 +2,15 @@ import { hoursToSeconds } from 'date-fns';
 import {
   ActivityStatsResult,
   SportsStatistic
-} from '@/components/components/hooks/types';
+} from '@/shared/services/statistics/types';
 import { time } from '@/shared/types/time';
-import calculateCommon from '@/components/components/hooks/utils/calculateCommon';
+import { fromBeginningOfYear } from '@/shared/utils';
+import { Activity, SportType } from '@/shared/types/Activity';
 import {
-  calculateActivityStreak,
+  calculateCommon,
   calculateMovingTime,
-  fromBeginningOfYear
-} from '@/shared/utils';
-import { SportType } from '@/shared/types/Activity';
-import { SummaryActivity } from '@/shared/strava-client';
+  calculateActivityStreak
+} from '@/shared/services/statistics';
 function calculateSportsStatistics(
   sports: Partial<
     Record<
@@ -43,7 +42,7 @@ function calculateSportsStatistics(
 const calculateAnnualActivityStats = (
   targetGoalHours: number,
   today: Date,
-  activityStats: SummaryActivity[]
+  activityStats: Activity.Row[]
 ): ActivityStatsResult['year'] => {
   const {
     dayOfYear,

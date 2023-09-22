@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { StravaEvent } from '@/shared/types/strava/events/StravaEvent';
-import { handleStravaEvent } from '@/shared/services/stravaEventHandler';
+import { handleStravaEvent } from '@/shared/stravaEventHandler';
 
 export async function POST(request: NextRequest) {
   try {

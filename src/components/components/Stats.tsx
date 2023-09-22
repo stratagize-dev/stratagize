@@ -1,32 +1,28 @@
 'use client';
 import AnnualGoal from '@/components/components/components/AnnualGoal';
 import MessageBlock from '@/components/components/components/MessageBlock';
-import useProcessActivityData from '@/components/components/hooks/useActivityStats';
 import { useAtom } from 'jotai';
-import { annualHourGoalAtom } from '@/components/components/state/atoms';
+import { annualHourGoalAtom } from '@/app/state/atoms';
 import ProgressCircle from '@/components/components/components/ProgressCircle';
 import { StatsRow } from '@/components/components/components/StatsRow';
 import HorizontalSpacer from '@/components/components/components/HorizontalSpacer';
 import SportsBreakdown from '@/components/components/components/SportsBreakdown';
-import useGetActivityData from '@/components/components/hooks/useGetActivityData';
-import { useMemo } from 'react';
 import LoadingDiv from '@/components/LoadingDiv';
-
+import { Activity } from '@/shared/types/Activity';
+import statisticsService from '@/shared/services/statistics/statisticsService';
 function humanDay(days: number) {
   return days == 1 ? `${days} day` : `${days} days`;
 }
 
-export default function Stats() {
+interface Props {
+  loading: boolean;
+  activities: Activity.Row[];
+}
+export default function Stats({ loading, activities }: Props) {
   const [annualHourGoal, setAnnualHourGoal] = useAtom(annualHourGoalAtom);
 
-  const { data: activityStats, loading } = useGetActivityData();
-
-  const today = useMemo(() => new Date(), []);
-  const { requiredActivityPerDay, year, month, day } = useProcessActivityData(
-    annualHourGoal,
-    today,
-    activityStats
-  );
+  const { day, month, requiredActivityPerDay, year } =
+    statisticsService.calculate(annualHourGoal, activities);
 
   return (
     <>

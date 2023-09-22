@@ -1,12 +1,13 @@
-import { ActivityStatsResult } from '@/components/components/hooks/types';
+import { ActivityStatsResult } from '@/shared/services/statistics/types';
 import { time } from '@/shared/types/time';
-import calculateCommon from '@/components/components/hooks/utils/calculateCommon';
-import { calculateMovingTime, fromToday } from '@/shared/utils';
-import * as StravaApi from '@/shared/strava-client';
+import { fromToday } from '@/shared/utils';
+import { calculateMovingTime } from '@/shared/services/statistics/calculateMovingTime';
+import { calculateCommon } from '@/shared/services/statistics/calculateCommon';
+import { Activity } from '@/shared/types/Activity';
 const calculateDailyActivityStats = (
   targetGoalHours: number,
   today: Date,
-  activityStats: StravaApi.SummaryActivity[]
+  activityStats: Activity.Row[]
 ): ActivityStatsResult['day'] => {
   const { totalMovingTime: totalMovingTimeSecondsForDay } = calculateMovingTime(
     activityStats,

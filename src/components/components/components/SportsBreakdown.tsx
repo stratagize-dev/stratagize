@@ -1,5 +1,5 @@
 'use client';
-import { SportsStatistic } from '@/components/components/hooks/types';
+import { SportsStatistic } from '@/shared/services/statistics/types';
 
 const SportsBreakdown = ({
   sportStatistics

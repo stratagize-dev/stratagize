@@ -8,7 +8,7 @@ import {
 } from 'date-fns';
 import { ActivityTotals } from '@/shared/ActivityTotals';
 import * as StravaApi from '@/shared/strava-client';
-import { convertSportType, SportType } from '@/shared/types/Activity';
+import { Activity, convertSportType, SportType } from '@/shared/types/Activity';
 export const secondsToHourDuration = (totalSeconds: number): HourDuration => {
   const absoluteSeconds = Math.abs(totalSeconds);
   const hours = Math.floor(secondsToHours(absoluteSeconds));
@@ -23,6 +23,11 @@ export const secondsToHourDuration = (totalSeconds: number): HourDuration => {
   };
 };
 
+/**
+ * @deprecated
+ * @param activities
+ * @param filter
+ */
 export const calculateActivityStreak = (
   activities: StravaApi.SummaryActivity[],
   filter?: (
@@ -72,6 +77,11 @@ export const calculateActivityStreak = (
     currentStreakStartDate
   };
 };
+/**
+ * @deprecated
+ * @param activities
+ * @param filter
+ */
 export const calculateMovingTime = (
   activities: StravaApi.SummaryActivity[],
   filter?: (
@@ -109,10 +119,10 @@ export const calculateMovingTime = (
   }, accumulator);
 };
 
-const filterFromDate = (
-  activities: StravaApi.SummaryActivity[],
+const filterFromDate = <T extends StravaApi.SummaryActivity | Activity.Row>(
+  activities: T[],
   fromDate: Date
-): StravaApi.SummaryActivity[] => {
+): T[] => {
   return activities.filter(activity => {
     return activity.start_date
       ? new Date(activity.start_date) > fromDate //BUG startOfMonthDate
@@ -120,16 +130,18 @@ const filterFromDate = (
   });
 };
 
-export const fromToday = (
-  activities: StravaApi.SummaryActivity[]
-): StravaApi.SummaryActivity[] => filterFromDate(activities, startOfToday());
+export const fromToday = <T extends StravaApi.SummaryActivity | Activity.Row>(
+  activities: T[]
+): T[] => filterFromDate(activities, startOfToday());
 
-export const fromBeginningOfMonth = (
-  activities: StravaApi.SummaryActivity[]
-): StravaApi.SummaryActivity[] =>
-  filterFromDate(activities, startOfMonth(new Date()));
+export const fromBeginningOfMonth = <
+  T extends StravaApi.SummaryActivity | Activity.Row
+>(
+  activities: T[]
+): T[] => filterFromDate(activities, startOfMonth(new Date()));
 
-export const fromBeginningOfYear = (
-  activities: StravaApi.SummaryActivity[]
-): StravaApi.SummaryActivity[] =>
-  filterFromDate(activities, startOfYear(new Date()));
+export const fromBeginningOfYear = <
+  T extends StravaApi.SummaryActivity | Activity.Row
+>(
+  activities: T[]
+): T[] => filterFromDate(activities, startOfYear(new Date()));
