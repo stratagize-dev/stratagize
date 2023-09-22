@@ -11,7 +11,7 @@
     "generate:strava-client": "/usr/local/Cellar/swagger-codegen@2/2.4.31/bin/swagger-codegen generate -i https://developers.strava.com/swagger/swagger.json -l typescript-fetch -o src/shared/strava-client"
   },
   "dependencies": {
-    "@types/node": "18.16.3",
+    "@types/node": "18.17.18",
     "@types/react": "18.2.5",
     "@types/react-dom": "18.2.3",
     "@vercel/kv": "^0.2.2",
