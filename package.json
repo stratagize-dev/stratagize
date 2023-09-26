@@ -12,7 +12,8 @@
     "db:local:generate:types": "supabase gen types typescript --local  > database.types.ts",
     "db:local:start": "supabase start",
     "db:local:stop": "supabase stop",
-    "db:local:migrate": "supabase db reset"
+    "db:local:migrate": "supabase db reset",
+    "ngrok" : "ngrok http 3001"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.33.1",
