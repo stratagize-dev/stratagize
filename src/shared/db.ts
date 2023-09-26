@@ -4,5 +4,6 @@ import { Config } from '@/shared/config';
 
 export const db = createClient<Database>(
   Config.supabaseUrl,
-  Config.supabaseAnonKey
+  Config.supabaseAnonKey,
+  { auth: { persistSession: false } }
 );
