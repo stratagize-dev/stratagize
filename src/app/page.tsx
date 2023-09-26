@@ -12,7 +12,7 @@ export default async function Home() {
   }
 
   const athleteId = Number(session.athleteId);
-  console.log(`retrieving athlete ${session.athleteId}`);
+  console.debug(`retrieving athlete ${session.athleteId}`);
   const { data: athlete } = await athleteRepository.get(athleteId);
 
   if (athlete) {
