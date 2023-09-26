@@ -42,7 +42,14 @@ const saveSummaryActivities = async (
     start_date_local: value.start_date_local
   }));
 
-  return db.from('activities').insert<Activity.Insert>(activities).select();
+  const result = await db
+    .from('activities')
+    .upsert<Activity.Insert>(activities)
+    .select();
+
+  logDatabaseError('error saving activities', result.error);
+
+  return result;
 };
 
 const insertDetailedActivity = async (

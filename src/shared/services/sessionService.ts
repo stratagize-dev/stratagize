@@ -3,6 +3,34 @@ import athleteRepository from '@/shared/repository/athleteRepository';
 import summaryActivityService from '@/shared/external/Strava/services/summaryActivityService';
 import { getServerCustomSession } from '@/shared/auth';
 import { activityService } from '@/shared/services/activityService';
+import { Athlete } from '@/shared/types/Athlete';
+
+async function onboardAthlete(athlete: Athlete.Row) {
+  const authToken = await getServerCustomSession();
+
+  console.log('beginning onboarding of athlete', authToken?.athleteId);
+
+  const summaryActivities = await summaryActivityService.loadFromFirstOfYear(
+    authToken?.accessToken,
+    undefined
+  );
+
+  const { error } = await activityService().saveSummaryActivities(
+    summaryActivities
+  );
+
+  if (error === null) {
+    await athleteRepository.update(athlete.id, {
+      ...athlete,
+      is_onboarded: true
+    });
+  }
+
+  console.log('sessionService.onboardAthlete completed', {
+    athleteId: athlete.id,
+    activityCount: summaryActivities.length
+  });
+}
 
 const beginSession = async (athleteId: number, refreshToken: string) => {
   const { data: athlete } = await athleteRepository.get(athleteId);
@@ -12,9 +40,13 @@ const beginSession = async (athleteId: number, refreshToken: string) => {
       refresh_token: refreshToken
     });
 
+    if (athlete.is_onboarded === false) {
+      await onboardAthlete(athlete);
+    }
+
     logDatabaseError('error updating refresh token', error);
   } else {
-    const { error } = await athleteRepository.insert({
+    const { error, data: athlete } = await athleteRepository.insert({
       id: athleteId,
       hour_goal: 365,
       is_onboarded: false,
@@ -23,22 +55,9 @@ const beginSession = async (athleteId: number, refreshToken: string) => {
 
     logDatabaseError('error inserting athlete', error);
 
-    const authToken = await getServerCustomSession();
-
-    const summaryActivities = await summaryActivityService.loadFromFirstOfYear(
-      authToken?.accessToken,
-      undefined
-    );
-
-    const { error: activityServiceError } =
-      await activityService().saveSummaryActivities(summaryActivities);
-
-    console.debug(
-      'sessionService.beginService',
-      `summary activities loaded ${summaryActivities.length} records`
-    );
-
-    logDatabaseError('error saving activities', activityServiceError);
+    if (athlete !== null) {
+      await onboardAthlete(athlete[0]);
+    }
   }
 };
 
