@@ -41,7 +41,7 @@ const beginSession = async (athleteId: number, refreshToken: string) => {
     });
 
     if (athlete.is_onboarded === false) {
-      await onboardAthlete(athlete);
+      // await onboardAthlete(athlete);
     }
 
     logDatabaseError('error updating refresh token', error);
@@ -56,7 +56,7 @@ const beginSession = async (athleteId: number, refreshToken: string) => {
     logDatabaseError('error inserting athlete', error);
 
     if (athlete !== null) {
-      await onboardAthlete(athlete[0]);
+      // await onboardAthlete(athlete[0]);
     }
   }
 };
