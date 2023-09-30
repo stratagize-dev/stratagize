@@ -8,6 +8,8 @@ interface Props {
   session: CustomSession | null;
   children?: ReactNode;
 }
-export default (props: Props) => (
+const ClientSide = (props: Props) => (
   <SessionProvider session={props.session}>{props.children}</SessionProvider>
 );
+
+export default ClientSide;
