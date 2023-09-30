@@ -1,24 +1,30 @@
 'use client';
-import AnnualGoal from '@/components/clientSide/components/components/AnnualGoal';
-import MessageBlock from '@/components/clientSide/components/components/MessageBlock';
+import AnnualGoal from '@/components/clientSide/components/components/components/components/components/AnnualGoal';
+import MessageBlock from '@/components/clientSide/components/components/components/components/components/MessageBlock';
 import { useAtom } from 'jotai';
-import { annualHourGoalAtom } from '@/app/state/atoms';
-import ProgressCircle from '@/components/clientSide/components/components/ProgressCircle';
-import { StatsRow } from '@/components/clientSide/components/components/StatsRow';
-import HorizontalSpacer from '@/components/clientSide/components/components/HorizontalSpacer';
-import SportsBreakdown from '@/components/clientSide/components/components/SportsBreakdown';
+import { annualHourGoalAtom } from '@/components/clientSide/state/atoms';
+import ProgressCircle from '@/components/clientSide/components/components/components/components/components/ProgressCircle';
+import { StatsRow } from '@/components/clientSide/components/components/components/components/components/StatsRow';
+import HorizontalSpacer from '@/components/clientSide/components/components/components/components/components/HorizontalSpacer';
+import SportsBreakdown from '@/components/clientSide/components/components/components/components/components/SportsBreakdown';
 import { Activity } from '@/shared/types/Activity';
 import statisticsService from '@/shared/services/statistics/statisticsService';
 import { useHydrateAtoms } from 'jotai/utils';
+import { db } from '@/shared/db';
 function humanDay(days: number) {
   return days == 1 ? `${days} day` : `${days} days`;
 }
 
 interface Props {
+  athleteId: number;
   goalHours: number;
   activities: Activity.Row[];
 }
-export default function Stats({ activities, goalHours }: Props) {
+
+const updateAthleteHours = async (athleteId: number, hours: number) =>
+  db.from('athletes').update({ hour_goal: hours }).eq('id', athleteId).select();
+
+export default function Stats({ athleteId, activities, goalHours }: Props) {
   useHydrateAtoms([[annualHourGoalAtom, goalHours]]);
 
   const [annualHourGoal, setAnnualHourGoal] = useAtom(annualHourGoalAtom);
@@ -32,8 +38,9 @@ export default function Stats({ activities, goalHours }: Props) {
         <div className="pb-4">
           <AnnualGoal
             value={annualHourGoal}
-            onYearGoalChange={hours => {
+            onYearGoalChange={async hours => {
               setAnnualHourGoal(hours);
+              await updateAthleteHours(athleteId, hours);
             }}
           />
         </div>
