@@ -34,12 +34,15 @@ export async function GET(request: NextRequest) {
   const mode = searchParams.get('hub.mode');
 
   if (mode !== 'subscribe') {
+    console.log('Invalid Request - hub.mode');
     return new NextResponse('Invalid Request - hub.mode', { status: 500 });
   }
 
   const verifyToken = searchParams.get('hub.verify_token');
 
   if (verifyToken !== Config.stravaVerificationToken) {
+    console.log('Invalid Request - hub.verify_token');
+
     return new NextResponse('Invalid Request - hub.verify_token', {
       status: 500
     });
