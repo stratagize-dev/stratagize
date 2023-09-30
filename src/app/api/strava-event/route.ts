@@ -41,12 +41,12 @@ async function upsertActivity(
 
 const createNewActivity = async (activityEvent: StravaEvent) =>
   upsertActivity(activityEvent, async activity => {
-    await activityService().insertDetailedActivity(activity);
+    await activityService.insertDetailedActivity(activity);
   });
 
 const updateExistingActivity = async (activityEvent: StravaEvent) =>
   upsertActivity(activityEvent, async activity => {
-    await activityService().updateDetailedActivity(activity);
+    await activityService.updateDetailedActivity(activity);
   });
 
 async function handleActivityStravaEvent(activityEvent: StravaEvent) {
@@ -57,7 +57,7 @@ async function handleActivityStravaEvent(activityEvent: StravaEvent) {
     case 'update':
       return updateExistingActivity(activityEvent);
     case 'delete':
-      const { error } = await activityService().deleteActivity(
+      const { error } = await activityService.deleteActivity(
         activityEvent.object_id
       );
       logDatabaseError('error deleting activity', error);

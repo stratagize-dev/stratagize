@@ -91,10 +91,10 @@ const updateDetailedActivity = async (
   }
 };
 
-export const activityService = () => ({
+export const activityService = {
   deleteActivity,
   getActivitiesForAthlete,
   saveSummaryActivities,
   insertDetailedActivity,
   updateDetailedActivity
-});
+};

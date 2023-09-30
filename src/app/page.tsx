@@ -1,36 +1,35 @@
-import { redirect } from 'next/navigation';
-import SignOutButton from '@/components/SignOutButton';
 import { getServerCustomSession } from '@/shared/auth';
 
-import Goal from '@/components/serverSide/Goal';
 import athleteRepository from '@/shared/repository/athleteRepository';
+import CustomSession from '@/shared/types/auth/CustomSession';
+import ClientSide from '@/components/clientSide/ClientSide';
+import { onboardAthlete } from '@/shared/services/sessionService';
+import { Suspense } from 'react';
+import { activityService } from '@/shared/services/activityService';
+import Stats from '@/components/clientSide/components/Stats';
 
 export default async function Home() {
-  const session = await getServerCustomSession();
-  if (!session) {
-    redirect('/api/auth/signin');
-  }
+  const session: CustomSession =
+    (await getServerCustomSession()) as CustomSession;
 
   const athleteId = Number(session.athleteId);
+
   const { data: athlete } = await athleteRepository.get(athleteId);
 
-  if (athlete) {
-    if (athlete.is_onboarded) {
-      return <div>athlete not onboarded yet</div>;
-    }
-
-    return (
-      <>
-        <div className="flex justify-between pt-5 pb-2 px-5 border-b">
-          <div className="text-orange-500 font-semibold py-2 px-4">
-            Strava Goals
-          </div>
-          <SignOutButton />
-        </div>
-        <Goal athlete={athlete} />
-      </>
-    );
-  } else {
-    return <div>error finding athlete</div>;
+  if (athlete?.is_onboarded === false && session.accessToken) {
+    await onboardAthlete(athlete, session.accessToken);
   }
+
+  const { data: activities } = await activityService.getActivitiesForAthlete(
+    athleteId
+  );
+
+  if (!athlete) throw new Error('Athlete not found');
+  return (
+    <Suspense fallback={<div>on boarding athlete.....</div>}>
+      <ClientSide session={session}>
+        <Stats activities={activities ?? []} goalHours={athlete.hour_goal} />
+      </ClientSide>
+    </Suspense>
+  );
 }

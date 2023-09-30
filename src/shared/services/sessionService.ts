@@ -1,21 +1,21 @@
 import { logDatabaseError } from '@/shared/error';
 import athleteRepository from '@/shared/repository/athleteRepository';
 import summaryActivityService from '@/shared/external/Strava/services/summaryActivityService';
-import { getServerCustomSession } from '@/shared/auth';
 import { activityService } from '@/shared/services/activityService';
 import { Athlete } from '@/shared/types/Athlete';
 
-async function onboardAthlete(athlete: Athlete.Row) {
-  const authToken = await getServerCustomSession();
-
-  console.log('beginning onboarding of athlete', authToken?.athleteId);
+export async function onboardAthlete(
+  athlete: Athlete.Row,
+  accessToken: string
+) {
+  console.log('beginning onboarding of athlete', athlete.id);
 
   const summaryActivities = await summaryActivityService.loadFromFirstOfYear(
-    authToken?.accessToken,
+    accessToken,
     undefined
   );
 
-  const { error } = await activityService().saveSummaryActivities(
+  const { error } = await activityService.saveSummaryActivities(
     summaryActivities
   );
 
