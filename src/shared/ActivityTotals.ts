@@ -1,10 +1,11 @@
-import { InternalSportType } from '@/components/components/hooks/types';
+import { SportType } from '@/shared/types/Activity';
 
+export interface RunningTotal {
+  totalTimeSeconds: number;
+  count: number;
+}
 export interface ActivityTotals {
   totalMovingTime: number;
   totalCount: number;
-  sports: Record<
-    InternalSportType,
-    { totalTimeSeconds: number; count: number }
-  >;
+  sports: Partial<Record<SportType, RunningTotal>>;
 }
