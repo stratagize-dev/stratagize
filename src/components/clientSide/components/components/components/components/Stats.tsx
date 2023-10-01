@@ -11,6 +11,7 @@ import { Activity } from '@/shared/types/Activity';
 import statisticsService from '@/shared/services/statistics/statisticsService';
 import { useHydrateAtoms } from 'jotai/utils';
 import { db } from '@/shared/db';
+import useSubscribeToActivityUpdates from '@/components/clientSide/hooks/useSubscribeToActivityUpdates';
 function humanDay(days: number) {
   return days == 1 ? `${days} day` : `${days} days`;
 }
@@ -27,10 +28,12 @@ const updateAthleteHours = async (athleteId: number, hours: number) =>
 export default function Stats({ athleteId, activities, goalHours }: Props) {
   useHydrateAtoms([[annualHourGoalAtom, goalHours]]);
 
+  const latestActivities = useSubscribeToActivityUpdates(athleteId, activities);
+
   const [annualHourGoal, setAnnualHourGoal] = useAtom(annualHourGoalAtom);
 
   const { day, month, requiredActivityPerDay, year } =
-    statisticsService.calculate(annualHourGoal, activities);
+    statisticsService.calculate(annualHourGoal, latestActivities);
 
   return (
     <>
