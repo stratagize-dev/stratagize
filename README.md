@@ -14,3 +14,8 @@ supabase migration new MIGRATION_NAME
 supabase db push
 ```
 
+### Create Auto Migration 
+
+supabase db diff -f MIGRATION_NAME
+
+
