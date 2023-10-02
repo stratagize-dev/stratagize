@@ -1,8 +1,8 @@
 import CustomSession from '@/shared/types/auth/CustomSession';
 import athleteRepository from '@/shared/repository/athleteRepository';
 import { onboardAthlete } from '@/shared/services/sessionService';
-import ClientSide from '@/components/clientSide/ClientSide';
-import ActivityLoadingScreen from '@/components/clientSide/components/components/components/ActivityLoadingScreen';
+import ActivityLoadingScreen from '@/components/server/components/ActivityLoadingScreen';
+import { Suspense } from 'react';
 
 export default async function OnboardingScreen({
   athleteId,
@@ -20,11 +20,12 @@ export default async function OnboardingScreen({
   }
 
   return (
-    <ClientSide session={session}>
+    <Suspense fallback={<div>loading activity data for user</div>}>
       <ActivityLoadingScreen
         athleteId={athleteId}
         athleteHourGoal={athlete.hour_goal}
+        session={session}
       />
-    </ClientSide>
+    </Suspense>
   );
 }

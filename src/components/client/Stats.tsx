@@ -1,17 +1,17 @@
 'use client';
-import AnnualGoal from '@/components/clientSide/components/components/components/components/components/AnnualGoal';
-import MessageBlock from '@/components/clientSide/components/components/components/components/components/MessageBlock';
+import AnnualGoal from '@/components/client/components/AnnualGoal';
+import MessageBlock from '@/components/client/components/MessageBlock';
 import { useAtom } from 'jotai';
-import { annualHourGoalAtom } from '@/components/clientSide/state/atoms';
-import ProgressCircle from '@/components/clientSide/components/components/components/components/components/ProgressCircle';
-import { StatsRow } from '@/components/clientSide/components/components/components/components/components/StatsRow';
-import HorizontalSpacer from '@/components/clientSide/components/components/components/components/components/HorizontalSpacer';
-import SportsBreakdown from '@/components/clientSide/components/components/components/components/components/SportsBreakdown';
+import { annualHourGoalAtom } from '@/components/client/state/atoms';
+import ProgressCircle from '@/components/client/components/ProgressCircle';
+import { StatsRow } from '@/components/client/components/StatsRow';
+import HorizontalSpacer from '@/components/client/components/HorizontalSpacer';
+import SportsBreakdown from '@/components/client/components/SportsBreakdown';
 import { Activity } from '@/shared/types/Activity';
 import statisticsService from '@/shared/services/statistics/statisticsService';
 import { useHydrateAtoms } from 'jotai/utils';
 import { db } from '@/shared/db';
-import useSubscribeToActivityUpdates from '@/components/clientSide/hooks/useSubscribeToActivityUpdates';
+import useSubscribeToActivityUpdates from '@/components/client/hooks/useSubscribeToActivityUpdates';
 function humanDay(days: number) {
   return days == 1 ? `${days} day` : `${days} days`;
 }
