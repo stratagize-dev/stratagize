@@ -36,7 +36,7 @@ export default function useSubscribeToActivityUpdates(
     return () => {
       void db.removeChannel(channel);
     };
-  }, [db, athleteId]);
+  }, [athleteId]);
 
   return updatedActivities;
 }
