@@ -1,8 +1,8 @@
 import './globals.css';
 import { Inter } from 'next/font/google';
-import SignOutButton from '@/components/SignOutButton';
 import { getServerCustomSession } from '@/shared/auth';
 import { redirect } from 'next/navigation';
+import NavBar from '@/components/server/NavBar';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
@@ -24,12 +24,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className="flex justify-between pt-5 pb-2 px-5 border-b">
-          <div className="text-orange-500 font-semibold py-2 px-4">
-            Strava Goals
-          </div>
-          <SignOutButton />
-        </div>
+        <NavBar />
         {children}
       </body>
     </html>
