@@ -1,7 +1,7 @@
-import MessageBlock from '@/components/client/components/MessageBlock';
+import MessageBlock from '@/components/client/components/components/components/components/components/MessageBlock';
 import ArrowDownRightCircleFill from '@/components/Icons/ArrowDownRightCircleFill';
 import ArrowUpRightCircleFill from '@/components/Icons/ArrowUpRightCircleFill';
-import HorizontalSpacer from '@/components/client/components/HorizontalSpacer';
+import HorizontalSpacer from '@/components/client/components/components/components/components/components/HorizontalSpacer';
 
 interface Props {
   title: string;

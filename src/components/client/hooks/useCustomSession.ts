@@ -6,7 +6,7 @@ export default function useCustomSession() {
 
   return {
     status,
-    data: data !== null ? (data as CustomSession) : null,
+    customSession: data !== null ? (data as CustomSession) : null,
     update
   };
 }

@@ -1,7 +1,7 @@
-import { db } from '@/shared/db';
 import * as StravaApi from '@/shared/strava-client';
 import { Activity, SportType } from '@/shared/types/Activity';
-import { logDatabaseError } from '@/shared/error';
+import { createActivityRepository } from '@/shared/repository/activityRepository';
+import { StravaGoalsClient } from '@/shared/db';
 
 const defaultDate = (date?: string) => date ?? new Date().toISOString();
 
@@ -17,20 +17,26 @@ const mapCommonFields = (detailedActivity: StravaApi.DetailedActivity) => ({
   detailed_event: JSON.stringify(detailedActivity)
 });
 
-const deleteActivity = (activityId: number) => {
-  return db.from('activities').delete().eq('id', activityId);
+const deleteActivity = async (
+  activityId: number,
+  client?: StravaGoalsClient
+) => {
+  const activityRepository = await createActivityRepository(client);
+
+  return activityRepository.delete(activityId);
 };
 
-const getActivitiesForAthlete = async (athleteId: number) => {
-  return db
-    .from('activities')
-    .select('*')
-    .eq('athlete_id', athleteId)
-    .returns<Activity.Row[]>();
+const getActivitiesForAthlete = async (
+  athleteId: number,
+  client?: StravaGoalsClient
+) => {
+  const activityRepository = await createActivityRepository(client);
+  return activityRepository.getActivitiesForAthlete(athleteId);
 };
 
 const saveSummaryActivities = async (
-  summaryActivities: StravaApi.SummaryActivity[]
+  summaryActivities: StravaApi.SummaryActivity[],
+  client?: StravaGoalsClient
 ) => {
   const activities: Activity.Insert[] = summaryActivities.map(value => ({
     athlete_id: value.athlete?.id ?? 0,
@@ -42,18 +48,14 @@ const saveSummaryActivities = async (
     start_date_local: value.start_date_local
   }));
 
-  const result = await db
-    .from('activities')
-    .upsert<Activity.Insert>(activities)
-    .select();
+  const activityRepository = await createActivityRepository(client);
 
-  logDatabaseError('error saving activities', result.error);
-
-  return result;
+  return activityRepository.upsert(activities);
 };
 
 const insertDetailedActivity = async (
-  detailedActivity: StravaApi.DetailedActivity
+  detailedActivity: StravaApi.DetailedActivity,
+  client?: StravaGoalsClient
 ) => {
   const activity: Activity.Insert = {
     athlete_id: detailedActivity.athlete?.id ?? 0,
@@ -61,40 +63,35 @@ const insertDetailedActivity = async (
     ...mapCommonFields(detailedActivity)
   };
 
-  const { data, error } = await db
-    .from('activities')
-    .insert<Activity.Insert>(activity)
-    .select();
-
-  logDatabaseError('error inserting detailed activity', error);
-
-  return { activity: data, error };
+  const activityRepository = await createActivityRepository(client);
+  return activityRepository.insert(activity);
 };
 
 const updateDetailedActivity = async (
-  detailedActivity: StravaApi.DetailedActivity
+  detailedActivity: StravaApi.DetailedActivity,
+  client?: StravaGoalsClient
 ) => {
   if (detailedActivity.id) {
     const activity: Activity.Update = {
       ...mapCommonFields(detailedActivity)
     };
 
-    const { data, error } = await db
-      .from('activities')
-      .update<Activity.Update>(activity)
-      .eq('id', detailedActivity.id)
-      .select();
+    const activityRepository = await createActivityRepository(client);
 
-    logDatabaseError('error updating detailed activity', error);
-
-    return { activity: data, error };
+    return activityRepository.update(activity);
   }
 };
 
-export const activityService = {
-  deleteActivity,
-  getActivitiesForAthlete,
-  saveSummaryActivities,
-  insertDetailedActivity,
-  updateDetailedActivity
+export const activityService = (client?: StravaGoalsClient) => {
+  return {
+    deleteActivity: (activityId: number) => deleteActivity(activityId, client),
+    getActivitiesForAthlete: (activityId: number) =>
+      getActivitiesForAthlete(activityId, client),
+    saveSummaryActivities: (summaryActivities: StravaApi.SummaryActivity[]) =>
+      saveSummaryActivities(summaryActivities, client),
+    insertDetailedActivity: (detailedActivity: StravaApi.DetailedActivity) =>
+      insertDetailedActivity(detailedActivity, client),
+    updateDetailedActivity: (detailedActivity: StravaApi.DetailedActivity) =>
+      updateDetailedActivity(detailedActivity, client)
+  };
 };

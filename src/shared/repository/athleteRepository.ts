@@ -1,45 +1,57 @@
-import { db } from '@/shared/db';
+import { db, StravaGoalsClient } from '@/shared/db';
 import { Athlete } from '@/shared/types/Athlete';
-import { logDatabaseError } from '@/shared/error';
-import { PostgrestSingleResponse } from '@supabase/supabase-js';
+import { getServerCustomSession } from '@/shared/auth';
+import { performOperationAndLogError } from '@/shared/repository/utils';
 
-const athletesTable = db.from('athletes');
-
-async function performOperationAndLogError<T>(
-  operation: () => Promise<PostgrestSingleResponse<T>>,
-  errorMessage: string
-) {
-  const result = await operation();
-
-  logDatabaseError(errorMessage, result.error);
-
-  return result;
-}
-
-const get = (athleteId: number) =>
+const get = (stravaGoalsClient: StravaGoalsClient) => (athleteId: number) =>
   performOperationAndLogError(
     async () =>
-      athletesTable.select('*').eq('id', athleteId).single<Athlete.Row>(),
+      stravaGoalsClient
+        .from('athletes')
+        .select('*')
+        .eq('id', athleteId)
+        .single<Athlete.Row>(),
     'an error occured retrieving the athlete'
   );
 
-const update = async (athleteId: number, athlete: Athlete.Update) =>
-  performOperationAndLogError(
-    async () =>
-      await athletesTable.update(athlete).eq('id', athleteId).select(),
-    'an error occured updating the athlete'
-  );
+const update =
+  (stravaGoalsClient: StravaGoalsClient) =>
+  (athleteId: number, athlete: Athlete.Update) =>
+    performOperationAndLogError(
+      async () =>
+        await stravaGoalsClient
+          .from('athletes')
+          .update(athlete)
+          .eq('id', athleteId)
+          .select(),
+      'an error occured updating the athlete'
+    );
 
-const insert = async (athlete: Athlete.Insert) =>
-  performOperationAndLogError(
-    async () => await athletesTable.insert(athlete).select(),
-    'an error occured inserting athlete'
-  );
+const insert =
+  (stravaGoalsClient: StravaGoalsClient) => (athlete: Athlete.Insert) =>
+    performOperationAndLogError(
+      async () =>
+        await stravaGoalsClient.from('athletes').insert(athlete).select(),
+      'an error occured inserting athlete'
+    );
 
-const athleteRepository = {
-  get,
-  insert,
-  update
+// export const athleteRepository = {
+//   get,
+//   insert,
+//   update
+// };
+
+export const createAthletesRepository = async (client?: StravaGoalsClient) => {
+  if (client === undefined) {
+    const session = await getServerCustomSession();
+    client = db(session.supabaseToken);
+  }
+
+  return {
+    get: get(client),
+    insert: insert(client),
+    update: update(client)
+  };
 };
 
-export default athleteRepository;
+// export default athleteRepository;

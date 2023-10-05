@@ -1,11 +1,10 @@
 import { getServerCustomSession } from '@/shared/auth';
 import CustomSession from '@/shared/types/auth/CustomSession';
 import { Suspense } from 'react';
-import OnboardingScreen from '@/components/server/OnboardingScreen';
+import OnboardingScreen from '@/components/client/components/components/OnboardingScreen';
 
 export default async function Home() {
-  const session: CustomSession =
-    (await getServerCustomSession()) as CustomSession;
+  const session: CustomSession = await getServerCustomSession();
 
   const athleteId = Number(session.athleteId);
 

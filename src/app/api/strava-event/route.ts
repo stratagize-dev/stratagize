@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { StravaEvent } from '@/shared/types/strava/events/StravaEvent';
 import { refreshToken } from '@/shared/external/Strava/token/refreshToken';
-import { logDatabaseError } from '@/shared/error';
 import { activityService } from '@/shared/services/activityService';
 import { ActivitiesApiFp, DetailedActivity } from '@/shared/strava-client';
 import { Database } from '../../../../database.types';
-import athleteRepository from '@/shared/repository/athleteRepository';
+import { createAthletesRepository } from '@/shared/repository/athleteRepository';
+
+import { serviceRoleDb } from '@/shared/serviceRoleDb';
 interface WebhookPayload {
   type: 'INSERT';
   table: 'strava_events';
@@ -18,6 +19,7 @@ async function upsertActivity(
   activityEvent: StravaEvent,
   operation: (activity: DetailedActivity) => Promise<void>
 ) {
+  const athleteRepository = await createAthletesRepository(serviceRoleDb);
   const { data: athlete } = await athleteRepository.get(activityEvent.owner_id);
 
   if (athlete?.refresh_token) {
@@ -41,29 +43,32 @@ async function upsertActivity(
 
 const createNewActivity = async (activityEvent: StravaEvent) =>
   upsertActivity(activityEvent, async activity => {
-    await activityService.insertDetailedActivity(activity);
+    await activityService(serviceRoleDb).insertDetailedActivity(activity);
   });
 
 const updateExistingActivity = async (activityEvent: StravaEvent) =>
   upsertActivity(activityEvent, async activity => {
-    await activityService.updateDetailedActivity(activity);
+    await activityService(serviceRoleDb).updateDetailedActivity(activity);
   });
 
 async function handleActivityStravaEvent(activityEvent: StravaEvent) {
   switch (activityEvent.aspect_type) {
     case 'create':
       return createNewActivity(activityEvent);
-
     case 'update':
       return updateExistingActivity(activityEvent);
     case 'delete':
-      const { error } = await activityService.deleteActivity(
+      return activityService(serviceRoleDb).deleteActivity(
         activityEvent.object_id
       );
-      logDatabaseError('error deleting activity', error);
   }
 }
 
+/**
+ * Endpoint called from by Supabase in response to insert of new StravaEvent
+ * @param request
+ * @constructor
+ */
 export async function POST(request: NextRequest) {
   const data: WebhookPayload = await request.json();
 

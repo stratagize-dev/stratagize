@@ -55,4 +55,7 @@ const summaryActivityService = {
   loadFrom
 };
 
+/**
+ * loads from activities from Strava
+ */
 export default summaryActivityService;
