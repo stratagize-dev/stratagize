@@ -5,7 +5,8 @@ import StravaProvider from 'next-auth/providers/strava';
 import { CustomJWT } from '@/shared/types/auth/CustomJWT';
 import { refreshToken } from '@/shared/external/Strava/token/refreshToken';
 import sessionService from '@/shared/services/sessionService';
-
+import jwt from 'jsonwebtoken';
+import { Config } from '@/shared/config';
 export const authOptions: AuthOptions = {
   providers: [
     StravaProvider({
@@ -42,18 +43,27 @@ export const authOptions: AuthOptions = {
       return customJWT;
     },
     async session({ session, token }) {
+      const payload = {
+        userId: token.sub,
+        exp: token.exp
+      };
+
+      const supabaseToken = jwt.sign(payload, Config.supabaseJWTSecret);
       // Send properties to the client, like an access_token and user id from a provider.
       const customSession: CustomSession = {
         ...session,
         athleteId: token.sub,
         accessToken: token.accessToken as string,
-        refreshToken: token.refreshToken as string
+        refreshToken: token.refreshToken as string,
+        supabaseToken
       };
       return customSession;
     }
   },
   events: {
-    signIn: message => console.debug('event', 'signIn', { message }),
+    signIn: message => {
+      console.debug('event', 'signIn', { message });
+    },
     signOut: message => console.debug('event', 'signOut', { message }),
     createUser: message => console.debug('event', 'createUser', { message }),
     updateUser: message => console.debug('event', 'updateUser', { message }),
@@ -62,16 +72,20 @@ export const authOptions: AuthOptions = {
       console.debug('event', 'session', { message });
       const customSession = message.session as CustomSession;
 
-      if (customSession.athleteId && customSession.refreshToken) {
+      if (customSession.athleteId && customSession) {
         const athleteId = parseInt(customSession.athleteId);
-        await sessionService.beginSession(
-          athleteId,
-          customSession.refreshToken
-        );
+        await sessionService.beginSession(athleteId, customSession);
       }
     }
   }
 };
 
-export const getServerCustomSession = () =>
-  getServerSession<AuthOptions, CustomSession>(authOptions);
+export const getServerCustomSession = async () => {
+  const session = await getServerSession<AuthOptions, CustomSession>(
+    authOptions
+  );
+
+  if (session == null) throw new Error('Not Authorised');
+
+  return session;
+};

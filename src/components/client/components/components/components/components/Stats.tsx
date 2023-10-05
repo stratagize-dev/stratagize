@@ -1,17 +1,18 @@
 'use client';
-import AnnualGoal from '@/components/clientSide/components/components/components/components/components/AnnualGoal';
-import MessageBlock from '@/components/clientSide/components/components/components/components/components/MessageBlock';
+import AnnualGoal from '@/components/client/components/components/components/components/components/AnnualGoal';
+import MessageBlock from '@/components/client/components/components/components/components/components/MessageBlock';
 import { useAtom } from 'jotai';
-import { annualHourGoalAtom } from '@/components/clientSide/state/atoms';
-import ProgressCircle from '@/components/clientSide/components/components/components/components/components/ProgressCircle';
-import { StatsRow } from '@/components/clientSide/components/components/components/components/components/StatsRow';
-import HorizontalSpacer from '@/components/clientSide/components/components/components/components/components/HorizontalSpacer';
-import SportsBreakdown from '@/components/clientSide/components/components/components/components/components/SportsBreakdown';
+import { annualHourGoalAtom } from '@/components/client/state/atoms';
+import ProgressCircle from '@/components/client/components/components/components/components/components/ProgressCircle';
+import { StatsRow } from '@/components/client/components/components/components/components/components/StatsRow';
+import HorizontalSpacer from '@/components/client/components/components/components/components/components/HorizontalSpacer';
+import SportsBreakdown from '@/components/client/components/components/components/components/components/SportsBreakdown';
 import { Activity } from '@/shared/types/Activity';
 import statisticsService from '@/shared/services/statistics/statisticsService';
 import { useHydrateAtoms } from 'jotai/utils';
 import { db } from '@/shared/db';
-import useSubscribeToActivityUpdates from '@/components/clientSide/hooks/useSubscribeToActivityUpdates';
+import useSubscribeToActivityUpdates from '@/components/client/hooks/useSubscribeToActivityUpdates';
+import useCustomSession from '@/components/client/hooks/useCustomSession';
 function humanDay(days: number) {
   return days == 1 ? `${days} day` : `${days} days`;
 }
@@ -22,18 +23,29 @@ interface Props {
   activities: Activity.Row[];
 }
 
-const updateAthleteHours = async (athleteId: number, hours: number) =>
-  db.from('athletes').update({ hour_goal: hours }).eq('id', athleteId).select();
+const updateAthleteHours = async (
+  supabaseToken: string,
+  athleteId: number,
+  hours: number
+) =>
+  db(supabaseToken)
+    .from('athletes')
+    .update({ hour_goal: hours })
+    .eq('id', athleteId)
+    .select();
 
 export default function Stats({ athleteId, activities, goalHours }: Props) {
   useHydrateAtoms([[annualHourGoalAtom, goalHours]]);
 
+  const { customSession } = useCustomSession();
   const latestActivities = useSubscribeToActivityUpdates(athleteId, activities);
 
   const [annualHourGoal, setAnnualHourGoal] = useAtom(annualHourGoalAtom);
 
   const { day, month, requiredActivityPerDay, year } =
     statisticsService.calculate(annualHourGoal, latestActivities);
+
+  if (customSession === null) return null;
 
   return (
     <>
@@ -43,7 +55,11 @@ export default function Stats({ athleteId, activities, goalHours }: Props) {
             value={annualHourGoal}
             onYearGoalChange={async hours => {
               setAnnualHourGoal(hours);
-              await updateAthleteHours(athleteId, hours);
+              await updateAthleteHours(
+                customSession.supabaseToken,
+                athleteId,
+                hours
+              );
             }}
           />
         </div>

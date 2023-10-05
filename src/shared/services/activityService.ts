@@ -1,7 +1,6 @@
-import { db } from '@/shared/db';
 import * as StravaApi from '@/shared/strava-client';
 import { Activity, SportType } from '@/shared/types/Activity';
-import { logDatabaseError } from '@/shared/error';
+import { createActivityRepository } from '@/shared/repository/activityRepository';
 
 const defaultDate = (date?: string) => date ?? new Date().toISOString();
 
@@ -17,16 +16,15 @@ const mapCommonFields = (detailedActivity: StravaApi.DetailedActivity) => ({
   detailed_event: JSON.stringify(detailedActivity)
 });
 
-const deleteActivity = (activityId: number) => {
-  return db.from('activities').delete().eq('id', activityId);
+const deleteActivity = async (activityId: number) => {
+  const activityRepository = await createActivityRepository();
+
+  return activityRepository.delete(activityId);
 };
 
 const getActivitiesForAthlete = async (athleteId: number) => {
-  return db
-    .from('activities')
-    .select('*')
-    .eq('athlete_id', athleteId)
-    .returns<Activity.Row[]>();
+  const activityRepository = await createActivityRepository();
+  return activityRepository.getActivitiesForAthlete(athleteId);
 };
 
 const saveSummaryActivities = async (
@@ -42,14 +40,9 @@ const saveSummaryActivities = async (
     start_date_local: value.start_date_local
   }));
 
-  const result = await db
-    .from('activities')
-    .upsert<Activity.Insert>(activities)
-    .select();
+  const activityRepository = await createActivityRepository();
 
-  logDatabaseError('error saving activities', result.error);
-
-  return result;
+  return activityRepository.upsert(activities);
 };
 
 const insertDetailedActivity = async (
@@ -61,14 +54,8 @@ const insertDetailedActivity = async (
     ...mapCommonFields(detailedActivity)
   };
 
-  const { data, error } = await db
-    .from('activities')
-    .insert<Activity.Insert>(activity)
-    .select();
-
-  logDatabaseError('error inserting detailed activity', error);
-
-  return { activity: data, error };
+  const activityRepository = await createActivityRepository();
+  return activityRepository.insert(activity);
 };
 
 const updateDetailedActivity = async (
@@ -79,15 +66,9 @@ const updateDetailedActivity = async (
       ...mapCommonFields(detailedActivity)
     };
 
-    const { data, error } = await db
-      .from('activities')
-      .update<Activity.Update>(activity)
-      .eq('id', detailedActivity.id)
-      .select();
+    const activityRepository = await createActivityRepository();
 
-    logDatabaseError('error updating detailed activity', error);
-
-    return { activity: data, error };
+    return activityRepository.update(activity);
   }
 };
 

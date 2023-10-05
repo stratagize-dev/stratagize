@@ -1,6 +1,6 @@
 import { activityService } from '@/shared/services/activityService';
 import { Suspense } from 'react';
-import Stats from '@/components/clientSide/components/components/components/components/Stats';
+import Stats from '@/components/client/components/components/components/components/Stats';
 
 export default async function ActivityLoadingScreen({
   athleteId,

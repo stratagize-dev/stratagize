@@ -5,7 +5,7 @@ import { logDatabaseError } from '@/shared/error';
 import { activityService } from '@/shared/services/activityService';
 import { ActivitiesApiFp, DetailedActivity } from '@/shared/strava-client';
 import { Database } from '../../../../database.types';
-import athleteRepository from '@/shared/repository/athleteRepository';
+import { createAthletesRepository } from '@/shared/repository/athleteRepository';
 interface WebhookPayload {
   type: 'INSERT';
   table: 'strava_events';
@@ -18,6 +18,7 @@ async function upsertActivity(
   activityEvent: StravaEvent,
   operation: (activity: DetailedActivity) => Promise<void>
 ) {
+  const athleteRepository = await createAthletesRepository();
   const { data: athlete } = await athleteRepository.get(activityEvent.owner_id);
 
   if (athlete?.refresh_token) {

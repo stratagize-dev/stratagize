@@ -1,8 +1,8 @@
 import CustomSession from '@/shared/types/auth/CustomSession';
-import athleteRepository from '@/shared/repository/athleteRepository';
 import { onboardAthlete } from '@/shared/services/sessionService';
-import ClientSide from '@/components/clientSide/ClientSide';
-import ActivityLoadingScreen from '@/components/clientSide/components/components/components/ActivityLoadingScreen';
+import ClientSide from '@/components/client/ClientSide';
+import ActivityLoadingScreen from '@/components/client/components/components/components/ActivityLoadingScreen';
+import { createAthletesRepository } from '@/shared/repository/athleteRepository';
 
 export default async function OnboardingScreen({
   athleteId,
@@ -11,12 +11,13 @@ export default async function OnboardingScreen({
   athleteId: number;
   session: CustomSession;
 }) {
+  const athleteRepository = await createAthletesRepository();
   const { data: athlete } = await athleteRepository.get(athleteId);
 
   if (!athlete) throw new Error('Athlete not found');
 
   if (athlete?.is_onboarded === false && session.accessToken) {
-    await onboardAthlete(athlete, session.accessToken);
+    await onboardAthlete(athlete, session);
   }
 
   return (

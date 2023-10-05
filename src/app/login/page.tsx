@@ -1,10 +1,5 @@
-'use client';
-import { signIn } from 'next-auth/react';
+import SignInButton from '@/components/client/SignInButton';
 
 export default function Login() {
-  const handleLoginWithStrava = async () => {
-    await signIn('strava', { callbackUrl: '/' });
-  };
-
-  return <button onClick={handleLoginWithStrava}>Login with Strava</button>;
+  return <SignInButton />;
 }
