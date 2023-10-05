@@ -1,6 +1,7 @@
 import * as StravaApi from '@/shared/strava-client';
 import { Activity, SportType } from '@/shared/types/Activity';
 import { createActivityRepository } from '@/shared/repository/activityRepository';
+import { StravaGoalsClient } from '@/shared/db';
 
 const defaultDate = (date?: string) => date ?? new Date().toISOString();
 
@@ -16,19 +17,26 @@ const mapCommonFields = (detailedActivity: StravaApi.DetailedActivity) => ({
   detailed_event: JSON.stringify(detailedActivity)
 });
 
-const deleteActivity = async (activityId: number) => {
-  const activityRepository = await createActivityRepository();
+const deleteActivity = async (
+  activityId: number,
+  client?: StravaGoalsClient
+) => {
+  const activityRepository = await createActivityRepository(client);
 
   return activityRepository.delete(activityId);
 };
 
-const getActivitiesForAthlete = async (athleteId: number) => {
-  const activityRepository = await createActivityRepository();
+const getActivitiesForAthlete = async (
+  athleteId: number,
+  client?: StravaGoalsClient
+) => {
+  const activityRepository = await createActivityRepository(client);
   return activityRepository.getActivitiesForAthlete(athleteId);
 };
 
 const saveSummaryActivities = async (
-  summaryActivities: StravaApi.SummaryActivity[]
+  summaryActivities: StravaApi.SummaryActivity[],
+  client?: StravaGoalsClient
 ) => {
   const activities: Activity.Insert[] = summaryActivities.map(value => ({
     athlete_id: value.athlete?.id ?? 0,
@@ -40,13 +48,14 @@ const saveSummaryActivities = async (
     start_date_local: value.start_date_local
   }));
 
-  const activityRepository = await createActivityRepository();
+  const activityRepository = await createActivityRepository(client);
 
   return activityRepository.upsert(activities);
 };
 
 const insertDetailedActivity = async (
-  detailedActivity: StravaApi.DetailedActivity
+  detailedActivity: StravaApi.DetailedActivity,
+  client?: StravaGoalsClient
 ) => {
   const activity: Activity.Insert = {
     athlete_id: detailedActivity.athlete?.id ?? 0,
@@ -54,28 +63,35 @@ const insertDetailedActivity = async (
     ...mapCommonFields(detailedActivity)
   };
 
-  const activityRepository = await createActivityRepository();
+  const activityRepository = await createActivityRepository(client);
   return activityRepository.insert(activity);
 };
 
 const updateDetailedActivity = async (
-  detailedActivity: StravaApi.DetailedActivity
+  detailedActivity: StravaApi.DetailedActivity,
+  client?: StravaGoalsClient
 ) => {
   if (detailedActivity.id) {
     const activity: Activity.Update = {
       ...mapCommonFields(detailedActivity)
     };
 
-    const activityRepository = await createActivityRepository();
+    const activityRepository = await createActivityRepository(client);
 
     return activityRepository.update(activity);
   }
 };
 
-export const activityService = {
-  deleteActivity,
-  getActivitiesForAthlete,
-  saveSummaryActivities,
-  insertDetailedActivity,
-  updateDetailedActivity
+export const activityService = (client?: StravaGoalsClient) => {
+  return {
+    deleteActivity: (activityId: number) => deleteActivity(activityId, client),
+    getActivitiesForAthlete: (activityId: number) =>
+      getActivitiesForAthlete(activityId, client),
+    saveSummaryActivities: (summaryActivities: StravaApi.SummaryActivity[]) =>
+      saveSummaryActivities(summaryActivities, client),
+    insertDetailedActivity: (detailedActivity: StravaApi.DetailedActivity) =>
+      insertDetailedActivity(detailedActivity, client),
+    updateDetailedActivity: (detailedActivity: StravaApi.DetailedActivity) =>
+      updateDetailedActivity(detailedActivity, client)
+  };
 };

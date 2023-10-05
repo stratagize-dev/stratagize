@@ -1,11 +1,20 @@
 import { StravaEvent } from '@/shared/types/strava/events/StravaEvent';
-import { stravaEventService } from '@/shared/services/stravaEventService';
+import { logDatabaseError } from '@/shared/error';
+
+import { serviceRoleDb } from '@/shared/serviceRoleDb';
 
 export async function handleStravaEvent(event: StravaEvent) {
   if (event.object_type === 'activity') {
-    await stravaEventService().insert({
-      data: JSON.stringify(event),
-      is_processed: false
-    });
+    const { error } = await serviceRoleDb
+      .from('strava_events')
+      .insert([
+        {
+          data: JSON.stringify(event),
+          is_processed: false
+        }
+      ])
+      .select();
+
+    logDatabaseError('error inserting strava event', error);
   }
 }

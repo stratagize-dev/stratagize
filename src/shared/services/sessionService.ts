@@ -1,11 +1,9 @@
-import {
-  athleteRepository,
-  createAthletesRepository
-} from '@/shared/repository/athleteRepository';
+import { createAthletesRepository } from '@/shared/repository/athleteRepository';
 import summaryActivityService from '@/shared/external/Strava/services/summaryActivityService';
 import { activityService } from '@/shared/services/activityService';
 import { Athlete } from '@/shared/types/Athlete';
 import CustomSession from '@/shared/types/auth/CustomSession';
+import { db } from '@/shared/db';
 
 export async function onboardAthlete(
   athlete: Athlete.Row,
@@ -18,7 +16,7 @@ export async function onboardAthlete(
     undefined
   );
 
-  const { error } = await activityService.saveSummaryActivities(
+  const { error } = await activityService().saveSummaryActivities(
     summaryActivities
   );
 
@@ -40,16 +38,16 @@ const beginSession = async (
   athleteId: number,
   customSession: CustomSession
 ) => {
-  const { data: athlete } = await athleteRepository.get(
-    customSession.supabaseToken
-  )(athleteId);
+  const client = db(customSession.supabaseToken);
+  const athleteRepository = await createAthletesRepository(client);
+  const { data: athlete } = await athleteRepository.get(athleteId);
 
   if (athlete) {
-    await athleteRepository.update(customSession.supabaseToken)(athleteId, {
+    await athleteRepository.update(athleteId, {
       refresh_token: customSession.refreshToken
     });
   } else {
-    await athleteRepository.insert(customSession.supabaseToken)({
+    await athleteRepository.insert({
       id: athleteId,
       hour_goal: 365,
       is_onboarded: false,

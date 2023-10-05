@@ -35,19 +35,23 @@ const insert =
       'an error occured inserting athlete'
     );
 
-export const athleteRepository = {
-  get: (supabaseToken: string) => get(db(supabaseToken)),
-  insert: (supabaseToken: string) => insert(db(supabaseToken)),
-  update: (supabaseToken: string) => update(db(supabaseToken))
-};
+// export const athleteRepository = {
+//   get,
+//   insert,
+//   update
+// };
 
-export const createAthletesRepository = async () => {
-  const session = await getServerCustomSession();
+export const createAthletesRepository = async (client?: StravaGoalsClient) => {
+  if (client === undefined) {
+    const session = await getServerCustomSession();
+    client = db(session.supabaseToken);
+  }
+
   return {
-    get: athleteRepository.get(session.supabaseToken),
-    insert: athleteRepository.insert(session.supabaseToken),
-    update: athleteRepository.update(session.supabaseToken)
+    get: get(client),
+    insert: insert(client),
+    update: update(client)
   };
 };
 
-export default athleteRepository;
+// export default athleteRepository;

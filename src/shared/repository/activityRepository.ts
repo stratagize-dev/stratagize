@@ -56,23 +56,17 @@ const update =
       'an error occured updating the activity'
     );
 
-const activityRepository = {
-  getActivitiesForAthlete: (supabaseToken: string) =>
-    getActivitiesForAthlete(db(supabaseToken)),
-  delete: (supabaseToken: string) => deleteActivity(db(supabaseToken)),
-  update: (supabaseToken: string) => update(db(supabaseToken)),
-  upsert: (supabaseToken: string) => upsert(db(supabaseToken)),
-  insert: (supabaseToken: string) => insert(db(supabaseToken))
-};
-export const createActivityRepository = async () => {
-  const session = await getServerCustomSession();
+export const createActivityRepository = async (client?: StravaGoalsClient) => {
+  if (client === undefined) {
+    const session = await getServerCustomSession();
+    client = db(session.supabaseToken);
+  }
+
   return {
-    getActivitiesForAthlete: activityRepository.getActivitiesForAthlete(
-      session.supabaseToken
-    ),
-    delete: activityRepository.delete(session.supabaseToken),
-    update: activityRepository.update(session.supabaseToken),
-    upsert: activityRepository.upsert(session.supabaseToken),
-    insert: activityRepository.insert(session.supabaseToken)
+    getActivitiesForAthlete: getActivitiesForAthlete(client),
+    delete: deleteActivity(client),
+    update: update(client),
+    upsert: upsert(client),
+    insert: insert(client)
   };
 };

@@ -1,3 +1,15 @@
+function getEnvironmentVariableOrThrowError(environmentVariableName: string) {
+  const value = process.env[environmentVariableName];
+
+  if (value === undefined) {
+    const message = `Environment Variable '${environmentVariableName}' not set`;
+    console.error(message);
+    throw new Error(message);
+  }
+
+  return value;
+}
+
 export const Config = {
   clientId: process.env.CLIENT_ID ?? '',
   clientSecret: process.env.CLIENT_SECRET ?? '',
@@ -5,5 +17,6 @@ export const Config = {
   stravaSubscriptionId: Number(process.env.STRAVA_SUBSCRIPTION_ID),
   supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL ?? '',
   supabaseAnonKey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? '',
-  supabaseJWTSecret: process.env.SUPABASE_JWT_SECRET ?? ''
+  supabaseJWTSecret: process.env.SUPABASE_JWT_SECRET ?? '',
+  supabaseServiceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY ?? ''
 };

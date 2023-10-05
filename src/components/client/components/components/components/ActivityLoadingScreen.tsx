@@ -9,7 +9,7 @@ export default async function ActivityLoadingScreen({
   athleteId: number;
   athleteHourGoal: number;
 }) {
-  const { data: activities } = await activityService.getActivitiesForAthlete(
+  const { data: activities } = await activityService().getActivitiesForAthlete(
     athleteId
   );
 

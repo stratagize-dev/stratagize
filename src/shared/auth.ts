@@ -69,7 +69,7 @@ export const authOptions: AuthOptions = {
     updateUser: message => console.debug('event', 'updateUser', { message }),
     linkAccount: message => console.debug('event', 'linkAccount', { message }),
     session: async message => {
-      console.debug('event', 'session', { message });
+      // console.debug('event', 'session', { message });
       const customSession = message.session as CustomSession;
 
       if (customSession.athleteId && customSession) {
