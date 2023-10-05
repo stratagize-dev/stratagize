@@ -1,15 +1,3 @@
-function getEnvironmentVariableOrThrowError(environmentVariableName: string) {
-  const value = process.env[environmentVariableName];
-
-  if (value === undefined) {
-    const message = `Environment Variable '${environmentVariableName}' not set`;
-    console.error(message);
-    throw new Error(message);
-  }
-
-  return value;
-}
-
 export const Config = {
   clientId: process.env.CLIENT_ID ?? '',
   clientSecret: process.env.CLIENT_SECRET ?? '',
