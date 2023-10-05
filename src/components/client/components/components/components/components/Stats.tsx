@@ -1,4 +1,5 @@
 'use client';
+<<<<<<<< HEAD:src/components/client/components/components/components/components/Stats.tsx
 import AnnualGoal from '@/components/client/components/components/components/components/components/AnnualGoal';
 import MessageBlock from '@/components/client/components/components/components/components/components/MessageBlock';
 import { useAtom } from 'jotai';
@@ -7,12 +8,25 @@ import ProgressCircle from '@/components/client/components/components/components
 import { StatsRow } from '@/components/client/components/components/components/components/components/StatsRow';
 import HorizontalSpacer from '@/components/client/components/components/components/components/components/HorizontalSpacer';
 import SportsBreakdown from '@/components/client/components/components/components/components/components/SportsBreakdown';
+========
+import AnnualGoal from '@/components/client/components/AnnualGoal';
+import MessageBlock from '@/components/client/components/MessageBlock';
+import { useAtom } from 'jotai';
+import { annualHourGoalAtom } from '@/components/client/state/atoms';
+import ProgressCircle from '@/components/client/components/ProgressCircle';
+import { StatsRow } from '@/components/client/components/StatsRow';
+import HorizontalSpacer from '@/components/client/components/HorizontalSpacer';
+import SportsBreakdown from '@/components/client/components/SportsBreakdown';
+>>>>>>>> main:src/components/client/Stats.tsx
 import { Activity } from '@/shared/types/Activity';
 import statisticsService from '@/shared/services/statistics/statisticsService';
 import { useHydrateAtoms } from 'jotai/utils';
 import { db } from '@/shared/db';
 import useSubscribeToActivityUpdates from '@/components/client/hooks/useSubscribeToActivityUpdates';
+<<<<<<<< HEAD:src/components/client/components/components/components/components/Stats.tsx
 import useCustomSession from '@/components/client/hooks/useCustomSession';
+========
+>>>>>>>> main:src/components/client/Stats.tsx
 function humanDay(days: number) {
   return days == 1 ? `${days} day` : `${days} days`;
 }
