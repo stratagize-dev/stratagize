@@ -2,7 +2,6 @@ import { db, StravaGoalsClient } from '@/shared/db';
 import { performOperationAndLogError } from '@/shared/repository/utils';
 import { Activity } from '@/shared/types/Activity';
 import { getServerCustomSession } from '@/shared/auth';
-import athleteRepository from '@/shared/repository/athleteRepository';
 
 const getActivitiesForAthlete =
   (stravaGoalsClient: StravaGoalsClient) => (athleteId: number) =>

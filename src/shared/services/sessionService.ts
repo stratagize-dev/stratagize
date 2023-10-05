@@ -45,15 +45,11 @@ const beginSession = async (
   )(athleteId);
 
   if (athlete) {
-    const { error } = await athleteRepository.update(
-      customSession.supabaseToken
-    )(athleteId, {
+    await athleteRepository.update(customSession.supabaseToken)(athleteId, {
       refresh_token: customSession.refreshToken
     });
   } else {
-    const { error, data: athlete } = await athleteRepository.insert(
-      customSession.supabaseToken
-    )({
+    await athleteRepository.insert(customSession.supabaseToken)({
       id: athleteId,
       hour_goal: 365,
       is_onboarded: false,

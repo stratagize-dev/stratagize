@@ -11,7 +11,7 @@ export default function useSubscribeToActivityUpdates(
   const [updatedActivities, setUpdatedActivities] =
     useState<Activity.Row[]>(activities);
 
-  const { customSession, status } = useCustomSession();
+  const { customSession } = useCustomSession();
   useEffect(() => {
     let channel: RealtimeChannel | undefined = undefined;
     if (customSession) {
