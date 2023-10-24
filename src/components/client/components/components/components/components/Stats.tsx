@@ -99,7 +99,9 @@ export default function Stats({ athleteId, activities, goalHours }: Props) {
             {
               id: 'year.timeAhead',
               header: year.timeAhead().human,
-              message: 'Time ahead for year'
+              message: `Time ${
+                year.timeAhead().duration.isAhead ? 'ahead' : 'behind'
+              } for year`
             },
             {
               id: 'year.actualDailyAverage',
