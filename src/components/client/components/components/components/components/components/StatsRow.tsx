@@ -22,8 +22,8 @@ export const StatsRow = ({
   return (
     <>
       <div className="grid items-center lg:grid-cols-12 gap-6 lg:gap-16 my-12">
-        <div className="lg:col-span-4">
-          <div className="lg:pr-6 xl:pr-12">
+        <div className="lg:col-span-6">
+          <div className="lg:px-6 xl:px-12">
             <p className="text-6xl font-bold leading-10 text-orange-500">
               {title}
               {!!percentage && (
@@ -41,7 +41,7 @@ export const StatsRow = ({
             <p className="mt-2 sm:mt-3 text-gray-500">{subTitle}</p>
           </div>
         </div>
-        <div className="lg:col-span-8 relative lg:before:absolute lg:before:top-0 lg:before:-left-12 lg:before:w-px lg:before:h-full lg:before:bg-gray-200 lg:before:dark:bg-gray-700">
+        <div className="lg:col-span-6 relative lg:before:absolute lg:before:top-0 lg:before:-left-12 lg:before:w-px lg:before:h-full lg:before:bg-gray-200 lg:before:dark:bg-gray-700">
           <div className="grid gap-6 grid-cols-2 md:grid-cols-4 lg:grid-cols-3 sm:gap-8">
             {messageBlocks.map(value => (
               <MessageBlock

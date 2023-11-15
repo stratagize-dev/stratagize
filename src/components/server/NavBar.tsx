@@ -1,4 +1,5 @@
 import SignOutButton from '@/components/client/SignOutButton';
+import { SportsMenu } from '@/components/client/SportsMenu';
 
 export default function NavBar() {
   return (
@@ -6,9 +7,11 @@ export default function NavBar() {
       <div className="text-orange-500 font-semibold py-2 px-4">
         Strava Goals
       </div>
-      <div className="bg-amber-500 w-max"></div>
 
-      <SignOutButton />
+      <div className="flex justify-items-start items-center gap-x-4">
+        <SportsMenu />
+        <SignOutButton />
+      </div>
     </div>
   );
 }
