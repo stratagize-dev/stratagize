@@ -8,7 +8,7 @@ import CustomSession from '@/shared/types/auth/CustomSession';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
-  title: 'Strava Goals',
+  title: 'Stratagize',
   description: 'View your annual Strava Goals'
 };
 

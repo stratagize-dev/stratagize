@@ -24,7 +24,7 @@ export const StatsRow = ({
       <div className="grid items-center lg:grid-cols-12 gap-6 lg:gap-16 my-12">
         <div className="lg:col-span-6">
           <div className="lg:px-6 xl:px-12">
-            <p className="text-6xl font-bold leading-10 text-orange-500">
+            <p className="text-6xl font-bold leading-10 text-purple-500">
               {title}
               {!!percentage && (
                 <span className="ml-4 inline-flex items-center gap-x-1 bg-gray-200 font-medium text-gray-800 text-xs leading-4 rounded-full py-0.5 px-2 dark:bg-gray-800 dark:text-gray-300">

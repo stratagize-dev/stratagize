@@ -9,7 +9,7 @@ export default async function Home() {
   const athleteId = Number(session.athleteId);
 
   return (
-    <Suspense fallback={<div>on boarding athlete.....</div>}>
+    <Suspense fallback={<div>Loading Athlete Data</div>}>
       <OnboardingScreen athleteId={athleteId} session={session} />{' '}
     </Suspense>
   );

@@ -7,7 +7,7 @@ interface Props {
 const AnnualGoal = ({ value, onYearGoalChange }: Props) => {
   return (
     <>
-      <div className="grid grid-cols-6 gap-4 place-items-center max-w-4xl text-5xl font-bold  text-orange-500 ">
+      <div className="grid grid-cols-6 gap-4 place-items-center max-w-4xl text-5xl font-bold  text-purple-500 ">
         <p className="col-span-6 md:col-span-3">Goal for year :</p>
         <div className="col-span-3 md:col-span-2 text-gray-500 ">
           <input

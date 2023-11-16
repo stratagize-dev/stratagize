@@ -14,10 +14,10 @@ export function CustomMenu({ text, menuItems }: Props) {
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
-        <Menu.Button className="inline-flex w-full justify-center rounded-md   px-4 py-2 text-orange-500 font-semibold hover:bg-orange-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75">
+        <Menu.Button className="inline-flex w-full justify-center rounded-md   px-4 py-2 text-purple-500 font-semibold hover:bg-purple-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75">
           {text}
           <ChevronDownIcon
-            className="ml-2 -mr-1 h-5 w-5 text-orange-500"
+            className="ml-2 -mr-1 h-5 w-5 text-purple-500"
             aria-hidden="true"
           />
         </Menu.Button>
@@ -33,8 +33,12 @@ export function CustomMenu({ text, menuItems }: Props) {
       >
         <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none">
           <div className="px-1 py-1 ">
-            {menuItems.map(({ buttonText }) => (
-              <MenuItem key={buttonText} buttonText={buttonText} />
+            {menuItems.map(({ buttonText, onClick }) => (
+              <MenuItem
+                key={buttonText}
+                buttonText={buttonText}
+                onClick={onClick}
+              />
             ))}
           </div>
         </Menu.Items>

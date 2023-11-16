@@ -29,7 +29,7 @@ const ProgressCircle = ({ percentageComplete }: Props) => {
           strokeDashoffset={
             circumference - (percentageComplete / 100) * circumference
           }
-          className="text-orange-500"
+          className="text-purple-500"
         />
       </svg>
       <span className="absolute text-5xl">{percentageComplete}%</span>
