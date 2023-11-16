@@ -34,6 +34,16 @@ const getActivitiesForAthlete = async (
   return activityRepository.getActivitiesForAthlete(athleteId);
 };
 
+const getSportTypesForAthlete = async (
+  athleteId: number,
+  client?: StravaGoalsClient
+) => {
+  return client
+    ?.from('athlete_sport_types')
+    .select()
+    .eq('athlete_id', athleteId);
+};
+
 const saveSummaryActivities = async (
   summaryActivities: StravaApi.SummaryActivity[],
   client?: StravaGoalsClient
@@ -85,8 +95,10 @@ const updateDetailedActivity = async (
 export const activityService = (client?: StravaGoalsClient) => {
   return {
     deleteActivity: (activityId: number) => deleteActivity(activityId, client),
-    getActivitiesForAthlete: (activityId: number) =>
-      getActivitiesForAthlete(activityId, client),
+    getSportTypesForAthlete: (athleteId: number) =>
+      getSportTypesForAthlete(athleteId, client),
+    getActivitiesForAthlete: (atheleteId: number) =>
+      getActivitiesForAthlete(atheleteId, client),
     saveSummaryActivities: (summaryActivities: StravaApi.SummaryActivity[]) =>
       saveSummaryActivities(summaryActivities, client),
     insertDetailedActivity: (detailedActivity: StravaApi.DetailedActivity) =>

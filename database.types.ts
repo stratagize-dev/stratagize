@@ -124,7 +124,20 @@ export interface Database {
       }
     }
     Views: {
-      [_ in never]: never
+      athlete_sport_types: {
+        Row: {
+          athlete_id: number | null
+          sport_type: Database["public"]["Enums"]["sport_type"] | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "activities_athlete_id_fkey"
+            columns: ["athlete_id"]
+            referencedRelation: "athletes"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
     }
     Functions: {
       [_ in never]: never

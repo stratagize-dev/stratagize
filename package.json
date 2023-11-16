@@ -16,6 +16,8 @@
     "ngrok": "ngrok http 3001"
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.17",
+    "@heroicons/react": "^2.0.18",
     "@supabase/supabase-js": "2.38.0",
     "autoprefixer": "10.4.16",
     "date-fns": "2.30.0",

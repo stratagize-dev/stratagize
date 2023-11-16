@@ -5,7 +5,7 @@ interface Props {
 const MessageBlock = ({ header, message }: Props) => {
   return (
     <div>
-      <p className="text-3xl font-semibold text-orange-500">{header}</p>
+      <p className="text-3xl font-semibold text-purple-500">{header}</p>
       <p className="mt-1 text-gray-500">{message}</p>
     </div>
   );

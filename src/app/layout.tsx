@@ -8,7 +8,7 @@ import CustomSession from '@/shared/types/auth/CustomSession';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
-  title: 'Strava Goals',
+  title: 'Stratagize',
   description: 'View your annual Strava Goals'
 };
 
@@ -28,7 +28,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <NavBar />
+        <NavBar customSession={session} />
         {children}
       </body>
     </html>

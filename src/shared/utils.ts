@@ -6,9 +6,8 @@ import {
   startOfToday,
   startOfYear
 } from 'date-fns';
-import { ActivityTotals } from '@/shared/ActivityTotals';
 import * as StravaApi from '@/shared/strava-client';
-import { Activity, convertSportType, SportType } from '@/shared/types/Activity';
+import { Activity } from '@/shared/types/Activity';
 export const secondsToHourDuration = (totalSeconds: number): HourDuration => {
   const absoluteSeconds = Math.abs(totalSeconds);
   const hours = Math.floor(secondsToHours(absoluteSeconds));
@@ -76,47 +75,6 @@ export const calculateActivityStreak = (
     currentStreak,
     currentStreakStartDate
   };
-};
-/**
- * @deprecated
- * @param activities
- * @param filter
- */
-export const calculateMovingTime = (
-  activities: StravaApi.SummaryActivity[],
-  filter?: (
-    activities: StravaApi.SummaryActivity[]
-  ) => StravaApi.SummaryActivity[]
-): ActivityTotals => {
-  const filterToApply = filter
-    ? filter
-    : (act: StravaApi.SummaryActivity[]) => act;
-
-  const accumulator: ActivityTotals = {
-    totalMovingTime: 0,
-    totalCount: 0,
-    sports: { Unknown: { totalTimeSeconds: 0, count: 0 } }
-  };
-
-  return filterToApply(activities).reduce((runningTotal, currentActivity) => {
-    const sportType: SportType = convertSportType(currentActivity.sport_type);
-    const movingTime = currentActivity.moving_time ?? 0;
-
-    let total = runningTotal.sports[sportType];
-
-    if (total === undefined) {
-      total = { count: 0, totalTimeSeconds: 0 };
-    }
-
-    total.totalTimeSeconds += movingTime;
-    total.count++;
-
-    runningTotal.sports[sportType] = total;
-    runningTotal.totalCount++;
-    runningTotal.totalMovingTime += movingTime;
-
-    return runningTotal;
-  }, accumulator);
 };
 
 const filterFromDate = <T extends StravaApi.SummaryActivity | Activity.Row>(
