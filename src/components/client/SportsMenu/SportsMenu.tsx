@@ -2,7 +2,7 @@
 
 import { CustomMenu } from '@/components/CustomMenu/CustomMenu';
 import { useEffect, useState } from 'react';
-import { activityService } from '@/shared/services/activityService';
+import { activityService } from '@/shared/services/activityService/activityService';
 import useCustomSession from '@/components/client/hooks/useCustomSession';
 import { db } from '@/shared/db';
 import { MenuItemProps } from '@/components/CustomMenu/components/MenuItem';

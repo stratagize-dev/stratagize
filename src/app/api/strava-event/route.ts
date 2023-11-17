@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { StravaEvent } from '@/shared/types/strava/events/StravaEvent';
 import { refreshToken } from '@/shared/external/Strava/token/refreshToken';
-import { activityService } from '@/shared/services/activityService';
+import { activityService } from '@/shared/services/activityService/activityService';
 import { ActivitiesApiFp, DetailedActivity } from '@/shared/strava-client';
 import { Database } from '../../../../database.types';
 import { createAthletesRepository } from '@/shared/repository/athleteRepository';

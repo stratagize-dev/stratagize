@@ -1,25 +1,42 @@
 import CustomSession from '@/shared/types/auth/CustomSession';
 import { getServerCustomSession } from '@/shared/auth';
-import { db } from '@/shared/db';
 import { Suspense } from 'react';
+import { Activity, SportType } from '@/shared/types/Activity';
+import { MountainBikeRide } from '@/components/server/MountainBikeRide';
+import { activityService } from '@/shared/services/activityService';
+
+function SportLoader({
+  sportType,
+  activities
+}: {
+  sportType: SportType;
+  activities: Activity.Row[];
+}) {
+  switch (sportType) {
+    case 'MountainBikeRide':
+      return <MountainBikeRide activities={activities} />;
+    default:
+      return <div>An error has occured unsupported {sportType}</div>;
+  }
+}
 
 export default async function Page({
   params
 }: {
-  params: { sportType: string };
+  params: { sportType: SportType };
 }) {
   const session: CustomSession = await getServerCustomSession();
 
-  const client = db(session.supabaseToken);
+  const athleteId = Number(session.athleteId);
 
-  const result = await client
-    .from('activities')
-    .select()
-    .eq('sport_type', params.sportType);
+  const { data: activities } = await activityService().getActivitiesForAthlete(
+    athleteId,
+    params.sportType
+  );
+
   return (
-    <Suspense fallback={<div>Loading babd Data</div>}>
-      <div>My Sport: {params.sportType}</div>
-      <div>{JSON.stringify(result.data)}</div>
+    <Suspense fallback={<div>Loading Data</div>}>
+      <SportLoader sportType={params.sportType} activities={activities ?? []} />
     </Suspense>
   );
 }

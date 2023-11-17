@@ -1,19 +1,21 @@
 import { db, StravaGoalsClient } from '@/shared/db';
 import { performOperationAndLogError } from '@/shared/repository/utils';
-import { Activity } from '@/shared/types/Activity';
+import { Activity, SportType } from '@/shared/types/Activity';
 import { getServerCustomSession } from '@/shared/auth';
 
 const getActivitiesForAthlete =
-  (stravaGoalsClient: StravaGoalsClient) => (athleteId: number) =>
-    performOperationAndLogError(
-      async () =>
-        stravaGoalsClient
-          .from('activities')
-          .select('*')
-          .eq('athlete_id', athleteId)
-          .returns<Activity.Row[]>(),
-      `an error occured retrieving the activities for the athlete ${athleteId}`
-    );
+  (stravaGoalsClient: StravaGoalsClient) =>
+  (athleteId: number, sportType?: SportType) =>
+    performOperationAndLogError(async () => {
+      let query = stravaGoalsClient
+        .from('activities')
+        .select('*')
+        .eq('athlete_id', athleteId);
+
+      if (sportType) query = query.eq('sport_type', sportType);
+
+      return query.returns<Activity.Row[]>();
+    }, `an error occured retrieving the activities for the athlete ${athleteId}`);
 
 const deleteActivity =
   (stravaGoalsClient: StravaGoalsClient) => (activityId: number) =>

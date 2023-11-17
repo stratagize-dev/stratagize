@@ -2,6 +2,7 @@ import * as StravaApi from '@/shared/strava-client';
 import { Activity, SportType } from '@/shared/types/Activity';
 import { createActivityRepository } from '@/shared/repository/activityRepository';
 import { StravaGoalsClient } from '@/shared/db';
+import { getSportTypesForAthlete } from '@/shared/services/activityService/getSportTypesForAthlete';
 
 const defaultDate = (date?: string) => date ?? new Date().toISOString();
 
@@ -28,20 +29,11 @@ const deleteActivity = async (
 
 const getActivitiesForAthlete = async (
   athleteId: number,
+  sportType?: SportType,
   client?: StravaGoalsClient
 ) => {
   const activityRepository = await createActivityRepository(client);
-  return activityRepository.getActivitiesForAthlete(athleteId);
-};
-
-const getSportTypesForAthlete = async (
-  athleteId: number,
-  client?: StravaGoalsClient
-) => {
-  return client
-    ?.from('athlete_sport_types')
-    .select()
-    .eq('athlete_id', athleteId);
+  return activityRepository.getActivitiesForAthlete(athleteId, sportType);
 };
 
 const saveSummaryActivities = async (
@@ -95,10 +87,14 @@ const updateDetailedActivity = async (
 export const activityService = (client?: StravaGoalsClient) => {
   return {
     deleteActivity: (activityId: number) => deleteActivity(activityId, client),
+    /**
+     * Gets all the distinct sport types that an athlete has engaged in
+     * @param athleteId
+     */
     getSportTypesForAthlete: (athleteId: number) =>
       getSportTypesForAthlete(athleteId, client),
-    getActivitiesForAthlete: (atheleteId: number) =>
-      getActivitiesForAthlete(atheleteId, client),
+    getActivitiesForAthlete: (athleteId: number, sportType?: SportType) =>
+      getActivitiesForAthlete(athleteId, sportType, client),
     saveSummaryActivities: (summaryActivities: StravaApi.SummaryActivity[]) =>
       saveSummaryActivities(summaryActivities, client),
     insertDetailedActivity: (detailedActivity: StravaApi.DetailedActivity) =>

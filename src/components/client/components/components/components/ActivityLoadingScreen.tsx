@@ -1,4 +1,4 @@
-import { activityService } from '@/shared/services/activityService';
+import { activityService } from '@/shared/services/activityService/activityService';
 import { Suspense } from 'react';
 import Stats from '@/components/client/components/components/components/components/Stats';
 
@@ -9,9 +9,8 @@ export default async function ActivityLoadingScreen({
   athleteId: number;
   athleteHourGoal: number;
 }) {
-  const { data: activities } = await activityService().getActivitiesForAthlete(
-    athleteId
-  );
+  const { data: activities } =
+    await activityService().getActivitiesForAthlete(athleteId);
 
   return (
     <Suspense fallback={<div>loading activity data</div>}>

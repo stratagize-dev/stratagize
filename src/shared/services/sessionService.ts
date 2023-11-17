@@ -1,6 +1,6 @@
 import { createAthletesRepository } from '@/shared/repository/athleteRepository';
 import summaryActivityService from '@/shared/external/Strava/services/summaryActivityService';
-import { activityService } from '@/shared/services/activityService';
+import { activityService } from '@/shared/services/activityService/activityService';
 import { Athlete } from '@/shared/types/Athlete';
 import CustomSession from '@/shared/types/auth/CustomSession';
 import { db } from '@/shared/db';
@@ -16,9 +16,8 @@ export async function onboardAthlete(
     undefined
   );
 
-  const { error } = await activityService().saveSummaryActivities(
-    summaryActivities
-  );
+  const { error } =
+    await activityService().saveSummaryActivities(summaryActivities);
 
   const athleteRepository = await createAthletesRepository();
   if (error === null) {
