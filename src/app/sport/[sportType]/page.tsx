@@ -1,24 +1,9 @@
 import CustomSession from '@/shared/types/auth/CustomSession';
 import { getServerCustomSession } from '@/shared/auth';
 import { Suspense } from 'react';
-import { Activity, SportType } from '@/shared/types/Activity';
-import { MountainBikeRide } from '@/components/server/MountainBikeRide';
+import { SportType } from '@/shared/types/Activity';
 import { activityService } from '@/shared/services/activityService';
-
-function SportLoader({
-  sportType,
-  activities
-}: {
-  sportType: SportType;
-  activities: Activity.Row[];
-}) {
-  switch (sportType) {
-    case 'MountainBikeRide':
-      return <MountainBikeRide activities={activities} />;
-    default:
-      return <div>An error has occured unsupported {sportType}</div>;
-  }
-}
+import { SportLoader } from '@/components/server/SportLoader';
 
 export default async function Page({
   params

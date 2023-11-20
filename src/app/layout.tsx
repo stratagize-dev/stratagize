@@ -2,7 +2,7 @@ import './globals.css';
 import { Inter } from 'next/font/google';
 import { authOptions } from '@/shared/auth';
 import { redirect } from 'next/navigation';
-import NavBar from '@/components/server/NavBar';
+import { NavBar } from '@/components/server/NavBar';
 import { AuthOptions, getServerSession } from 'next-auth';
 import CustomSession from '@/shared/types/auth/CustomSession';
 const inter = Inter({ subsets: ['latin'] });

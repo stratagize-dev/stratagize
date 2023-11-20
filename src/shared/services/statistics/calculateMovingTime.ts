@@ -1,6 +1,11 @@
 import { ActivityTotals } from '@/shared/ActivityTotals';
 import { Activity, SportType } from '@/shared/types/Activity';
 
+/**
+ * calculate the total moving time for an array of activities
+ * @param activities
+ * @param filter
+ */
 export const calculateMovingTime = (
   activities: Activity.Row[],
   filter?: (activities: Activity.Row[]) => Activity.Row[]

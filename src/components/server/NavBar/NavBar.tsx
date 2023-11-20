@@ -4,8 +4,10 @@ import CustomSession from '@/shared/types/auth/CustomSession';
 import ClientSide from '@/components/client/ClientSide';
 import Image from 'next/image';
 import Link from 'next/link';
+import { NavLink } from '@/components/server/NavBar/components/NavLink';
+import { AdminMenu } from '@/components/client/AdminMenu/AdminMenu';
 
-export default function NavBar({
+export function NavBar({
   customSession
 }: {
   customSession: CustomSession | null;
@@ -22,10 +24,13 @@ export default function NavBar({
       </Link>
 
       <div className="flex justify-items-start items-center gap-x-4">
+        <NavLink href="/">Today</NavLink>
+        <NavLink href="/">Month</NavLink>
+        <NavLink href="/">Year</NavLink>
         <ClientSide session={customSession}>
           <SportsMenu />
         </ClientSide>
-
+        <AdminMenu />
         <SignOutButton />
       </div>
     </div>

@@ -1,4 +1,5 @@
 import { secondsToHourDuration } from '@/shared/utils';
+
 describe('secondsToHourDuration', () => {
   test('1797 seconds should be 29 minutes 57 seconds', () => {
     const result = secondsToHourDuration(1797);
