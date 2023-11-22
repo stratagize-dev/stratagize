@@ -1,12 +1,9 @@
-import { getServerCustomSession } from '@/shared/auth';
-import CustomSession from '@/shared/types/auth/CustomSession';
+import { getAuthDetails } from '@/shared/auth';
 import { Suspense } from 'react';
 import OnboardingScreen from '@/components/client/components/components/OnboardingScreen';
 
 export default async function Home() {
-  const session: CustomSession = await getServerCustomSession();
-
-  const athleteId = Number(session.athleteId);
+  const {athleteId, session} = await getAuthDetails();
 
   return (
     <Suspense fallback={<div>Loading Athlete Data</div>}>

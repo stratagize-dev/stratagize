@@ -6,6 +6,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { NavLink } from '@/components/server/NavBar/components/NavLink';
 import { AdminMenu } from '@/components/client/AdminMenu/AdminMenu';
+import { Toaster } from 'react-hot-toast';
 
 export function NavBar({
   customSession
@@ -22,7 +23,7 @@ export function NavBar({
           height={60}
         />
       </Link>
-
+      <Toaster/>
       <div className="flex justify-items-start items-center gap-x-4">
         <NavLink href="/">Today</NavLink>
         <NavLink href="/">Month</NavLink>

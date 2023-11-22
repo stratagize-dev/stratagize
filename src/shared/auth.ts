@@ -80,12 +80,12 @@ export const authOptions: AuthOptions = {
   }
 };
 
-export const getServerCustomSession = async () => {
+export const getAuthDetails = async () => {
   const session = await getServerSession<AuthOptions, CustomSession>(
     authOptions
   );
 
   if (session == null) throw new Error('Not Authorised');
 
-  return session;
+  return  {athleteId: Number(session.athleteId), supabaseToken: session.supabaseToken,  session};
 };

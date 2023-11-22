@@ -1,6 +1,6 @@
 import { db, StravaGoalsClient } from '@/shared/db';
 import { Athlete } from '@/shared/types/Athlete';
-import { getServerCustomSession } from '@/shared/auth';
+import { getAuthDetails } from '@/shared/auth';
 import { performOperationAndLogError } from '@/shared/repository/utils';
 
 const get = (stravaGoalsClient: StravaGoalsClient) => (athleteId: number) =>
@@ -43,8 +43,8 @@ const insert =
 
 export const createAthletesRepository = async (client?: StravaGoalsClient) => {
   if (client === undefined) {
-    const session = await getServerCustomSession();
-    client = db(session.supabaseToken);
+    const { supabaseToken } = await getAuthDetails();
+    client = db(supabaseToken);
   }
 
   return {
