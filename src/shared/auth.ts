@@ -87,5 +87,9 @@ export const getAuthDetails = async () => {
 
   if (session == null) throw new Error('Not Authorised');
 
-  return  {athleteId: Number(session.athleteId), supabaseToken: session.supabaseToken,  session};
+  return {
+    athleteId: Number(session.athleteId),
+    supabaseToken: session.supabaseToken,
+    session
+  };
 };

@@ -60,7 +60,7 @@ const update =
 
 export const createActivityRepository = async (client?: StravaGoalsClient) => {
   if (client === undefined) {
-    const {supabaseToken} = await getAuthDetails();
+    const { supabaseToken } = await getAuthDetails();
     client = db(supabaseToken);
   }
 

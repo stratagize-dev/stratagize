@@ -23,7 +23,7 @@ export function NavBar({
           height={60}
         />
       </Link>
-      <Toaster/>
+      <Toaster />
       <div className="flex justify-items-start items-center gap-x-4">
         <NavLink href="/">Today</NavLink>
         <NavLink href="/">Month</NavLink>

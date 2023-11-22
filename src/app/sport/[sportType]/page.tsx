@@ -9,7 +9,7 @@ export default async function Page({
 }: {
   params: { sportType: SportType };
 }) {
-  const {athleteId} = await getAuthDetails();
+  const { athleteId } = await getAuthDetails();
 
   const { data: activities } = await activityService().getActivitiesForAthlete(
     athleteId,
