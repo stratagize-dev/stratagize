@@ -16,7 +16,7 @@ interface WebhookPayload {
  * @constructor
  */
 export async function POST(request: NextRequest) {
-  const data = await request.json();
+  const data: WebhookPayload = await request.json();
 
   console.log('loading details', data);
   // const dataString = data.record.data?.toString();
