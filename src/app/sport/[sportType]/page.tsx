@@ -1,4 +1,3 @@
-import CustomSession from '@/shared/types/auth/CustomSession';
 import { getAuthDetails } from '@/shared/auth';
 import { Suspense } from 'react';
 import { SportType } from '@/shared/types/Activity';
@@ -10,9 +9,7 @@ export default async function Page({
 }: {
   params: { sportType: SportType };
 }) {
-  const session: CustomSession = await getAuthDetails();
-
-  const athleteId = Number(session.athleteId);
+  const {athleteId} = await getAuthDetails();
 
   const { data: activities } = await activityService().getActivitiesForAthlete(
     athleteId,
