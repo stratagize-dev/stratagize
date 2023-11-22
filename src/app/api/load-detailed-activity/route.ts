@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
         data.record.id
       )(fetch);
 
-      return await activityService(serviceRoleDb).insertDetailedActivity(
+      await activityService(serviceRoleDb).insertDetailedActivity(
         detailedActivity
       );
     }
