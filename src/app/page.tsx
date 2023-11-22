@@ -3,7 +3,7 @@ import { Suspense } from 'react';
 import OnboardingScreen from '@/components/client/components/components/OnboardingScreen';
 
 export default async function Home() {
-  const {athleteId, session} = await getAuthDetails();
+  const { athleteId, session } = await getAuthDetails();
 
   return (
     <Suspense fallback={<div>Loading Athlete Data</div>}>
