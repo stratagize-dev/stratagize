@@ -15,5 +15,5 @@ export const insertDetailedActivity = async (
   };
 
   const activityRepository = await createActivityRepository(client);
-  return activityRepository.insert(activity);
+  return activityRepository.upsert([activity]);
 };
