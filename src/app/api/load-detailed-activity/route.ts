@@ -20,31 +20,38 @@ interface WebhookPayload {
  * @constructor
  */
 export async function POST(request: NextRequest) {
-  const data: WebhookPayload = await request.json();
+  try {
+    const data: WebhookPayload = await request.json();
 
-  console.log(`loading details ${JSON.stringify(data)}`);
+    console.log(`loading details ${JSON.stringify(data)}`);
 
-  const athleteRepository = await createAthletesRepository(serviceRoleDb);
+    const athleteRepository = await createAthletesRepository(serviceRoleDb);
 
-  const { data: athlete } = await athleteRepository.get(data.record.athlete_id);
+    const { data: athlete } = await athleteRepository.get(
+      data.record.athlete_id
+    );
 
-  if (athlete?.refresh_token) {
-    const tokenResult = await refreshToken(athlete.refresh_token);
+    if (athlete?.refresh_token) {
+      const tokenResult = await refreshToken(athlete.refresh_token);
 
-    if (tokenResult.accessToken) {
-      const activitiesApi = ActivitiesApiFp({
-        accessToken: tokenResult.accessToken
-      });
+      if (tokenResult.accessToken) {
+        const activitiesApi = ActivitiesApiFp({
+          accessToken: tokenResult.accessToken
+        });
 
-      const detailedActivity = await activitiesApi.getActivityById(
-        data.record.id
-      )(fetch);
+        const detailedActivity = await activitiesApi.getActivityById(
+          data.record.id
+        )(fetch);
 
-      await activityService(serviceRoleDb).insertDetailedActivity(
-        detailedActivity
-      );
+        await activityService(serviceRoleDb).insertDetailedActivity(
+          detailedActivity
+        );
+      }
     }
-  }
 
-  return NextResponse.json({ status: 'ok', data });
+    return NextResponse.json({ status: 'ok', data });
+  } catch (e) {
+    console.error('an error occured trying to load detailed activity ', e);
+    return NextResponse.error();
+  }
 }
