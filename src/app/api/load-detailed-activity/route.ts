@@ -14,15 +14,17 @@ interface WebhookPayload {
   old_record: StravaEvent | null;
 }
 
-/**
- * Endpoint called from by Supabase in response to insert of new StravaEvent
- * @param request
- * @constructor
- */
 export async function POST(request: NextRequest) {
   try {
     const data: WebhookPayload = await request.json();
 
+    if (data.record.detailed_event) {
+      return NextResponse.json({
+        status: 'ok',
+        activity_id: data.record.id,
+        message: 'skipping activity as detailed event already exists'
+      });
+    }
     console.log(`loading details ${JSON.stringify(data)}`);
 
     const athleteRepository = await createAthletesRepository(serviceRoleDb);
@@ -49,7 +51,11 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    return NextResponse.json({ status: 'ok', data });
+    return NextResponse.json({
+      status: 'ok',
+      activity_id: data.record.id,
+      message: 'detailed activity succesfully loaded'
+    });
   } catch (e) {
     console.error('an error occured trying to load detailed activity ', e);
     return NextResponse.error();
