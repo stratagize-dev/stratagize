@@ -10,6 +10,7 @@ const getActivitiesForAthlete =
       let query = stravaGoalsClient
         .from('activities')
         .select('*')
+        .order('start_date', { ascending: true })
         .eq('athlete_id', athleteId);
 
       if (sportType) query = query.eq('sport_type', sportType);
