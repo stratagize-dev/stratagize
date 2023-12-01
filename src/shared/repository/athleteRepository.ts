@@ -1,7 +1,10 @@
 import { db, StravaGoalsClient } from '@/shared/db';
 import { Athlete } from '@/shared/types/Athlete';
 import { getAuthDetails } from '@/shared/auth';
-import { performOperationAndLogError } from '@/shared/repository/utils';
+import {
+  createClient,
+  performOperationAndLogError
+} from '@/shared/repository/utils';
 
 const get = (stravaGoalsClient: StravaGoalsClient) => (athleteId: number) =>
   performOperationAndLogError(
@@ -35,17 +38,8 @@ const insert =
       'an error occured inserting athlete'
     );
 
-// export const athleteRepository = {
-//   get,
-//   insert,
-//   update
-// };
-
 export const createAthletesRepository = async (client?: StravaGoalsClient) => {
-  if (client === undefined) {
-    const { supabaseToken } = await getAuthDetails();
-    client = db(supabaseToken);
-  }
+  client = await createClient(client);
 
   return {
     get: get(client),
@@ -53,5 +47,3 @@ export const createAthletesRepository = async (client?: StravaGoalsClient) => {
     update: update(client)
   };
 };
-
-// export default athleteRepository;
