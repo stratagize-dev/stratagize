@@ -6,7 +6,7 @@ import { createAthletesRepository } from '@/shared/repository/athleteRepository'
 import { refreshToken } from '@/shared/external/Strava/token/refreshToken';
 import { activityService } from '@/shared/services/activityService';
 import serviceRoleDb from '@/shared/serviceRoleDb';
-interface WebhookPayload {
+export interface WebhookPayload {
   type: 'INSERT' | 'UPDATE';
   table: 'activities';
   record: Activity.Row;
