@@ -1,7 +1,7 @@
 export default function logError(
   message: string,
-  error: Error,
+  error?: { message: string },
   namespace?: string
 ) {
-  console.log(JSON.stringify({ message, error: error.message, namespace }));
+  console.log(JSON.stringify({ message, error: error?.message, namespace }));
 }

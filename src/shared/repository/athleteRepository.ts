@@ -1,6 +1,5 @@
-import { db, StravaGoalsClient } from '@/shared/db';
+import { StravaGoalsClient } from '@/shared/db';
 import { Athlete } from '@/shared/types/Athlete';
-import { getAuthDetails } from '@/shared/auth';
 import {
   createClient,
   performOperationAndLogError
