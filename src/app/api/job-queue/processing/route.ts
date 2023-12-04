@@ -4,15 +4,17 @@ import { logDatabaseError } from '@/shared/logging/logDatabaseError';
 import { batchSize } from '@/app/api/job-queue/constants';
 import logError from '@/shared/logging/logError';
 import { JobHandlerPayload } from '@/app/api/job-handler/types';
+import { createJobQueueRepository } from '@/shared/repository/jobQueueRespository';
 
 export async function POST() {
   console.log('processing jobs');
 
-  const { data, error } = await serviceRoleDb
-    .from('job_queue')
-    .select('*')
-    .eq('status', 'processing')
-    .limit(batchSize);
+  const jobsRepository = await createJobQueueRepository(serviceRoleDb);
+
+  const { data, error } = await jobsRepository.findByStatus(
+    'processing',
+    batchSize
+  );
 
   if (error) {
     logDatabaseError('an error occured retrieving processed jobs', error);

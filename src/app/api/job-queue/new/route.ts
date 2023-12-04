@@ -8,12 +8,8 @@ import { JobQueue } from '@/shared/types/JobQueue';
 export async function POST() {
   console.log('looking for new jobs');
 
-  const { data, error } = await serviceRoleDb
-    .from('job_queue')
-    .select('*')
-    .order('job_id', { ascending: true })
-    .eq('status', 'new')
-    .limit(batchSize);
+  const jobsRepository = await createJobQueueRepository(serviceRoleDb);
+  const { data, error } = await jobsRepository.findByStatus('new', batchSize);
 
   if (error) {
     logDatabaseError('an error occured retrieving unprocessed jobs', error);
