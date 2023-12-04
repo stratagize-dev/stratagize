@@ -110,7 +110,7 @@ export interface Database {
           payload: Json | null
           retry_count: number | null
           retry_limit: number | null
-          status: string
+          status: Database["public"]["Enums"]["job_status"]
           url_path: string | null
         }
         Insert: {
@@ -121,7 +121,7 @@ export interface Database {
           payload?: Json | null
           retry_count?: number | null
           retry_limit?: number | null
-          status?: string
+          status?: Database["public"]["Enums"]["job_status"]
           url_path?: string | null
         }
         Update: {
@@ -132,7 +132,7 @@ export interface Database {
           payload?: Json | null
           retry_count?: number | null
           retry_limit?: number | null
-          status?: string
+          status?: Database["public"]["Enums"]["job_status"]
           url_path?: string | null
         }
         Relationships: []
@@ -180,11 +180,11 @@ export interface Database {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
-      job_queue_processing: {
+      job_queue_new: {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
-      job_queue_unprocessed: {
+      job_queue_processing: {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
@@ -194,6 +194,12 @@ export interface Database {
       }
     }
     Enums: {
+      job_status:
+        | "new"
+        | "processing"
+        | "failed"
+        | "complete"
+        | "unable-to-complete"
       sport_type:
         | "AlpineSki"
         | "BackcountrySki"

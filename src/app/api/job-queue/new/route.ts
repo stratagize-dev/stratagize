@@ -3,15 +3,16 @@ import serviceRoleDb from '@/shared/serviceRoleDb';
 import { logDatabaseError } from '@/shared/logging/logDatabaseError';
 import { createJobQueueRepository } from '@/shared/repository/jobQueueRespository';
 import { batchSize } from '@/app/api/job-queue/constants';
+import { JobQueue } from '@/shared/types/JobQueue';
 
 export async function POST() {
-  console.log('looking for unprocessed jobs');
+  console.log('looking for new jobs');
 
   const { data, error } = await serviceRoleDb
     .from('job_queue')
     .select('*')
     .order('job_id', { ascending: true })
-    .eq('status', '')
+    .eq('status', 'new')
     .limit(batchSize);
 
   if (error) {
@@ -19,7 +20,9 @@ export async function POST() {
     return NextResponse.error();
   } else {
     if (data) {
-      const processing = data?.map(job => ({ ...job, status: 'processing' }));
+      const processing = data?.map(
+        job => ({ ...job, status: 'processing' }) as JobQueue.Insert
+      );
       const jobsRepository = await createJobQueueRepository(serviceRoleDb);
 
       await jobsRepository.upsert(processing);

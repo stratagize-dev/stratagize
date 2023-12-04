@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
     if (data.payload.detailed_event) {
       const jobUpdated: JobQueue.Update = {
         job_id: data.jobId,
-        status: 'completed'
+        status: 'complete'
       };
 
       await jobsRepository.update(jobUpdated);
@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
 
         const jobUpdated: JobQueue.Update = {
           job_id: data.jobId,
-          status: 'completed'
+          status: 'complete'
         };
 
         await jobsRepository.update(jobUpdated);

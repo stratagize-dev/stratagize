@@ -8,15 +8,15 @@ AS $body$
 BEGIN
     -- Schedule retry job
     PERFORM cron.schedule(
-            'job_queue_unprocessed',
+            'job_queue_new',
             '* * * * *',
-            $$ SELECT job_queue_unprocessed(); $$
+            $$ SELECT job_queue_new(); $$
             );
     -- Schedule second job with a 20-second delay
     PERFORM pg_sleep(20);
 
     PERFORM cron.schedule(
-            'job_queue_processing',
+            'job_queue_new',
             '* * * * *',
             $$ SELECT job_queue_processing(); $$
             );
