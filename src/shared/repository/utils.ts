@@ -1,7 +1,7 @@
 import { PostgrestSingleResponse } from '@supabase/supabase-js';
-import { logDatabaseError } from '@/shared/error';
 import { getAuthDetails } from '@/shared/auth';
 import { db, StravaGoalsClient } from '@/shared/db';
+import { logDatabaseError } from '@/shared/logging/logDatabaseError';
 
 export async function performOperationAndLogError<T>(
   operation: () => Promise<PostgrestSingleResponse<T>>,

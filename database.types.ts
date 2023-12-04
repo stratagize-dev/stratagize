@@ -101,6 +101,42 @@ export interface Database {
         }
         Relationships: []
       }
+      job_queue: {
+        Row: {
+          content: string | null
+          created_at: string | null
+          http_verb: string
+          job_id: number
+          payload: Json | null
+          retry_count: number | null
+          retry_limit: number | null
+          status: string
+          url_path: string | null
+        }
+        Insert: {
+          content?: string | null
+          created_at?: string | null
+          http_verb: string
+          job_id?: number
+          payload?: Json | null
+          retry_count?: number | null
+          retry_limit?: number | null
+          status?: string
+          url_path?: string | null
+        }
+        Update: {
+          content?: string | null
+          created_at?: string | null
+          http_verb?: string
+          job_id?: number
+          payload?: Json | null
+          retry_count?: number | null
+          retry_limit?: number | null
+          status?: string
+          url_path?: string | null
+        }
+        Relationships: []
+      }
       strava_events: {
         Row: {
           created_at: string | null
@@ -140,7 +176,22 @@ export interface Database {
       }
     }
     Functions: {
-      [_ in never]: never
+      job_queue_failed: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      job_queue_processing: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      job_queue_unprocessed: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      schedule_jobs: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
     }
     Enums: {
       sport_type:

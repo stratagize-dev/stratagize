@@ -12,8 +12,7 @@ export async function onboardAthlete(
   console.log('beginning onboarding of athlete', athlete.id);
 
   const summaryActivities = await summaryActivityService.loadFromFirstOfYear(
-    customSession.accessToken,
-    undefined
+    customSession.accessToken
   );
 
   const { error } =

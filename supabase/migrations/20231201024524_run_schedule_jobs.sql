@@ -1,0 +1,1 @@
+SELECT public.schedule_jobs();
