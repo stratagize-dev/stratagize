@@ -3,7 +3,7 @@ CREATE type job_status as ENUM (
     'processing',
     'failed',
     'complete',
-    'unable-to-complete'
+    'retry'
     );
 
 CREATE TABLE job_queue

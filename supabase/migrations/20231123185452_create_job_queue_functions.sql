@@ -30,13 +30,13 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION job_queue_failed()
+CREATE OR REPLACE FUNCTION job_queue_retry()
     RETURNS VOID AS $$
 
 BEGIN
 
     PERFORM net.http_post(
-            url:='https://valid-factual-barnacle.ngrok-free.app/api/job-queue/failed',
+            url:='https://valid-factual-barnacle.ngrok-free.app/api/job-queue/retry',
             body:='{}'::JSONB,
             params:='{}'::JSONB,
             headers:='{}'::JSONB,

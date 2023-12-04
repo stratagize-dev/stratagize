@@ -22,9 +22,9 @@ BEGIN
             );
 
     PERFORM cron.schedule(
-                   'retry_failed_jobs',
+                   'retry_jobs',
                    '*/10 * * * *',
-                   $$ SELECT job_queue_failed(); $$
+                   $$ SELECT job_queue_retry(); $$
            );
 
 END;

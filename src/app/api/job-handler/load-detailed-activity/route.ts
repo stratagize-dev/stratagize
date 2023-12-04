@@ -70,7 +70,7 @@ export async function POST(request: NextRequest) {
   } catch (e) {
     const jobUpdated: JobQueue.Update = {
       job_id: data.jobId,
-      status: 'failed'
+      status: 'retry'
     };
 
     await jobsRepository.update(jobUpdated);

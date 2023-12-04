@@ -176,15 +176,15 @@ export interface Database {
       }
     }
     Functions: {
-      job_queue_failed: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
       job_queue_new: {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
       job_queue_processing: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      job_queue_retry: {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
@@ -194,12 +194,7 @@ export interface Database {
       }
     }
     Enums: {
-      job_status:
-        | "new"
-        | "processing"
-        | "failed"
-        | "complete"
-        | "unable-to-complete"
+      job_status: "new" | "processing" | "failed" | "complete" | "retry"
       sport_type:
         | "AlpineSki"
         | "BackcountrySki"
