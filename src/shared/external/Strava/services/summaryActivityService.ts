@@ -1,16 +1,11 @@
 import { startOfYear } from 'date-fns';
 import * as StravaApi from '@/shared/strava-client';
+import logError from '@/shared/logging/logError';
 
-export const loadFromFirstOfYear = async (
-  accessToken: string | undefined,
-  signal: AbortSignal | undefined
-) => loadFrom(accessToken, signal, startOfYear(new Date()));
+export const loadFromFirstOfYear = async (accessToken: string | undefined) =>
+  loadFrom(accessToken, startOfYear(new Date()));
 
-async function loadFrom(
-  accessToken: string | undefined,
-  signal: AbortSignal | undefined,
-  after: Date
-) {
+async function loadFrom(accessToken: string | undefined, after: Date) {
   if (!accessToken) return [];
 
   if (accessToken) {
@@ -24,24 +19,31 @@ async function loadFrom(
     let totalRecords = perPage;
 
     while (totalRecords === perPage) {
-      const activities = await activitiesApi.getLoggedInAthleteActivities(
-        undefined,
-        after.getTime() / 1000,
-        page,
-        perPage
-      )();
+      try {
+        const activities = await activitiesApi.getLoggedInAthleteActivities(
+          undefined,
+          after.getTime() / 1000,
+          page,
+          perPage
+        )();
 
-      allActivities = allActivities.concat(
-        activities.filter(
-          x =>
-            x.id !== undefined &&
-            x.athlete?.id !== undefined &&
-            x.start_date !== undefined
-        )
-      );
+        allActivities = allActivities.concat(
+          activities.filter(
+            x =>
+              x.id !== undefined &&
+              x.athlete?.id !== undefined &&
+              x.start_date !== undefined
+          )
+        );
 
-      totalRecords = activities.length;
-      page++;
+        totalRecords = activities.length;
+        page++;
+      } catch (e) {
+        logError(
+          'an error occurred retrieving summary activities for athlete',
+          e as Error
+        );
+      }
     }
 
     return allActivities;
@@ -51,8 +53,7 @@ async function loadFrom(
 }
 
 const summaryActivityService = {
-  loadFromFirstOfYear,
-  loadFrom
+  loadFromFirstOfYear
 };
 
 /**
