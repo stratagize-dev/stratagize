@@ -1,7 +1,6 @@
 import { StravaGoalsClient } from '@/shared/db';
 import { performOperationAndLogError } from '@/shared/repository/utils';
-import { JobQueue, JobStatus } from '@/shared/types/JobQueue';
-import { batchSize } from '@/app/api/job-queue/constants';
+import { JobStatus } from '@/shared/types/JobQueue';
 
 export const findByStatus =
   (stravaGoalsClient: StravaGoalsClient) =>
