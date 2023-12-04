@@ -75,7 +75,8 @@ export async function POST(request: NextRequest) {
 
     await jobsRepository.update(jobUpdated);
 
-    logError('an error occured trying to load detailed activity ', e as Error);
+    logError('an error occured trying to load detailed activity ', e);
+
     return NextResponse.error();
   }
 }

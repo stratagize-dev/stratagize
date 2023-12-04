@@ -41,7 +41,7 @@ async function loadFrom(accessToken: string | undefined, after: Date) {
       } catch (e) {
         logError(
           'an error occurred retrieving summary activities for athlete',
-          e as Error
+          e
         );
       }
     }
