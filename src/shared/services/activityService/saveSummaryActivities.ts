@@ -1,9 +1,8 @@
-import { db, StravaGoalsClient } from '@/shared/db';
+import { StravaGoalsClient } from '@/shared/db';
 import { Activity, SportType } from '@/shared/types/Activity';
 import { createActivityRepository } from '@/shared/repository/activityRepository';
 import * as StravaApi from '@/shared/strava-client';
 import { JobQueue } from '@/shared/types/JobQueue';
-import { getAuthDetails } from '@/shared/auth';
 import { createJobQueueRepository } from '@/shared/repository/jobQueueRespository';
 
 export const saveSummaryActivities = async (
@@ -20,10 +19,11 @@ export const saveSummaryActivities = async (
     start_date_local: value.start_date_local
   }));
 
-  const jobs: JobQueue.Insert[] = activities.map(value => ({
+  const jobs: JobQueue.Insert[] = activities.map(activity => ({
     http_verb: 'POST',
-    url_path: 'https://valid-factual-barnacle.ngrok-free.app/api/load',
-    payload: value
+    url_path:
+      'https://valid-factual-barnacle.ngrok-free.app/api/job-handler/load-detailed-activity',
+    payload: activity
   }));
 
   const jobsRepository = await createJobQueueRepository(client);

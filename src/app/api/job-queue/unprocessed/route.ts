@@ -1,10 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import serviceRoleDb from '@/shared/serviceRoleDb';
 import { logDatabaseError } from '@/shared/logging/logDatabaseError';
 import { createJobQueueRepository } from '@/shared/repository/jobQueueRespository';
+import { batchSize } from '@/app/api/job-queue/constants';
 
-const batchSize = 60;
-export async function POST(request: NextRequest) {
+export async function POST() {
   console.log('looking for unprocessed jobs');
 
   const { data, error } = await serviceRoleDb
