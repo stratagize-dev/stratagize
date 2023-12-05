@@ -103,35 +103,35 @@ export interface Database {
       }
       job_queue: {
         Row: {
-          content: string | null
           created_at: string | null
           http_verb: string
           job_id: number
+          job_key: string
           payload: Json | null
-          retry_count: number | null
-          retry_limit: number | null
+          retry_count: number
+          retry_limit: number
           status: Database["public"]["Enums"]["job_status"]
           url_path: string | null
         }
         Insert: {
-          content?: string | null
           created_at?: string | null
           http_verb: string
           job_id?: number
+          job_key: string
           payload?: Json | null
-          retry_count?: number | null
-          retry_limit?: number | null
+          retry_count?: number
+          retry_limit?: number
           status?: Database["public"]["Enums"]["job_status"]
           url_path?: string | null
         }
         Update: {
-          content?: string | null
           created_at?: string | null
           http_verb?: string
           job_id?: number
+          job_key?: string
           payload?: Json | null
-          retry_count?: number | null
-          retry_limit?: number | null
+          retry_count?: number
+          retry_limit?: number
           status?: Database["public"]["Enums"]["job_status"]
           url_path?: string | null
         }

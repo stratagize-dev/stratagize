@@ -1,9 +1,9 @@
-import { StravaGoalsClient } from '@/shared/db';
+import { StratagizeClient } from '@/shared/db';
 import { performOperationAndLogError } from '@/shared/repository/utils';
 import { JobQueue } from '@/shared/types/JobQueue';
 
 export const update =
-  (stravaGoalsClient: StravaGoalsClient) => (job: JobQueue.Update) =>
+  (stravaGoalsClient: StratagizeClient) => (job: JobQueue.Update) =>
     performOperationAndLogError(
       async () =>
         stravaGoalsClient

@@ -1,35 +1,12 @@
 import { createAthletesRepository } from '@/shared/repository/athleteRepository';
-import summaryActivityService from '@/shared/external/Strava/services/summaryActivityService';
-import { activityService } from '@/shared/services/activityService/activityService';
 import { Athlete } from '@/shared/types/Athlete';
 import CustomSession from '@/shared/types/auth/CustomSession';
 import { db } from '@/shared/db';
 
-export async function onboardAthlete(
-  athlete: Athlete.Row,
-  customSession: CustomSession
-) {
-  console.log('beginning onboarding of athlete', athlete.id);
+import { jobQueueService } from '@/shared/services/jobQueue';
 
-  const summaryActivities = await summaryActivityService.loadFromFirstOfYear(
-    customSession.accessToken
-  );
-
-  const { error } =
-    await activityService().saveSummaryActivities(summaryActivities);
-
-  const athleteRepository = await createAthletesRepository();
-  if (error === null) {
-    await athleteRepository.update(athlete.id, {
-      ...athlete,
-      is_onboarded: true
-    });
-  }
-
-  console.log('sessionService.onboardAthlete completed', {
-    athleteId: athlete.id,
-    activityCount: summaryActivities.length
-  });
+export async function onboardAthlete(athlete: Athlete.Row) {
+  return jobQueueService().createOnboardingJob(athlete.id);
 }
 
 const beginSession = async (

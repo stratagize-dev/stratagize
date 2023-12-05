@@ -1,8 +1,8 @@
-import { StravaGoalsClient } from '@/shared/db';
+import { StratagizeClient } from '@/shared/db';
 
 export const getSportTypesForAthlete = async (
   athleteId: number,
-  client?: StravaGoalsClient
+  client?: StratagizeClient
 ) => {
   return client
     ?.from('athlete_sport_types')

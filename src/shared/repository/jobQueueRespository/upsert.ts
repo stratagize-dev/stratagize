@@ -1,10 +1,10 @@
-import { StravaGoalsClient } from '@/shared/db';
+import { StratagizeClient } from '@/shared/db';
 import { Activity } from '@/shared/types/Activity';
 import { performOperationAndLogError } from '@/shared/repository/utils';
 import { JobQueue } from '@/shared/types/JobQueue';
 
 export const upsert =
-  (stravaGoalsClient: StravaGoalsClient) => (jobs: JobQueue.Insert[]) =>
+  (stravaGoalsClient: StratagizeClient) => (jobs: JobQueue.Insert[]) =>
     performOperationAndLogError(
       async () =>
         stravaGoalsClient

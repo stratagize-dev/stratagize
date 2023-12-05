@@ -1,4 +1,4 @@
-import { StravaGoalsClient } from '@/shared/db';
+import { StratagizeClient } from '@/shared/db';
 import { Activity } from '@/shared/types/Activity';
 import { mapCommonFields } from '@/shared/services/activityService/mapCommonFields';
 import { createActivityRepository } from '@/shared/repository/activityRepository';
@@ -6,7 +6,7 @@ import * as StravaApi from '@/shared/strava-client';
 
 export const insertDetailedActivity = async (
   detailedActivity: StravaApi.DetailedActivity,
-  client?: StravaGoalsClient
+  client?: StratagizeClient
 ) => {
   const activity: Activity.Insert = {
     athlete_id: detailedActivity.athlete?.id ?? 0,

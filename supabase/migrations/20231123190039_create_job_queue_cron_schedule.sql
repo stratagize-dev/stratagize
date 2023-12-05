@@ -13,17 +13,17 @@ BEGIN
             $$ SELECT job_queue_new(); $$
             );
     -- Schedule second job with a 20-second delay
-    PERFORM pg_sleep(20);
+    PERFORM pg_sleep(5);
 
     PERFORM cron.schedule(
-            'job_queue_new',
+            'job_queue_processing',
             '* * * * *',
             $$ SELECT job_queue_processing(); $$
             );
 
     PERFORM cron.schedule(
                    'retry_jobs',
-                   '*/10 * * * *',
+                   '* * * * *',
                    $$ SELECT job_queue_retry(); $$
            );
 

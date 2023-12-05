@@ -1,9 +1,9 @@
-import { StravaGoalsClient } from '@/shared/db';
+import { StratagizeClient } from '@/shared/db';
 import { createActivityRepository } from '@/shared/repository/activityRepository';
 
 export const deleteActivity = async (
   activityId: number,
-  client?: StravaGoalsClient
+  client?: StratagizeClient
 ) => {
   const activityRepository = await createActivityRepository(client);
 

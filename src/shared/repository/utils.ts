@@ -1,6 +1,6 @@
 import { PostgrestSingleResponse } from '@supabase/supabase-js';
 import { getAuthDetails } from '@/shared/auth';
-import { db, StravaGoalsClient } from '@/shared/db';
+import { db, StratagizeClient } from '@/shared/db';
 import { logDatabaseError } from '@/shared/logging/logDatabaseError';
 
 export async function performOperationAndLogError<T>(
@@ -15,8 +15,8 @@ export async function performOperationAndLogError<T>(
 }
 
 export async function createClient(
-  client?: StravaGoalsClient
-): Promise<StravaGoalsClient> {
+  client?: StratagizeClient
+): Promise<StratagizeClient> {
   if (client === undefined) {
     const { supabaseToken } = await getAuthDetails();
     client = db(supabaseToken);

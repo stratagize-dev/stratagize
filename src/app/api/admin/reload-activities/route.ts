@@ -4,7 +4,7 @@ import { createAthletesRepository } from '@/shared/repository/athleteRepository'
 import { onboardAthlete } from '@/shared/services/sessionService';
 
 export async function POST() {
-  const { athleteId, session } = await getAuthDetails();
+  const { athleteId } = await getAuthDetails();
 
   const athleteRepository = await createAthletesRepository();
   const { data: athlete } = await athleteRepository.get(athleteId);
@@ -12,7 +12,7 @@ export async function POST() {
   if (athlete) {
     await athleteRepository.update(athleteId, { is_onboarded: false });
 
-    await onboardAthlete(athlete, session);
+    await onboardAthlete(athlete);
 
     return NextResponse.json('success');
   } else {

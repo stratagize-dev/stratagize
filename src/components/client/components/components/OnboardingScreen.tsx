@@ -16,8 +16,8 @@ export default async function OnboardingScreen({
 
   if (!athlete) throw new Error('Athlete not found');
 
-  if (athlete?.is_onboarded === false && session.accessToken) {
-    await onboardAthlete(athlete, session);
+  if (athlete?.is_onboarded === false) {
+    await onboardAthlete(athlete);
   }
 
   return (

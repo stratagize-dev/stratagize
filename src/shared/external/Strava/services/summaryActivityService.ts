@@ -5,7 +5,10 @@ import logError from '@/shared/logging/logError';
 export const loadFromFirstOfYear = async (accessToken: string | undefined) =>
   loadFrom(accessToken, startOfYear(new Date()));
 
-async function loadFrom(accessToken: string | undefined, after: Date) {
+async function loadFrom(
+  accessToken: string | undefined,
+  after: Date
+): Promise<StravaApi.SummaryActivity[]> {
   if (!accessToken) return [];
 
   if (accessToken) {
