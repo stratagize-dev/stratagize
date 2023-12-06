@@ -16,6 +16,7 @@ CREATE TABLE job_queue
     retry_limit INTEGER       NOT NULL DEFAULT 10,
     url_path    TEXT          DEFAULT '',
     job_key     TEXT          NOT NULL,
+    job_time  TIMESTAMPTZ   DEFAULT NOW(),
     created_at  TIMESTAMPTZ   DEFAULT NOW()
 );
 
