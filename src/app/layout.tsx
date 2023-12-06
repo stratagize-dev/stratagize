@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation';
 import { NavBar } from '@/components/server/NavBar';
 import { AuthOptions, getServerSession } from 'next-auth';
 import CustomSession from '@/shared/types/auth/CustomSession';
+import React from 'react';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {

@@ -1,6 +1,6 @@
 import * as StravaApi from '@/shared/strava-client';
 import { SportType } from '@/shared/types/Activity';
-import { StravaGoalsClient } from '@/shared/db';
+import { StratagizeClient } from '@/shared/db';
 import { getSportTypesForAthlete } from '@/shared/services/activityService/getSportTypesForAthlete';
 import { deleteActivity } from '@/shared/services/activityService/deleteActivity';
 import { getActivitiesForAthlete } from '@/shared/services/activityService/getActivitiesForAthlete';
@@ -8,7 +8,7 @@ import { saveSummaryActivities } from '@/shared/services/activityService/saveSum
 import { insertDetailedActivity } from '@/shared/services/activityService/insertDetailedActivity';
 import { updateDetailedActivity } from '@/shared/services/activityService/updateDetailedActivity';
 
-export const activityService = (client?: StravaGoalsClient) => {
+export const activityService = (client?: StratagizeClient) => {
   return {
     deleteActivity: (activityId: number) => deleteActivity(activityId, client),
     /**

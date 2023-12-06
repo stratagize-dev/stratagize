@@ -10,6 +10,6 @@ to public
 using (false);
 
 
-CREATE OR REPLACE TRIGGER strava_events_trigger AFTER INSERT ON public.strava_events FOR EACH ROW EXECUTE FUNCTION supabase_functions.http_request('https://a48e-124-248-141-142.ngrok-free.app/api/strava-event', 'POST', '{"Content-type":"application/json"}', '{}', '1000');
+CREATE OR REPLACE TRIGGER strava_events_trigger AFTER INSERT ON public.strava_events FOR EACH ROW EXECUTE FUNCTION supabase_functions.http_request('https://valid-factual-barnacle.ngrok-free.app/api/strava-event', 'POST', '{"Content-type":"application/json"}', '{}', '1000');
 
 

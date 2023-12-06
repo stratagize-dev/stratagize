@@ -85,7 +85,7 @@ export const getAuthDetails = async () => {
     authOptions
   );
 
-  if (session == null) throw new Error('Not Authorised');
+  if (session == null) throw new Error('Session is Null..Not Authorised');
 
   return {
     athleteId: Number(session.athleteId),

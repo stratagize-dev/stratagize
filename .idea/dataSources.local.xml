@@ -12,7 +12,13 @@
           <node negative="1">
             <node kind="database" qname="@" />
             <node kind="database" qname="postgres">
-              <node kind="schema" qname="@" />
+              <node kind="schema">
+                <name qname="@" />
+                <name qname="cron" />
+                <name qname="extensions" />
+                <name qname="net" />
+                <name qname="vault" />
+              </node>
             </node>
           </node>
         </introspection-scope>

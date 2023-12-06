@@ -1,9 +1,11 @@
-import { db, StravaGoalsClient } from '@/shared/db';
+import { StratagizeClient } from '@/shared/db';
 import { Athlete } from '@/shared/types/Athlete';
-import { getAuthDetails } from '@/shared/auth';
-import { performOperationAndLogError } from '@/shared/repository/utils';
+import {
+  createClient,
+  performOperationAndLogError
+} from '@/shared/repository/utils';
 
-const get = (stravaGoalsClient: StravaGoalsClient) => (athleteId: number) =>
+const get = (stravaGoalsClient: StratagizeClient) => (athleteId: number) =>
   performOperationAndLogError(
     async () =>
       stravaGoalsClient
@@ -15,7 +17,7 @@ const get = (stravaGoalsClient: StravaGoalsClient) => (athleteId: number) =>
   );
 
 const update =
-  (stravaGoalsClient: StravaGoalsClient) =>
+  (stravaGoalsClient: StratagizeClient) =>
   (athleteId: number, athlete: Athlete.Update) =>
     performOperationAndLogError(
       async () =>
@@ -28,24 +30,15 @@ const update =
     );
 
 const insert =
-  (stravaGoalsClient: StravaGoalsClient) => (athlete: Athlete.Insert) =>
+  (stravaGoalsClient: StratagizeClient) => (athlete: Athlete.Insert) =>
     performOperationAndLogError(
       async () =>
         await stravaGoalsClient.from('athletes').insert(athlete).select(),
       'an error occured inserting athlete'
     );
 
-// export const athleteRepository = {
-//   get,
-//   insert,
-//   update
-// };
-
-export const createAthletesRepository = async (client?: StravaGoalsClient) => {
-  if (client === undefined) {
-    const { supabaseToken } = await getAuthDetails();
-    client = db(supabaseToken);
-  }
+export const createAthletesRepository = async (client?: StratagizeClient) => {
+  client = await createClient(client);
 
   return {
     get: get(client),
@@ -53,5 +46,3 @@ export const createAthletesRepository = async (client?: StravaGoalsClient) => {
     update: update(client)
   };
 };
-
-// export default athleteRepository;

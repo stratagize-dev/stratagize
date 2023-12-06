@@ -1,10 +1,10 @@
-import { db, StravaGoalsClient } from '@/shared/db';
+import { db, StratagizeClient } from '@/shared/db';
 import { performOperationAndLogError } from '@/shared/repository/utils';
 import { Activity, SportType } from '@/shared/types/Activity';
 import { getAuthDetails } from '@/shared/auth';
 
 const getActivitiesForAthlete =
-  (stravaGoalsClient: StravaGoalsClient) =>
+  (stravaGoalsClient: StratagizeClient) =>
   (athleteId: number, sportType?: SportType) =>
     performOperationAndLogError(async () => {
       let query = stravaGoalsClient
@@ -19,7 +19,7 @@ const getActivitiesForAthlete =
     }, `an error occured retrieving the activities for the athlete ${athleteId}`);
 
 const deleteActivity =
-  (stravaGoalsClient: StravaGoalsClient) => (activityId: number) =>
+  (stravaGoalsClient: StratagizeClient) => (activityId: number) =>
     performOperationAndLogError(
       async () =>
         stravaGoalsClient.from('activities').delete().eq('id', activityId),
@@ -27,7 +27,7 @@ const deleteActivity =
     );
 
 const upsert =
-  (stravaGoalsClient: StravaGoalsClient) => (activities: Activity.Insert[]) =>
+  (stravaGoalsClient: StratagizeClient) => (activities: Activity.Insert[]) =>
     performOperationAndLogError(
       async () =>
         stravaGoalsClient
@@ -38,7 +38,7 @@ const upsert =
     );
 
 const insert =
-  (stravaGoalsClient: StravaGoalsClient) => (activity: Activity.Insert) =>
+  (stravaGoalsClient: StratagizeClient) => (activity: Activity.Insert) =>
     performOperationAndLogError(
       async () =>
         stravaGoalsClient
@@ -49,7 +49,7 @@ const insert =
     );
 
 const update =
-  (stravaGoalsClient: StravaGoalsClient) => (activity: Activity.Update) =>
+  (stravaGoalsClient: StratagizeClient) => (activity: Activity.Update) =>
     performOperationAndLogError(
       async () =>
         stravaGoalsClient
@@ -59,7 +59,7 @@ const update =
       'an error occured updating the activity'
     );
 
-export const createActivityRepository = async (client?: StravaGoalsClient) => {
+export const createActivityRepository = async (client?: StratagizeClient) => {
   if (client === undefined) {
     const { supabaseToken } = await getAuthDetails();
     client = db(supabaseToken);

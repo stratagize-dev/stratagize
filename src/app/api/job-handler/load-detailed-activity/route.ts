@@ -1,27 +1,32 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { StravaEvent } from '@/shared/types/strava/events/StravaEvent';
 import { ActivitiesApiFp } from '@/shared/strava-client';
 import { Activity } from '@/shared/types/Activity';
 import { createAthletesRepository } from '@/shared/repository/athleteRepository';
 import { refreshToken } from '@/shared/external/Strava/token/refreshToken';
 import { activityService } from '@/shared/services/activityService';
 import serviceRoleDb from '@/shared/serviceRoleDb';
-interface WebhookPayload {
-  type: 'INSERT' | 'UPDATE';
-  table: 'activities';
-  record: Activity.Row;
-  schema: 'public';
-  old_record: StravaEvent | null;
-}
+import { JobHandlerPayload } from '@/app/api/job-handler/types';
+import logError from '@/shared/logging/logError';
+import { createJobQueueRepository } from '@/shared/repository/jobQueueRespository';
+import { JobQueue } from '@/shared/types/JobQueue';
+import isRateLimitingError from '@/shared/error';
 
 export async function POST(request: NextRequest) {
-  try {
-    const data: WebhookPayload = await request.json();
+  const data: JobHandlerPayload<Activity.Row> = await request.json();
+  const jobsRepository = await createJobQueueRepository(serviceRoleDb);
 
-    if (data.record.detailed_event) {
+  try {
+    if (data.payload.detailed_event) {
+      const jobUpdated: JobQueue.Update = {
+        job_id: data.jobId,
+        status: 'complete'
+      };
+
+      await jobsRepository.update(jobUpdated);
+
       return NextResponse.json({
         status: 'ok',
-        activity_id: data.record.id,
+        activity_id: data.payload.id,
         message: 'skipping activity as detailed event already exists'
       });
     }
@@ -30,7 +35,7 @@ export async function POST(request: NextRequest) {
     const athleteRepository = await createAthletesRepository(serviceRoleDb);
 
     const { data: athlete } = await athleteRepository.get(
-      data.record.athlete_id
+      data.payload.athlete_id
     );
 
     if (athlete?.refresh_token) {
@@ -42,22 +47,41 @@ export async function POST(request: NextRequest) {
         });
 
         const detailedActivity = await activitiesApi.getActivityById(
-          data.record.id
+          data.payload.id
         )(fetch);
 
         await activityService(serviceRoleDb).insertDetailedActivity(
           detailedActivity
         );
+
+        const jobUpdated: JobQueue.Update = {
+          job_id: data.jobId,
+          status: 'complete'
+        };
+
+        await jobsRepository.update(jobUpdated);
       }
     }
 
     return NextResponse.json({
       status: 'ok',
-      activity_id: data.record.id,
-      message: 'detailed activity succesfully loaded'
+      activity_id: data.payload.id,
+      message: 'detailed activity successfully loaded'
     });
   } catch (e) {
-    console.error('an error occured trying to load detailed activity ', e);
+    const { isRateLimited } = isRateLimitingError(e);
+
+    // TODO: wait specific amount of time.
+
+    const jobUpdated: JobQueue.Update = {
+      job_id: data.jobId,
+      status: 'retry'
+    };
+
+    await jobsRepository.update(jobUpdated);
+
+    logError('an error occured trying to load detailed activity ', e);
+
     return NextResponse.error();
   }
 }

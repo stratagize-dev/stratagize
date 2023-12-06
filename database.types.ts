@@ -101,6 +101,45 @@ export interface Database {
         }
         Relationships: []
       }
+      job_queue: {
+        Row: {
+          created_at: string | null
+          http_verb: string
+          job_id: number
+          job_key: string
+          job_time: string | null
+          payload: Json | null
+          retry_count: number
+          retry_limit: number
+          status: Database["public"]["Enums"]["job_status"]
+          url_path: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          http_verb: string
+          job_id?: number
+          job_key: string
+          job_time?: string | null
+          payload?: Json | null
+          retry_count?: number
+          retry_limit?: number
+          status?: Database["public"]["Enums"]["job_status"]
+          url_path?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          http_verb?: string
+          job_id?: number
+          job_key?: string
+          job_time?: string | null
+          payload?: Json | null
+          retry_count?: number
+          retry_limit?: number
+          status?: Database["public"]["Enums"]["job_status"]
+          url_path?: string | null
+        }
+        Relationships: []
+      }
       strava_events: {
         Row: {
           created_at: string | null
@@ -140,9 +179,25 @@ export interface Database {
       }
     }
     Functions: {
-      [_ in never]: never
+      job_queue_new: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      job_queue_processing: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      job_queue_retry: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      schedule_jobs: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
     }
     Enums: {
+      job_status: "new" | "processing" | "failed" | "complete" | "retry"
       sport_type:
         | "AlpineSki"
         | "BackcountrySki"
@@ -211,6 +266,7 @@ export interface Database {
           id: string
           name: string
           owner: string | null
+          owner_id: string | null
           public: boolean | null
           updated_at: string | null
         }
@@ -222,6 +278,7 @@ export interface Database {
           id: string
           name: string
           owner?: string | null
+          owner_id?: string | null
           public?: boolean | null
           updated_at?: string | null
         }
@@ -233,17 +290,11 @@ export interface Database {
           id?: string
           name?: string
           owner?: string | null
+          owner_id?: string | null
           public?: boolean | null
           updated_at?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "buckets_owner_fkey"
-            columns: ["owner"]
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          }
-        ]
+        Relationships: []
       }
       migrations: {
         Row: {
@@ -275,6 +326,7 @@ export interface Database {
           metadata: Json | null
           name: string | null
           owner: string | null
+          owner_id: string | null
           path_tokens: string[] | null
           updated_at: string | null
           version: string | null
@@ -287,6 +339,7 @@ export interface Database {
           metadata?: Json | null
           name?: string | null
           owner?: string | null
+          owner_id?: string | null
           path_tokens?: string[] | null
           updated_at?: string | null
           version?: string | null
@@ -299,6 +352,7 @@ export interface Database {
           metadata?: Json | null
           name?: string | null
           owner?: string | null
+          owner_id?: string | null
           path_tokens?: string[] | null
           updated_at?: string | null
           version?: string | null
