@@ -3,6 +3,7 @@ import { OnboardAthletePayload } from '@/app/api/job-handler/onboard-athlete/rou
 import { JobQueue } from '@/shared/types/JobQueue';
 import { createJobQueueRepository } from '@/shared/repository/jobQueueRespository';
 import { Activity } from '@/shared/types/Activity';
+import { getApiBaseUrl } from '@/shared/url';
 
 async function createOnboardingJob(
   athleteId: number,
@@ -18,8 +19,7 @@ async function createOnboardingJob(
     const job: JobQueue.Insert[] = [
       {
         http_verb: 'POST',
-        url_path:
-          'https://valid-factual-barnacle.ngrok-free.app/api/job-handler/onboard-athlete',
+        url_path: `${getApiBaseUrl()}/job-handler/onboard-athlete`,
         payload: JSON.stringify(payload),
         job_key: `onboard-athlete-${athleteId}`
       }
@@ -35,8 +35,7 @@ async function createLoadDetailedActivityJob(
 ) {
   const jobs: JobQueue.Insert[] = activities.map(activity => ({
     http_verb: 'POST',
-    url_path:
-      'https://valid-factual-barnacle.ngrok-free.app/api/job-handler/load-detailed-activity',
+    url_path: `${getApiBaseUrl()}/job-handler/load-detailed-activity`,
     payload: activity,
     job_key: `load-detailed-activity-${activity.id}`
   }));
