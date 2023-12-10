@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { NavLink } from '@/components/server/NavBar/components/NavLink';
 import { AdminMenu } from '@/components/client/AdminMenu/AdminMenu';
 import { Toaster } from 'react-hot-toast';
+import Notifications from '@/components/client/Notifications';
 
 export function NavBar({
   customSession
@@ -30,6 +31,7 @@ export function NavBar({
         <NavLink href="/">Year</NavLink>
         <ClientSide session={customSession}>
           <SportsMenu />
+          <Notifications />
         </ClientSide>
         <AdminMenu />
         <SignOutButton />

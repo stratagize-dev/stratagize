@@ -140,6 +140,37 @@ export interface Database {
         }
         Relationships: []
       }
+      notifications: {
+        Row: {
+          athlete_id: number
+          created_at: string | null
+          is_delivered: boolean | null
+          message: string
+          notification_id: number
+        }
+        Insert: {
+          athlete_id: number
+          created_at?: string | null
+          is_delivered?: boolean | null
+          message: string
+          notification_id?: number
+        }
+        Update: {
+          athlete_id?: number
+          created_at?: string | null
+          is_delivered?: boolean | null
+          message?: string
+          notification_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_athletes_id_fk"
+            columns: ["athlete_id"]
+            referencedRelation: "athletes"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       strava_events: {
         Row: {
           created_at: string | null
