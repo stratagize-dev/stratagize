@@ -9,12 +9,12 @@ import { JobHandlerPayload } from '@/app/api/job-handler/types';
 import logError from '@/shared/logging/logError';
 import { createJobQueueRepository } from '@/shared/repository/jobQueueRespository';
 import { JobQueue } from '@/shared/types/JobQueue';
-import isRateLimitingError from '@/shared/error';
+import { jobQueueService } from '@/shared/services/jobQueue';
 
 export async function POST(request: NextRequest) {
   const data: JobHandlerPayload<Activity.Row> = await request.json();
   const jobsRepository = await createJobQueueRepository(serviceRoleDb);
-
+  const jobQueue = jobQueueService(serviceRoleDb);
   try {
     if (data.payload.detailed_event) {
       const jobUpdated: JobQueue.Update = {
@@ -69,17 +69,7 @@ export async function POST(request: NextRequest) {
       message: 'detailed activity successfully loaded'
     });
   } catch (e) {
-    // eslint-disable-next-line no-unused-vars
-    const { isRateLimited } = isRateLimitingError(e);
-
-    // TODO: wait specific amount of time.
-
-    const jobUpdated: JobQueue.Update = {
-      job_id: data.jobId,
-      status: 'retry'
-    };
-
-    await jobsRepository.update(jobUpdated);
+    await jobQueue.retryJob(data.jobId);
 
     logError('an error occured trying to load detailed activity ', e);
 

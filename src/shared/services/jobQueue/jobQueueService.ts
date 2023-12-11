@@ -4,6 +4,7 @@ import { JobQueue } from '@/shared/types/JobQueue';
 import { createJobQueueRepository } from '@/shared/repository/jobQueueRespository';
 import { Activity } from '@/shared/types/Activity';
 import { getApiBaseUrl } from '@/shared/url';
+import { addHours } from 'date-fns';
 
 async function createOnboardingJob(
   athleteId: number,
@@ -66,10 +67,13 @@ async function retryJob(jobId: number, client: StratagizeClient | undefined) {
   if (job) {
     let jobUpdated: JobQueue.Update;
     if (job.retry_count < job.retry_limit) {
+      const delayHours = Math.pow(2, job.retry_count);
+      const newJobTime = addHours(new Date(), delayHours);
       jobUpdated = {
         job_id: jobId,
         retry_count: job.retry_count + 1,
-        status: 'retry'
+        status: 'retry',
+        job_time: newJobTime.toISOString()
       };
     } else {
       jobUpdated = {
