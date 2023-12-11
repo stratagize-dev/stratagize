@@ -69,6 +69,7 @@ export async function POST(request: NextRequest) {
       message: 'detailed activity successfully loaded'
     });
   } catch (e) {
+    // eslint-disable-next-line no-unused-vars
     const { isRateLimited } = isRateLimitingError(e);
 
     // TODO: wait specific amount of time.

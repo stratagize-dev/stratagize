@@ -17,6 +17,7 @@ interface WebhookPayload {
 
 async function upsertActivity(
   activityEvent: StravaEvent,
+  // eslint-disable-next-line no-unused-vars
   operation: (activity: DetailedActivity) => Promise<void>
 ) {
   const athleteRepository = await createAthletesRepository(serviceRoleDb);

@@ -1,5 +1,4 @@
 import { StratagizeClient } from '@/shared/db';
-import { Activity } from '@/shared/types/Activity';
 import { performOperationAndLogError } from '@/shared/repository/utils';
 import { JobQueue } from '@/shared/types/JobQueue';
 

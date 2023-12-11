@@ -2,6 +2,7 @@
 
 interface Props {
   value: number;
+  // eslint-disable-next-line no-unused-vars
   onYearGoalChange?: (value: number) => void;
 }
 const AnnualGoal = ({ value, onYearGoalChange }: Props) => {

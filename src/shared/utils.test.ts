@@ -1,4 +1,5 @@
 import { secondsToHourDuration } from '@/shared/utils';
+import { describe, test, expect } from '@jest/globals';
 
 describe('secondsToHourDuration', () => {
   test('1797 seconds should be 29 minutes 57 seconds', () => {
