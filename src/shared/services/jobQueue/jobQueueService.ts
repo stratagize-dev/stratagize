@@ -34,9 +34,10 @@ async function createLoadDetailedActivityJob(
   activities: Activity.Insert[],
   client: StratagizeClient | undefined
 ) {
+  const apiBaseUrl = getApiBaseUrl();
   const jobs: JobQueue.Insert[] = activities.map(activity => ({
     http_verb: 'POST',
-    url_path: `${getApiBaseUrl()}/job-handler/load-detailed-activity`,
+    url_path: `${apiBaseUrl}/job-handler/load-detailed-activity`,
     payload: activity,
     job_key: `load-detailed-activity-${activity.id}`
   }));
