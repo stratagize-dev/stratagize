@@ -16,7 +16,7 @@
     "ngrok": "ngrok http 3001 --domain valid-factual-barnacle.ngrok-free.app"
   },
   "dependencies": {
-    "@baselime/node-opentelemetry": "0.2.14",
+    "@baselime/node-opentelemetry": "0.3.0",
     "@headlessui/react": "1.7.17",
     "@heroicons/react": "2.0.18",
     "@supabase/supabase-js": "2.39.0",
