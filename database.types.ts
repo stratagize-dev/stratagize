@@ -83,6 +83,7 @@ export interface Database {
           hour_goal: number
           id: number
           is_onboarded: boolean
+          onboarding_status: Database["public"]["Enums"]["onboarding_status"]
           refresh_token: string | null
         }
         Insert: {
@@ -90,6 +91,7 @@ export interface Database {
           hour_goal: number
           id: number
           is_onboarded: boolean
+          onboarding_status?: Database["public"]["Enums"]["onboarding_status"]
           refresh_token?: string | null
         }
         Update: {
@@ -97,16 +99,19 @@ export interface Database {
           hour_goal?: number
           id?: number
           is_onboarded?: boolean
+          onboarding_status?: Database["public"]["Enums"]["onboarding_status"]
           refresh_token?: string | null
         }
         Relationships: []
       }
       job_queue: {
         Row: {
+          athlete_id: number | null
           created_at: string | null
           http_verb: string
           job_id: number
           job_key: string
+          job_name: string
           job_time: string | null
           payload: Json | null
           retry_count: number
@@ -115,10 +120,12 @@ export interface Database {
           url_path: string | null
         }
         Insert: {
+          athlete_id?: number | null
           created_at?: string | null
           http_verb: string
           job_id?: number
           job_key: string
+          job_name: string
           job_time?: string | null
           payload?: Json | null
           retry_count?: number
@@ -127,10 +134,12 @@ export interface Database {
           url_path?: string | null
         }
         Update: {
+          athlete_id?: number | null
           created_at?: string | null
           http_verb?: string
           job_id?: number
           job_key?: string
+          job_name?: string
           job_time?: string | null
           payload?: Json | null
           retry_count?: number
@@ -138,7 +147,14 @@ export interface Database {
           status?: Database["public"]["Enums"]["job_status"]
           url_path?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "job_queue_athlete_id_fkey"
+            columns: ["athlete_id"]
+            referencedRelation: "athletes"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       notifications: {
         Row: {
@@ -208,6 +224,13 @@ export interface Database {
           }
         ]
       }
+      job_queue_status_summary: {
+        Row: {
+          count: number | null
+          status: Database["public"]["Enums"]["job_status"] | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       job_queue_new: {
@@ -215,6 +238,10 @@ export interface Database {
         Returns: undefined
       }
       job_queue_processing: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      job_queue_remove_completed: {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
@@ -229,6 +256,12 @@ export interface Database {
     }
     Enums: {
       job_status: "new" | "processing" | "failed" | "complete" | "retry"
+      onboarding_status:
+        | "not-started"
+        | "in-progress"
+        | "partially-complete"
+        | "complete"
+        | "error"
       sport_type:
         | "AlpineSki"
         | "BackcountrySki"

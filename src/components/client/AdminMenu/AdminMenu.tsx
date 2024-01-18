@@ -11,7 +11,7 @@ export function AdminMenu() {
     fetch('/api/admin/reload-activities', { method: 'post' })
       .then(() => {
         setIsDisabled(true);
-        toast.success('Reload successful', { id });
+        toast.success('Reload begun', { id });
       })
       .catch(() => toast.error('whoops something went wrong', { id }))
       .finally(() => setIsDisabled(false));

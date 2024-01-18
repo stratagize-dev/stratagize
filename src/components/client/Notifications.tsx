@@ -8,11 +8,11 @@ import { Notification } from '@/shared/types/Notification';
 import toast from 'react-hot-toast';
 
 export default function Notifications() {
-  const { customSession } = useCustomSession();
+  const { customSession, athleteId } = useCustomSession();
   useEffect(() => {
     let channel: RealtimeChannel | undefined = undefined;
 
-    if (customSession) {
+    if (customSession && athleteId) {
       channel = db(customSession.supabaseToken)
         .channel('athlete notifications')
         .on(
@@ -26,10 +26,7 @@ export default function Notifications() {
             const newActivity: Notification.Row | undefined =
               payload.new as Notification.Row;
 
-            if (
-              newActivity?.athlete_id ===
-              parseInt(customSession.athleteId ?? '0')
-            ) {
+            if (newActivity?.athlete_id === athleteId) {
               toast.success(newActivity.message);
             }
           }
@@ -42,6 +39,6 @@ export default function Notifications() {
         void channel.unsubscribe();
       }
     };
-  }, [customSession]);
+  }, [customSession, athleteId]);
   return <></>;
 }

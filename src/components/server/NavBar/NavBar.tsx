@@ -8,11 +8,14 @@ import { NavLink } from '@/components/server/NavBar/components/NavLink';
 import { AdminMenu } from '@/components/client/AdminMenu/AdminMenu';
 import { Toaster } from 'react-hot-toast';
 import Notifications from '@/components/client/Notifications';
+import { OnboardingStatus } from '@/shared/types/Athlete';
 
 export function NavBar({
-  customSession
+  customSession,
+  onboardingStatus
 }: {
   customSession: CustomSession | null;
+  onboardingStatus?: OnboardingStatus;
 }) {
   return (
     <div className="flex justify-between pt-5 pb-2 px-5 border-b">
@@ -26,14 +29,19 @@ export function NavBar({
       </Link>
       <Toaster />
       <div className="flex justify-items-start items-center gap-x-4">
-        <NavLink href="/">Today</NavLink>
-        <NavLink href="/">Month</NavLink>
-        <NavLink href="/">Year</NavLink>
-        <ClientSide session={customSession}>
-          <SportsMenu />
-          <Notifications />
-        </ClientSide>
-        <AdminMenu />
+        {onboardingStatus === 'complete' && (
+          <>
+            <NavLink href="/">Today</NavLink>
+            <NavLink href="/">Month</NavLink>
+            <NavLink href="/">Year</NavLink>
+            <ClientSide session={customSession}>
+              <SportsMenu />
+              <Notifications />
+            </ClientSide>
+            <AdminMenu />
+          </>
+        )}
+
         <SignOutButton />
       </div>
     </div>

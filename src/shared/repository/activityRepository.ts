@@ -1,7 +1,9 @@
 import { db, StratagizeClient } from '@/shared/db';
-import { performOperationAndLogError } from '@/shared/repository/utils';
+import {
+  createClient,
+  performOperationAndLogError
+} from '@/shared/repository/utils';
 import { Activity, SportType } from '@/shared/types/Activity';
-import { getAuthDetails } from '@/shared/auth';
 
 const getActivitiesForAthlete =
   (stravaGoalsClient: StratagizeClient) =>
@@ -60,10 +62,7 @@ const update =
     );
 
 export const createActivityRepository = async (client?: StratagizeClient) => {
-  if (client === undefined) {
-    const { supabaseToken } = await getAuthDetails();
-    client = db(supabaseToken);
-  }
+  client = await createClient(client);
 
   return {
     getActivitiesForAthlete: getActivitiesForAthlete(client),

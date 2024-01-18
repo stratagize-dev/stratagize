@@ -7,14 +7,13 @@ import { JobHandlerPayload } from '@/app/api/job-handler/types';
 import logError from '@/shared/logging/logError';
 import summaryActivityService from '@/shared/external/Strava/services/summaryActivityService';
 import { jobQueueService } from '@/shared/services/jobQueue';
-
+import { notification } from '@/shared/services/notification/notification';
 export interface OnboardAthletePayload {
   athleteId: number;
 }
 export async function POST(request: NextRequest) {
   const data: JobHandlerPayload<OnboardAthletePayload> = await request.json();
-  const payload = JSON.parse(data.payload.toString());
-  const athleteId = payload.athleteId;
+  const athleteId = data.payload.athleteId;
   console.log('starting onboard athlete job');
 
   const jobQueue = jobQueueService(serviceRoleDb);
@@ -39,10 +38,16 @@ export async function POST(request: NextRequest) {
         `onboarding athlete: ${summaryActivities.length} activities found`
       );
 
-      const { error } =
+      const { error, data: savedActivities } =
         await activityService(serviceRoleDb).saveSummaryActivities(
           summaryActivities
         );
+
+      if (savedActivities) {
+        await jobQueue.createLoadDetailedActivitiesJob(savedActivities);
+
+        await jobQueue.createFinalizeAthleteOnboardingJob(athleteId);
+      }
 
       if (error !== null) {
         throw error;
@@ -50,8 +55,16 @@ export async function POST(request: NextRequest) {
 
       await athleteRepository.update(athlete.id, {
         ...athlete,
-        is_onboarded: true
+        is_onboarded: true,
+        onboarding_status: 'partially-complete'
       });
+
+      const notificationService = notification(serviceRoleDb);
+
+      await notificationService.createNotification(
+        athleteId,
+        'Onboarding has partially completed'
+      );
 
       await jobQueue.completeJob(data.jobId);
 

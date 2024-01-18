@@ -7,3 +7,5 @@ export namespace Athlete {
   export type Insert = AthleteTable['Insert'];
   export type Update = AthleteTable['Update'];
 }
+
+export type OnboardingStatus = Database['public']['Enums']['onboarding_status'];

@@ -1,28 +1,34 @@
 import { StratagizeClient } from '@/shared/db';
-import { OnboardAthletePayload } from '@/app/api/job-handler/onboard-athlete/route';
 import { JobQueue } from '@/shared/types/JobQueue';
 import { createJobQueueRepository } from '@/shared/repository/jobQueueRespository';
 import { Activity } from '@/shared/types/Activity';
-import { getApiBaseUrl } from '@/shared/url';
 import { addHours } from 'date-fns';
+import { createFinalizeAthleteOnboardingJob } from '@/shared/services/jobQueue/createFinalizeAthleteOnboardingJob';
+import {
+  loadDetailedActivityJob,
+  onboardAthleteJob as jobSettings
+} from '@/shared/services/jobQueue/jobs';
+import { createAthletesRepository } from '@/shared/repository/athleteRepository';
 
 async function createOnboardingJob(
   athleteId: number,
   client: StratagizeClient | undefined
 ) {
   const jobsRepository = await createJobQueueRepository(client);
-  const jobKey = `onboard-athlete-${athleteId}`;
+
+  const jobKey = jobSettings.createJobKey(athleteId);
 
   const { data } = await jobsRepository.findByJobKey(jobKey);
 
   if (data?.length === 0) {
-    const payload: OnboardAthletePayload = { athleteId: athleteId };
     const job: JobQueue.Insert[] = [
       {
         http_verb: 'POST',
-        url_path: `${getApiBaseUrl()}/job-handler/onboard-athlete`,
-        payload: JSON.stringify(payload),
-        job_key: `onboard-athlete-${athleteId}`
+        url_path: jobSettings.url,
+        payload: { athleteId: athleteId },
+        job_key: jobKey,
+        job_name: jobSettings.name,
+        athlete_id: athleteId
       }
     ];
 
@@ -30,16 +36,17 @@ async function createOnboardingJob(
   }
 }
 
-async function createLoadDetailedActivityJob(
+async function createLoadDetailedActivitiesJob(
   activities: Activity.Insert[],
   client: StratagizeClient | undefined
 ) {
-  const apiBaseUrl = getApiBaseUrl();
   const jobs: JobQueue.Insert[] = activities.map(activity => ({
     http_verb: 'POST',
-    url_path: `${apiBaseUrl}/job-handler/load-detailed-activity`,
+    url_path: loadDetailedActivityJob.url,
     payload: activity,
-    job_key: `load-detailed-activity-${activity.id}`
+    job_key: loadDetailedActivityJob.createJobKey(activity.id),
+    job_name: loadDetailedActivityJob.name,
+    athlete_id: activity.athlete_id
   }));
 
   const jobsRepository = await createJobQueueRepository(client);
@@ -93,8 +100,10 @@ export const jobQueueService = (client?: StratagizeClient) => {
   return {
     createOnboardingJob: (athleteId: number) =>
       createOnboardingJob(athleteId, client),
-    createLoadDetailedActivityJob: (activities: Activity.Insert[]) =>
-      createLoadDetailedActivityJob(activities, client),
+    createLoadDetailedActivitiesJob: (activities: Activity.Insert[]) =>
+      createLoadDetailedActivitiesJob(activities, client),
+    createFinalizeAthleteOnboardingJob: (athleteId: number) =>
+      createFinalizeAthleteOnboardingJob(athleteId, client),
     completeJob: (jobId: number) => completeJob(jobId, client),
     retryJob: (jobId: number) => retryJob(jobId, client)
   };

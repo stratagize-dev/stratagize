@@ -17,7 +17,10 @@ export default async function OnboardingScreen({
 
   if (!athlete) throw new Error('Athlete not found');
 
-  if (athlete?.is_onboarded === false) {
+  if (
+    athlete.is_onboarded === false &&
+    athlete.onboarding_status === 'not-started'
+  ) {
     await onboardAthlete(athlete);
     redirect('onboarding');
   }
