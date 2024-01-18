@@ -1,4 +1,4 @@
-import { db, StratagizeClient } from '@/shared/db';
+import { StratagizeClient } from '@/shared/db';
 import {
   createClient,
   performOperationAndLogError

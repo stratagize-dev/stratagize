@@ -7,7 +7,7 @@ export async function POST() {
   console.log('deleting completed jobs');
 
   const jobsRepository = await createJobQueueRepository(serviceRoleDb);
-  const { data, error } = await jobsRepository.delete('complete');
+  const { error } = await jobsRepository.delete('complete');
 
   logDatabaseError('an error occured retrieving complete jobs', error);
 

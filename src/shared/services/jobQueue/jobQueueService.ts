@@ -8,7 +8,6 @@ import {
   loadDetailedActivityJob,
   onboardAthleteJob as jobSettings
 } from '@/shared/services/jobQueue/jobs';
-import { createAthletesRepository } from '@/shared/repository/athleteRepository';
 
 async function createOnboardingJob(
   athleteId: number,
