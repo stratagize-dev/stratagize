@@ -8,22 +8,24 @@ import { saveSummaryActivities } from '@/shared/services/activityService/saveSum
 import { insertDetailedActivity } from '@/shared/services/activityService/insertDetailedActivity';
 import { updateDetailedActivity } from '@/shared/services/activityService/updateDetailedActivity';
 
-export const activityService = (client?: StratagizeClient) => {
-  return {
-    deleteActivity: (activityId: number) => deleteActivity(activityId, client),
-    /**
-     * Gets all the distinct sport types that an athlete has engaged in
-     * @param athleteId
-     */
-    getSportTypesForAthlete: (athleteId: number) =>
-      getSportTypesForAthlete(athleteId, client),
-    getActivitiesForAthlete: (athleteId: number, sportType?: SportType) =>
-      getActivitiesForAthlete(athleteId, sportType, client),
-    saveSummaryActivities: (summaryActivities: StravaApi.SummaryActivity[]) =>
-      saveSummaryActivities(summaryActivities, client),
-    insertDetailedActivity: (detailedActivity: StravaApi.DetailedActivity) =>
-      insertDetailedActivity(detailedActivity, client),
-    updateDetailedActivity: (detailedActivity: StravaApi.DetailedActivity) =>
-      updateDetailedActivity(detailedActivity, client)
-  };
-};
+export const activityService = (client?: StratagizeClient) => ({
+  deleteActivity: (activityId: number) => deleteActivity(activityId, client),
+  /**
+   * Gets all the distinct sport types that an athlete has engaged in
+   * @param athleteId
+   */
+  getSportTypesForAthlete: (athleteId: number) =>
+    getSportTypesForAthlete(athleteId, client),
+  getActivitiesForAthlete: (
+    athleteId: number,
+    from: Date,
+    to: Date,
+    sportType?: SportType
+  ) => getActivitiesForAthlete(athleteId, from, to, sportType, client),
+  saveSummaryActivities: (summaryActivities: StravaApi.SummaryActivity[]) =>
+    saveSummaryActivities(summaryActivities, client),
+  insertDetailedActivity: (detailedActivity: StravaApi.DetailedActivity) =>
+    insertDetailedActivity(detailedActivity, client),
+  updateDetailedActivity: (detailedActivity: StravaApi.DetailedActivity) =>
+    updateDetailedActivity(detailedActivity, client)
+});

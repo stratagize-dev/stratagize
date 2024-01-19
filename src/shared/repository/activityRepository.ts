@@ -7,12 +7,14 @@ import { Activity, SportType } from '@/shared/types/Activity';
 
 const getActivitiesForAthlete =
   (stravaGoalsClient: StratagizeClient) =>
-  (athleteId: number, sportType?: SportType) =>
+  (athleteId: number, from: Date, to: Date, sportType?: SportType) =>
     performOperationAndLogError(async () => {
       let query = stravaGoalsClient
         .from('activities')
         .select('*')
         .order('start_date', { ascending: true })
+        .gte('start_date', from.toISOString())
+        .lte('start_date', to.toISOString())
         .eq('athlete_id', athleteId);
 
       if (sportType) query = query.eq('sport_type', sportType);
