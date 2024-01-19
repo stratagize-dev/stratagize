@@ -7,24 +7,18 @@ import { activityService } from '@/shared/services/activityService';
 import serviceRoleDb from '@/shared/serviceRoleDb';
 import { JobHandlerPayload } from '@/app/api/job-handler/types';
 import logError from '@/shared/logging/logError';
-import { createJobQueueRepository } from '@/shared/repository/jobQueueRespository';
-import { JobQueue } from '@/shared/types/JobQueue';
 import { jobQueueService } from '@/shared/services/jobQueue';
 
 export async function POST(request: NextRequest) {
   try {
     const data: JobHandlerPayload<Activity.Row> = await request.json();
-    const jobsRepository = await createJobQueueRepository(serviceRoleDb);
     const jobQueue = jobQueueService(serviceRoleDb);
 
     try {
-      if (data.payload.detailed_event) {
-        const jobUpdated: JobQueue.Update = {
-          job_id: data.jobId,
-          status: 'complete'
-        };
+      await jobQueue.completeJob(data.jobId);
 
-        await jobsRepository.update(jobUpdated);
+      if (data.payload.detailed_event) {
+        await jobQueue.completeJob(data.jobId);
 
         return NextResponse.json({
           status: 'ok',
@@ -32,6 +26,9 @@ export async function POST(request: NextRequest) {
           message: 'skipping activity as detailed event already exists'
         });
       }
+
+      await jobQueue.beginProcessingJob(data.jobId);
+
       console.log(`loading details ${JSON.stringify(data)}`);
 
       const athleteRepository = await createAthletesRepository(serviceRoleDb);
@@ -56,12 +53,7 @@ export async function POST(request: NextRequest) {
             detailedActivity
           );
 
-          const jobUpdated: JobQueue.Update = {
-            job_id: data.jobId,
-            status: 'complete'
-          };
-
-          await jobsRepository.update(jobUpdated);
+          await jobQueue.completeJob(data.jobId);
         }
       }
 

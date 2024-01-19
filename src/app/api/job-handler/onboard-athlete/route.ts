@@ -18,6 +18,8 @@ export async function POST(request: NextRequest) {
 
   const jobQueue = jobQueueService(serviceRoleDb);
   try {
+    await jobQueue.beginProcessingJob(data.jobId);
+
     const athleteRepository = await createAthletesRepository(serviceRoleDb);
 
     const { data: athlete } = await athleteRepository.get(athleteId);

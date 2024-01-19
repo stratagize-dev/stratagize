@@ -1,5 +1,5 @@
 import { StratagizeClient } from '@/shared/db';
-import { JobQueue } from '@/shared/types/JobQueue';
+import { JobQueue, JobStatus } from '@/shared/types/JobQueue';
 import { createJobQueueRepository } from '@/shared/repository/jobQueueRespository';
 import { Activity } from '@/shared/types/Activity';
 import { addHours } from 'date-fns';
@@ -14,6 +14,9 @@ async function createOnboardingJob(
   client: StratagizeClient | undefined
 ) {
   const jobsRepository = await createJobQueueRepository(client);
+
+  // delete any existing jobs..
+  await jobsRepository.deleteForAthlete(athleteId);
 
   const jobKey = jobSettings.createJobKey(athleteId);
 
@@ -53,13 +56,14 @@ async function createLoadDetailedActivitiesJob(
   return jobsRepository.upsert(jobs);
 }
 
-async function completeJob(
+async function updateJobStatus(
   jobId: number,
+  status: JobStatus,
   client: StratagizeClient | undefined
 ) {
   const jobUpdated: JobQueue.Update = {
     job_id: jobId,
-    status: 'complete'
+    status: status
   };
 
   const jobsRepository = await createJobQueueRepository(client);
@@ -103,7 +107,9 @@ export const jobQueueService = (client?: StratagizeClient) => {
       createLoadDetailedActivitiesJob(activities, client),
     createFinalizeAthleteOnboardingJob: (athleteId: number) =>
       createFinalizeAthleteOnboardingJob(athleteId, client),
-    completeJob: (jobId: number) => completeJob(jobId, client),
+    beginProcessingJob: (jobId: number) =>
+      updateJobStatus(jobId, 'processing', client),
+    completeJob: (jobId: number) => updateJobStatus(jobId, 'complete', client),
     retryJob: (jobId: number) => retryJob(jobId, client)
   };
 };

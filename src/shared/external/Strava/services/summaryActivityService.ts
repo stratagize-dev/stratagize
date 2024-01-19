@@ -25,7 +25,7 @@ async function loadFrom(
       try {
         const activities = await activitiesApi.getLoggedInAthleteActivities(
           undefined,
-          after.getTime() / 1000,
+          undefined, // after.getTime() / 1000,
           page,
           perPage
         )();
