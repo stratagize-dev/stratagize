@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@baselime/node-opentelemetry": "0.3.0",
-    "@headlessui/react": "1.7.17",
+    "@headlessui/react": "1.7.19",
     "@heroicons/react": "2.1.1",
     "@supabase/supabase-js": "2.39.1",
     "autoprefixer": "10.4.16",
