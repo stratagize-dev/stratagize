@@ -1,3 +1,6 @@
+1. sudo supabase start
+2. sudo supabase db reset
+
 
 # Supabase
 
