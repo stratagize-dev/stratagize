@@ -4,6 +4,7 @@ import ClientSide from '@/components/client/ClientSide';
 import ActivityLoadingScreen from '@/components/client/components/components/components/ActivityLoadingScreen';
 import { createAthletesRepository } from '@/shared/repository/athleteRepository';
 import { redirect } from 'next/navigation';
+import { inngest } from '@/inngest/client';
 
 export default async function OnboardingScreen({
   athleteId,
@@ -17,11 +18,13 @@ export default async function OnboardingScreen({
 
   if (!athlete) throw new Error('Athlete not found');
 
-  if (
-    athlete.is_onboarded === false &&
-    athlete.onboarding_status === 'not-started'
-  ) {
-    await onboardAthlete(athlete);
+  if (athlete.onboarding_status === 'not-started') {
+    await inngest.send({
+      id: `athlete-onboarding-${athleteId}`,
+      name: 'athlete/begin-onboarding',
+      data: { athleteId: athlete.id }
+    });
+
     redirect('onboarding');
   }
 

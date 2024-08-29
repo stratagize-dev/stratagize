@@ -13,7 +13,8 @@
     "db:local:start": "supabase start",
     "db:local:stop": "supabase stop",
     "db:local:migrate": "supabase db reset",
-    "ngrok": "ngrok http 3001 --domain valid-factual-barnacle.ngrok-free.app"
+    "ngrok": "ngrok http 3001 --domain valid-factual-barnacle.ngrok-free.app",
+    "inngest:dev": "npx inngest-cli@latest dev"
   },
   "dependencies": {
     "@baselime/node-opentelemetry": "0.3.0",
@@ -22,6 +23,7 @@
     "@supabase/supabase-js": "2.39.1",
     "autoprefixer": "10.4.16",
     "date-fns": "3.6.0",
+    "inngest": "^3.22.2",
     "jotai": "2.6.0",
     "jsonwebtoken": "9.0.2",
     "next": "14.0.4",
@@ -36,6 +38,7 @@
     "typescript": "5.3.3"
   },
   "devDependencies": {
+    "@inngest/eslint-plugin": "^0.0.7",
     "@playwright/test": "1.40.1",
     "@testing-library/jest-dom": "6.4.2",
     "@testing-library/react": "14.1.2",

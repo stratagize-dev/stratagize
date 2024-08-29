@@ -55,7 +55,33 @@ async function loadFrom(
   return [];
 }
 
+async function loadPage(
+  accessToken: string,
+  perPage: number,
+  pageNumber: number
+): Promise<StravaApi.SummaryActivity[]> {
+  const activitiesApi = StravaApi.ActivitiesApiFp({
+    accessToken: accessToken
+  });
+
+  const activities = await activitiesApi.getLoggedInAthleteActivities(
+    undefined,
+    undefined, // after.getTime() / 1000,
+    pageNumber,
+    perPage
+  )();
+
+  const allActivities = activities.filter(
+    x =>
+      x.id !== undefined &&
+      x.athlete?.id !== undefined &&
+      x.start_date !== undefined
+  );
+  return allActivities;
+}
+
 const summaryActivityService = {
+  loadPage,
   loadFromFirstOfYear
 };
 

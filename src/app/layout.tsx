@@ -25,7 +25,6 @@ export default async function RootLayout({
     authOptions
   );
 
-  console.debug({ session });
   if (!session) {
     redirect('/api/auth/signin');
   }

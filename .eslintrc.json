@@ -1,6 +1,6 @@
 {
-  "extends": ["next/core-web-vitals", "prettier", "eslint:recommended"],
-  "plugins": ["prettier"],
+  "extends": ["next/core-web-vitals", "prettier", "eslint:recommended", "plugin:@inngest/recommended"],
+  "plugins": ["prettier", "@inngest"],
   "rules": {
     "prettier/prettier": ["error"],
     "no-unused-vars" : ["off"] // need to get rid of this at some point

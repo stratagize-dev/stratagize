@@ -9,6 +9,11 @@ import {
   onboardAthleteJob as jobSettings
 } from '@/shared/services/jobQueue/jobs';
 
+/**
+ * @deprecated
+ * @param athleteId
+ * @param client
+ */
 async function createOnboardingJob(
   athleteId: number,
   client: StratagizeClient | undefined
@@ -101,6 +106,7 @@ async function retryJob(jobId: number, client: StratagizeClient | undefined) {
 
 export const jobQueueService = (client?: StratagizeClient) => {
   return {
+    /** @deprecated remove and replace with inngest function **/
     createOnboardingJob: (athleteId: number) =>
       createOnboardingJob(athleteId, client),
     createLoadDetailedActivitiesJob: (activities: Activity.Insert[]) =>

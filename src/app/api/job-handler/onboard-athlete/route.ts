@@ -11,6 +11,12 @@ import { notification } from '@/shared/services/notification/notification';
 export interface OnboardAthletePayload {
   athleteId: number;
 }
+
+/**
+ * @deprecated
+ * @param request
+ * @constructor
+ */
 export async function POST(request: NextRequest) {
   const data: JobHandlerPayload<OnboardAthletePayload> = await request.json();
   const athleteId = data.payload.athleteId;
