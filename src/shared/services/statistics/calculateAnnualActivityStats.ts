@@ -40,6 +40,7 @@ function calculateSportsStatistics(
 }
 
 const calculateAnnualActivityStats = (
+  year: number,
   targetGoalHours: number,
   today: Date,
   activityStats: Activity.Row[]
@@ -80,7 +81,9 @@ const calculateAnnualActivityStats = (
     currentStreakStartDate,
     maxStreakStartDate,
     activeDayCount
-  } = calculateActivityStreak(activityStats, fromBeginningOfYear);
+  } = calculateActivityStreak(activityStats, activities =>
+    fromBeginningOfYear(year, activities)
+  );
 
   return {
     secondsPerDayToComplete: time(secondsPerDayToComplete),

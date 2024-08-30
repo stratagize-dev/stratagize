@@ -45,5 +45,14 @@ export const fromBeginningOfMonth = <
 export const fromBeginningOfYear = <
   T extends StravaApi.SummaryActivity | Activity.Row
 >(
+  year: number,
   activities: T[]
-): T[] => filterFromDate(activities, startOfYear(new Date()));
+): T[] => filterFromDate(activities, getTheStartOfTheYear(year));
+
+export function humanDay(days: number) {
+  return days == 1 ? `${days} day` : `${days} days`;
+}
+
+export function getTheStartOfTheYear(year: number) {
+  return startOfYear(new Date(year, 0, 1));
+}

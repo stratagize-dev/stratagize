@@ -1,10 +1,10 @@
 import CustomSession from '@/shared/types/auth/CustomSession';
-import { onboardAthlete } from '@/shared/services/sessionService';
 import ClientSide from '@/components/client/ClientSide';
 import ActivityLoadingScreen from '@/components/client/components/components/components/ActivityLoadingScreen';
 import { createAthletesRepository } from '@/shared/repository/athleteRepository';
 import { redirect } from 'next/navigation';
 import { inngest } from '@/inngest/client';
+import { getYear } from 'date-fns';
 
 export default async function OnboardingScreen({
   athleteId,
@@ -33,6 +33,7 @@ export default async function OnboardingScreen({
       <ActivityLoadingScreen
         athleteId={athleteId}
         athleteHourGoal={athlete.hour_goal}
+        year={getYear(new Date())}
       />
     </ClientSide>
   );

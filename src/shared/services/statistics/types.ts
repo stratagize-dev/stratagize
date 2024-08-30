@@ -8,49 +8,47 @@ export interface SportsStatistic {
   activityCount: number;
 }
 
+export type AnnualTotals = {
+  totalMovingTime: Time;
+  actualDailyAverage: Time;
+  sportStatistics: SportsStatistic[];
+  activeDays: {
+    active: number;
+    total: number;
+  };
+  streaks: {
+    currentStreakDays: number;
+    maxStreakDays: number;
+    currentStreakStartDate: Date | undefined;
+    maxStreakStartDate: Date | undefined;
+  };
+};
+
+export type AnnualGoals = {
+  secondsPerDayToComplete: Time;
+  /**
+   * The expected total amount of time for the current day of the year
+   */
+  expectedTotal: Time;
+  /**
+   * the amount of time ahead or behind for the current year
+   * @example totalMovingTime - expectedTotal
+   */
+  timeAhead: Time;
+
+  projectedTotal: Time;
+  percentageComplete: number;
+  percentageAhead: number;
+};
+
 export type ActivityStatsResult = {
   /**
    * The required activity each day to achieve the annual goal
    */
   requiredActivityPerDay: Time;
 
-  year: {
-    secondsPerDayToComplete: Time;
-    totalMovingTime: Time;
-    /**
-     * The expected total amount of time for the current day of the year
-     */
-    expectedTotal: Time;
-    /**
-     * the amount of time ahead or behind for the current year
-     * @example totalMovingTime - expectedTotal
-     */
-    timeAhead: Time;
-    /**
-     * The daily average moving time up to the current day of the year
-     */
-    actualDailyAverage: Time;
-    projectedTotal: Time;
-    percentageComplete: number;
-    percentageAhead: number;
-    sportStatistics: SportsStatistic[];
-    activeDays: {
-      /**
-       * number of active days in the year
-       */
-      active: number;
-      /**
-       * current day of the year
-       */
-      total: number;
-    };
-    streaks: {
-      currentStreakDays: number;
-      currentStreakStartDate: Date | undefined;
-      maxStreakDays: number;
-      maxStreakStartDate: Date | undefined;
-    };
-  };
+  year: AnnualTotals & AnnualGoals;
+
   month: {
     totalMovingTime: Time;
     /**

@@ -1,4 +1,3 @@
-'use client';
 import { SportsStatistic } from '@/shared/services/statistics/types';
 
 const SportsBreakdown = ({
@@ -6,8 +5,8 @@ const SportsBreakdown = ({
 }: {
   sportStatistics: SportsStatistic[];
 }) => (
-  <table className="table-auto border-separate border-spacing-4 border border-slate-400">
-    <thead>
+  <table className="table-auto border-separate rounded-2xl border-spacing-4 border border-slate-400 p-4">
+    <thead className="text-left">
       <tr>
         <th>Sport</th>
         <th>Total Moving Time</th>

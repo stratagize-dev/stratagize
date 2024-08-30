@@ -6,13 +6,24 @@ import { Activity } from '@/shared/types/Activity';
 import calculateMonthlyActivityStats from '@/shared/services/statistics/calculateMonthlyActivityStats';
 import calculateDailyActivityStats from '@/shared/services/statistics/calculateDailyActivityStats';
 
-function calculate(targetGoalHours: number, activityStats: Activity.Row[]) {
+/**
+ * @deprecated
+ * @param yearToCalculateFor
+ * @param targetGoalHours
+ * @param activityStats
+ */
+function calculate(
+  yearToCalculateFor: number,
+  targetGoalHours: number,
+  activityStats: Activity.Row[]
+) {
   const today = new Date();
 
   const { secondsPerDay } = calculateCommon(targetGoalHours, today);
 
   // Yearly calculations
   const year = calculateAnnualActivityStats(
+    yearToCalculateFor,
     targetGoalHours,
     today,
     activityStats

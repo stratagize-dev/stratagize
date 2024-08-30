@@ -5,16 +5,21 @@ import { endOfYear, startOfYear } from 'date-fns';
 
 export default async function ActivityLoadingScreen({
   athleteId,
-  athleteHourGoal
+  athleteHourGoal,
+  year
 }: {
   athleteId: number;
   athleteHourGoal: number;
+  year: number;
 }) {
-  const now = new Date();
+  const theStartOfTheYear = startOfYear(new Date(year, 0, 1));
+  const theEndOfTheYear = endOfYear(theStartOfTheYear);
+
   const { data: activities } = await activityService().getActivitiesForAthlete(
     athleteId,
-    startOfYear(now),
-    endOfYear(now)
+
+    theStartOfTheYear,
+    theEndOfTheYear
   );
 
   return (

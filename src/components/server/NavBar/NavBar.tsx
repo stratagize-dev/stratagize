@@ -1,5 +1,5 @@
 import SignOutButton from '@/components/client/SignOutButton';
-import { SportsMenu } from '@/components/client/SportsMenu';
+import { SportsMenu, YearMenu } from '@/components/client/SportsMenu';
 import CustomSession from '@/shared/types/auth/CustomSession';
 import ClientSide from '@/components/client/ClientSide';
 import Image from 'next/image';
@@ -9,6 +9,10 @@ import { AdminMenu } from '@/components/client/AdminMenu/AdminMenu';
 import { Toaster } from 'react-hot-toast';
 import Notifications from '@/components/client/Notifications';
 import { OnboardingStatus } from '@/shared/types/Athlete';
+import { activityService } from '@/shared/services/activityService';
+import { endOfYear, startOfYear } from 'date-fns';
+import { createClient } from '@/shared/repository/utils';
+import { CustomMenu } from '@/components/CustomMenu';
 
 export function NavBar({
   customSession,
@@ -33,8 +37,9 @@ export function NavBar({
           <>
             <NavLink href="/">Today</NavLink>
             <NavLink href="/">Month</NavLink>
-            <NavLink href="/">Year</NavLink>
+
             <ClientSide session={customSession}>
+              <YearMenu />
               <SportsMenu />
               <Notifications />
             </ClientSide>
