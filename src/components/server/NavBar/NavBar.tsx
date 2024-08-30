@@ -36,7 +36,7 @@ export function NavBar({
         {onboardingStatus === 'complete' && (
           <>
             <NavLink href="/">Today</NavLink>
-            <NavLink href="/">Month</NavLink>
+            <NavLink href="/summary">Summary</NavLink>
 
             <ClientSide session={customSession}>
               <YearMenu />
