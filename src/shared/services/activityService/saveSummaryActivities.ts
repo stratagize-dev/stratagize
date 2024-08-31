@@ -2,6 +2,7 @@ import { StratagizeClient } from '@/shared/db';
 import { Activity, SportType } from '@/shared/types/Activity';
 import { createActivityRepository } from '@/shared/repository/activityRepository';
 import * as StravaApi from '@/shared/strava-client';
+import { getYear } from 'date-fns';
 
 export const saveSummaryActivities = async (
   summaryActivities: StravaApi.SummaryActivity[],
@@ -31,7 +32,10 @@ export const saveSummaryActivities = async (
     max_watts: value.max_watts,
     timezone: value.timezone,
     total_elevation_gain: value.total_elevation_gain,
-    weighted_average_watts: value.weighted_average_watts
+    weighted_average_watts: value.weighted_average_watts,
+    year: value.start_date_local
+      ? getYear(value.start_date_local)
+      : getYear(new Date())
   }));
 
   const activityRepository = await createActivityRepository(client);

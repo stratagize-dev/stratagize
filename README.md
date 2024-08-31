@@ -14,11 +14,11 @@ supabase migration new MIGRATION_NAME
 ### Deploy Migration
 
 ```
-supabase db push
+sudo supabase db push
 ```
 
 ### Create Auto Migration 
 
-supabase db diff -f MIGRATION_NAME
+ ```sudo supabase db diff -f MIGRATION_NAME ```
 
 

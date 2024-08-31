@@ -9,8 +9,7 @@
     "lint": "next lint",
     "test:e2e": "playwright test",
     "generate:strava-client": "/usr/local/Cellar/swagger-codegen@2/2.4.31/bin/swagger-codegen generate --additional-properties modelPropertyNaming=original -i https://developers.strava.com/swagger/swagger.json -l typescript-fetch -o src/shared/strava-client",
-    "db:local:generate:types": "sudo Nangaparbat1supabase gen types typescript --local  > database.types.ts",
-
+    "db:local:generate:types": "sudo supabase gen types typescript --local  > database.types.ts",
     "db:local:start": "sudo supabase start",
     "db:local:stop": "sudo supabase stop",
     "db:local:migrate": "sudo supabase db reset",
