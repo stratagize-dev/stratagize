@@ -8,7 +8,7 @@ alter table "public"."activities" add column "average_watts" real;
 
 alter table "public"."activities" add column "comment_count" integer;
 
-alter table "public"."activities" add column "device_watts" real;
+alter table "public"."activities" add column "device_watts" boolean;
 
 alter table "public"."activities" add column "distance" real;
 

@@ -44,7 +44,7 @@ export type Database = {
           comment_count: number | null
           created_at: string
           detailed_event: Json | null
-          device_watts: number | null
+          device_watts: boolean | null
           distance: number | null
           elapsed_time: number | null
           elev_high: number | null
@@ -72,7 +72,7 @@ export type Database = {
           comment_count?: number | null
           created_at?: string
           detailed_event?: Json | null
-          device_watts?: number | null
+          device_watts?: boolean | null
           distance?: number | null
           elapsed_time?: number | null
           elev_high?: number | null
@@ -100,7 +100,7 @@ export type Database = {
           comment_count?: number | null
           created_at?: string
           detailed_event?: Json | null
-          device_watts?: number | null
+          device_watts?: boolean | null
           distance?: number | null
           elapsed_time?: number | null
           elev_high?: number | null
