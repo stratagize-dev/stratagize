@@ -229,6 +229,31 @@ export type Database = {
           },
         ]
       }
+      athlete_yearly_summary: {
+        Row: {
+          athlete_id: number | null
+          max_distance: number | null
+          max_elevation_gain: number | null
+          max_moving_time: number | null
+          max_speed: number | null
+          max_watts: number | null
+          sum: number | null
+          total_achievements: number | null
+          total_distance: number | null
+          total_elevation_gain: number | null
+          total_moving_time: number | null
+          year: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "activities_athlete_id_fkey"
+            columns: ["athlete_id"]
+            isOneToOne: false
+            referencedRelation: "athletes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       [_ in never]: never
