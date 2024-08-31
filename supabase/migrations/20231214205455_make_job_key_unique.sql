@@ -1,1 +1,0 @@
-ALTER TABLE job_queue ADD CONSTRAINT constraint_name UNIQUE (job_key);
