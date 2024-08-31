@@ -34,7 +34,7 @@ export const beginAthleteOnboarding = inngest.createFunction(
 export const finalizeAthleteOnboarding = inngest.createFunction(
   { id: 'finalize-athlete-onboarding' },
   { event: 'athlete/finalize-onboarding' },
-  async ({ event, step }) => {
+  async ({ event }) => {
     const athleteId = event.data.athleteId;
 
     const athleteRepository = await createAthletesRepository(serviceRoleDb);
