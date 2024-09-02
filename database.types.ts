@@ -214,10 +214,54 @@ export type Database = {
       }
     }
     Views: {
-      athlete_sport_types: {
+      athlete_sport_all_time_stats: {
         Row: {
           athlete_id: number | null
+          avg_distance: number | null
+          avg_elevation_gain: number | null
+          avg_moving_time: number | null
+          max_distance: number | null
+          max_elevation_gain: number | null
+          max_moving_time: number | null
+          max_speed: number | null
+          max_watts: number | null
           sport_type: Database["public"]["Enums"]["sport_type"] | null
+          total_achievements: number | null
+          total_activities: number | null
+          total_distance: number | null
+          total_elevation_gain: number | null
+          total_kudos: number | null
+          total_moving_time: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "activities_athlete_id_fkey"
+            columns: ["athlete_id"]
+            isOneToOne: false
+            referencedRelation: "athletes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      athlete_sport_yearly_stats: {
+        Row: {
+          athlete_id: number | null
+          avg_distance: number | null
+          avg_elevation_gain: number | null
+          avg_moving_time: number | null
+          max_distance: number | null
+          max_elevation_gain: number | null
+          max_moving_time: number | null
+          max_speed: number | null
+          max_watts: number | null
+          sport_type: Database["public"]["Enums"]["sport_type"] | null
+          total_achievements: number | null
+          total_activities: number | null
+          total_distance: number | null
+          total_elevation_gain: number | null
+          total_kudos: number | null
+          total_moving_time: number | null
+          year: number | null
         }
         Relationships: [
           {

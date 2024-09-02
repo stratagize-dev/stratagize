@@ -1,4 +1,4 @@
-create or replace view "public"."athlete_sport_all_time_stats_view" as
+create or replace view "public"."athlete_sport_all_time_stats" as
 
 SELECT activities.athlete_id,
        activities.sport_type,
