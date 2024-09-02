@@ -1,5 +1,6 @@
 import { Time } from '@/shared/types/time';
 import { SportType } from '@/shared/types/Activity';
+import { Database } from '../../../../database.types';
 
 export interface SportsStatistic {
   sportType: SportType;
@@ -65,3 +66,6 @@ export type ActivityStatsResult = {
     percentageAhead: number;
   };
 };
+
+export type AthleteYearlySummary =
+  Database['public']['Views']['athlete_yearly_summary']['Row'];

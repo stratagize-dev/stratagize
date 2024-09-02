@@ -13,7 +13,6 @@
     "db:local:start": "sudo supabase start",
     "db:local:stop": "sudo supabase stop",
     "db:local:migrate": "sudo supabase db reset",
-    "ngrok": "ngrok http 3001 --domain valid-factual-barnacle.ngrok-free.app",
     "inngest:dev": "npx inngest-cli@latest dev"
   },
   "dependencies": {
@@ -28,12 +27,12 @@
     "jsonwebtoken": "9.0.2",
     "next": "14.0.4",
     "next-auth": "4.24.5",
-    "ngrok": "5.0.0-beta.2",
     "portable-fetch": "^3.0.0",
     "postcss": "8.4.38",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hot-toast": "^2.4.1",
+    "recharts": "^2.12.7",
     "tailwindcss": "3.4.3",
     "typescript": "5.3.3"
   },

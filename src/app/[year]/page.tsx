@@ -34,7 +34,7 @@ export default async function Page({ params }: { params: { year: number } }) {
   } = calculateAnnualTotals(params.year, activities ?? []);
 
   return (
-    <div className="max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">
+    <>
       <StatsRow
         title={totalMovingTime().human}
         subTitle={`Total moving time for ${params.year}`}
@@ -63,6 +63,6 @@ export default async function Page({ params }: { params: { year: number } }) {
       <div className="flex  justify-center">
         <SportsBreakdown sportStatistics={sportStatistics} />
       </div>
-    </div>
+    </>
   );
 }
