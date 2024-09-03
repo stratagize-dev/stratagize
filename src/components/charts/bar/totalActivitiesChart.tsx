@@ -1,7 +1,6 @@
 'use client';
 
 import { YearlySummaryChartData } from '@/components/charts/bar/types';
-import { time } from '@/shared/types/time';
 import React from 'react';
 import { YearlySummaryChart } from '@/components/charts/bar/index';
 import { numberFormat } from '@/shared/formatting';

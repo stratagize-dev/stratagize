@@ -15,4 +15,3 @@ SELECT athlete_id,
 FROM activities
 
 group by athlete_id, year
-order by year asc

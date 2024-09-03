@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import { SportType } from '@/shared/types/Activity';
 
 const metresToKilometres = (value: number | null): number | null =>
@@ -15,7 +14,6 @@ function splitPascalCase(str: string): string {
  * @param converter
  * @param defaultValue
  * @param postModifier
- * @param input
  */
 const formatter = (
   converter: (value: number | null) => number | null = x => x,

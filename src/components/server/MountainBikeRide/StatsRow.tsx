@@ -1,6 +1,4 @@
 import MessageBlock from '@/components/MessageBlock';
-import ArrowDownRightCircleFill from '@/components/Icons/ArrowDownRightCircleFill';
-import ArrowUpRightCircleFill from '@/components/Icons/ArrowUpRightCircleFill';
 import HorizontalSpacer from '@/components/HorizontalSpacer';
 import { ReactNode } from 'react';
 
@@ -10,14 +8,7 @@ interface Props {
   messageBlocks: { id: string; header: string; message: string }[];
   children?: ReactNode;
 }
-export const StatsRow = ({
-  title,
-  subTitle,
-  messageBlocks,
-  children
-}: Props) => {
-  const symbol = (value: number) => (value > 0 ? '+' : '');
-
+export const StatsRow = ({ messageBlocks, children }: Props) => {
   return (
     <>
       <div className="grid items-center lg:grid-cols-12 gap-6 lg:gap-16 my-12">
