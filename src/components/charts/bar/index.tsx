@@ -10,73 +10,10 @@ import {
   XAxis,
   YAxis
 } from 'recharts';
-import { time } from '@/shared/types/time';
 import { tailwindConfig } from '@/shared/tailwindConfig';
-import { AthleteYearlySummary } from '@/shared/services/statistics/types';
+import { YearlySummaryChartData } from '@/components/charts/bar/types';
 
-const formatNumber = (num: number) =>
-  new Intl.NumberFormat().format(Math.round(num));
-
-const TotalMovingSummary = ({ data }: { data: AthleteYearlySummary[] }) => (
-  <YearlySummaryBarChart
-    title="Total moving time"
-    tickFormatter={value => time(value)().duration.hours.toString()}
-    toolTipFormatter={value => time(value as number)().human}
-    yAxisDataKey="total_moving_time"
-    chartType="bar-chart"
-    data={data}
-  />
-);
-
-const TotalDistanceSummary = ({ data }: { data: AthleteYearlySummary[] }) => (
-  <YearlySummaryBarChart
-    title="Total distance"
-    tickFormatter={value => (value / 1000).toString()}
-    toolTipFormatter={value => `${Math.round((value as number) / 1000)} km`}
-    yAxisDataKey="total_distance"
-    chartType="bar-chart"
-    data={data}
-  />
-);
-
-const TotalElevationsSummary = ({ data }: { data: AthleteYearlySummary[] }) => (
-  <YearlySummaryBarChart
-    title="Total elevation"
-    tickFormatter={value => formatNumber(value).toString()}
-    toolTipFormatter={value => `${formatNumber(value)} m`}
-    yAxisDataKey="total_elevation_gain"
-    chartType="bar-chart"
-    data={data}
-  />
-);
-
-const TotalKudosSummary = ({ data }: { data: AthleteYearlySummary[] }) => (
-  <YearlySummaryBarChart
-    title="Total kudos"
-    tickFormatter={value => formatNumber(value).toString()}
-    toolTipFormatter={value => `${formatNumber(value)}`}
-    yAxisDataKey="sum"
-    chartType="line-chart"
-    data={data}
-  />
-);
-
-const TotalAchievementsSummary = ({
-  data
-}: {
-  data: AthleteYearlySummary[];
-}) => (
-  <YearlySummaryBarChart
-    title="Total achievements"
-    tickFormatter={value => formatNumber(value).toString()}
-    toolTipFormatter={value => `${formatNumber(value)}`}
-    yAxisDataKey="total_achievements"
-    chartType="line-chart"
-    data={data}
-  />
-);
-
-function YearlySummaryBarChart({
+export function YearlySummaryChart({
   title,
   yAxisDataKey,
   toolTipFormatter,
@@ -85,11 +22,11 @@ function YearlySummaryBarChart({
   data
 }: {
   title: string;
-  yAxisDataKey: string;
+  yAxisDataKey: keyof YearlySummaryChartData;
   tickFormatter: (value: any, index: number) => string;
   toolTipFormatter: (value: any) => string;
   chartType: 'bar-chart' | 'line-chart';
-  data: AthleteYearlySummary[];
+  data: YearlySummaryChartData[];
 }) {
   return (
     <div className="w-full h-72">
@@ -120,11 +57,3 @@ function YearlySummaryBarChart({
     </div>
   );
 }
-
-export {
-  TotalDistanceSummary,
-  TotalMovingSummary,
-  TotalElevationsSummary,
-  TotalKudosSummary,
-  TotalAchievementsSummary
-};

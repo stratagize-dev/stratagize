@@ -8,8 +8,16 @@ import { db } from '@/shared/db';
 import { MenuItemProps } from '@/components/CustomMenu/components/MenuItem';
 import { useRouter } from 'next/navigation';
 import { SportType } from '@/shared/types/Activity';
+import { formatSportsTypeName } from '@/shared/formatting';
 
-const supportedSports: SportType[] = ['MountainBikeRide'];
+const supportedSports: SportType[] = [
+  'MountainBikeRide',
+  'AlpineSki',
+  'NordicSki',
+  'TrailRun',
+  'Run',
+  'Kayaking'
+];
 export function SportsMenu() {
   const { customSession } = useCustomSession();
   const router = useRouter();
@@ -25,7 +33,7 @@ export function SportsMenu() {
             const allMenuItems = value.data
               .filter(d => supportedSports.includes(d.sport_type as SportType))
               .map(d => ({
-                buttonText: d.sport_type,
+                buttonText: formatSportsTypeName(d.sport_type as SportType),
                 onClick: () => router.push(`/sport/${d.sport_type}`)
               })) as MenuItemProps[];
 

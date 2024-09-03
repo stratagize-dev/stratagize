@@ -1,11 +1,11 @@
 'use client';
 import AnnualGoal from '@/components/client/components/components/components/components/components/AnnualGoal';
-import MessageBlock from '@/components/client/components/components/components/components/components/MessageBlock';
+import MessageBlock from '@/components/MessageBlock';
 import { useAtom } from 'jotai';
 import { annualHourGoalAtom } from '@/components/client/state/atoms';
 import ProgressCircle from '@/components/client/components/components/components/components/components/ProgressCircle';
 import { StatsRow } from '@/components/client/components/components/components/components/components/StatsRow';
-import HorizontalSpacer from '@/components/client/components/components/components/components/components/HorizontalSpacer';
+import HorizontalSpacer from '@/components/HorizontalSpacer';
 import SportsBreakdown from '@/components/client/components/components/components/components/components/SportsBreakdown';
 import { Activity } from '@/shared/types/Activity';
 import { useHydrateAtoms } from 'jotai/utils';

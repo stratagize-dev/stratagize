@@ -281,10 +281,11 @@ export type Database = {
           max_moving_time: number | null
           max_speed: number | null
           max_watts: number | null
-          sum: number | null
           total_achievements: number | null
+          total_activities: number | null
           total_distance: number | null
           total_elevation_gain: number | null
+          total_kudos: number | null
           total_moving_time: number | null
           year: number | null
         }

@@ -5,7 +5,7 @@ export const getSportTypesForAthlete = async (
   client?: StratagizeClient
 ) => {
   return client
-    ?.from('athlete_sport_types')
-    .select()
+    ?.from('athlete_sport_all_time_stats')
+    .select('sport_type')
     .eq('athlete_id', athleteId);
 };

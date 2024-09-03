@@ -1,17 +1,50 @@
-import { Activity, SportType } from '@/shared/types/Activity';
+import { SportType } from '@/shared/types/Activity';
 import { MountainBikeRide } from '@/components/server/MountainBikeRide';
+import { Database } from '../../../../database.types';
+
+export type SportsAllTimeStats =
+  Database['public']['Views']['athlete_sport_all_time_stats']['Row'];
+
+export type SportsYearlyStats =
+  Database['public']['Views']['athlete_sport_yearly_stats']['Row'];
 
 export function SportLoader({
   sportType,
-  activities
+  allTimeStats,
+  yearlyStats
 }: {
   sportType: SportType;
-  activities: Activity.Row[];
+  allTimeStats: SportsAllTimeStats;
+  yearlyStats: SportsYearlyStats[];
 }) {
   switch (sportType) {
     case 'MountainBikeRide':
-      return <MountainBikeRide activities={activities} />;
+      return (
+        <MountainBikeRide
+          allTimeStats={allTimeStats}
+          yearlyStats={yearlyStats}
+        />
+      );
+    case 'AlpineSki':
+      return (
+        <MountainBikeRide
+          allTimeStats={allTimeStats}
+          yearlyStats={yearlyStats}
+        />
+      );
+    case 'Kayaking':
+      return (
+        <MountainBikeRide
+          allTimeStats={allTimeStats}
+          yearlyStats={yearlyStats}
+        />
+      );
     default:
-      return <div>An error has occured unsupported {sportType}</div>;
+      return (
+        <MountainBikeRide
+          allTimeStats={allTimeStats}
+          yearlyStats={yearlyStats}
+        />
+      );
   }
 }

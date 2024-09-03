@@ -1,4 +1,5 @@
 import { SportsStatistic } from '@/shared/services/statistics/types';
+import { formatSportsTypeName } from '@/shared/formatting';
 
 const SportsBreakdown = ({
   sportStatistics
@@ -20,11 +21,7 @@ const SportsBreakdown = ({
         .sort((a, b) => b.percentage - a.percentage)
         .map(statistic => (
           <tr key={statistic.sportType} className="my-3">
-            <td>
-              {statistic.sportType
-                .toString()
-                .replace(/([a-z])([A-Z])/g, '$1 $2')}
-            </td>
+            <td>{formatSportsTypeName(statistic.sportType)}</td>
             <td>{statistic.totalMovingTime().human}</td>
             <td>{statistic.activityCount}</td>
             <td>{Math.round(statistic.percentage)}%</td>
