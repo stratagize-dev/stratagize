@@ -3,8 +3,6 @@ import HorizontalSpacer from '@/components/HorizontalSpacer';
 import { ReactNode } from 'react';
 
 interface Props {
-  title: string;
-  subTitle: string;
   messageBlocks: { id: string; header: string; message: string }[];
   children?: ReactNode;
 }

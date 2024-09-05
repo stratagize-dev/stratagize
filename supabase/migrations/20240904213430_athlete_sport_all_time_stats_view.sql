@@ -18,7 +18,8 @@ SELECT activities.athlete_id,
        sum(activities.kudos_count)          AS total_kudos
 FROM activities
 
-group by activities.athlete_id, activities.sport_type;
+group by activities.athlete_id, activities.sport_type
+
 
 
 

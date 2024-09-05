@@ -18,23 +18,41 @@ export function SportLoader({
   yearlyStats: SportsYearlyStats[];
 }) {
   switch (sportType) {
-    case 'MountainBikeRide':
+    case 'Yoga':
       return (
         <MountainBikeRide
+          displayDistance={false}
+          displayElevation={false}
           allTimeStats={allTimeStats}
           yearlyStats={yearlyStats}
         />
       );
-    case 'AlpineSki':
+    case 'RockClimbing':
       return (
         <MountainBikeRide
+          displayElevation={false}
+          displayAchievements={false}
           allTimeStats={allTimeStats}
           yearlyStats={yearlyStats}
         />
       );
+    case 'Workout':
+    case 'WeightTraining':
+      return (
+        <MountainBikeRide
+          displayElevation={false}
+          displayDistance={false}
+          displayAchievements={false}
+          allTimeStats={allTimeStats}
+          yearlyStats={yearlyStats}
+        />
+      );
+
     case 'Kayaking':
+    case 'StandUpPaddling':
       return (
         <MountainBikeRide
+          displayElevation={false}
           allTimeStats={allTimeStats}
           yearlyStats={yearlyStats}
         />

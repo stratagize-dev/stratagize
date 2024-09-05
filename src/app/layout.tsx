@@ -19,8 +19,6 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // const { session: session2, athleteId } = await getAuthDetails();
-
   const session = await getServerSession<AuthOptions, CustomSession>(
     authOptions
   );

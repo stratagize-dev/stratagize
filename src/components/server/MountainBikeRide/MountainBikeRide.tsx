@@ -16,6 +16,9 @@ import { TotalAchievementsSummary } from '@/components/charts/bar/totalAchieveme
 import { TotalActivities } from '@/components/charts/bar/totalActivitiesChart';
 
 interface Props {
+  displayDistance?: boolean;
+  displayElevation?: boolean;
+  displayAchievements?: boolean;
   allTimeStats: SportsAllTimeStats;
   yearlyStats: SportsYearlyStats[];
 }
@@ -28,7 +31,13 @@ const toMeters = formatter(
   'm'
 );
 
-export function MountainBikeRide({ allTimeStats, yearlyStats }: Props) {
+export function MountainBikeRide({
+  displayDistance = true,
+  displayElevation = true,
+  displayAchievements = true,
+  allTimeStats,
+  yearlyStats
+}: Props) {
   return (
     <TabGroup>
       <TabList className="flex flex-row gap-2 mb-2">
@@ -45,8 +54,6 @@ export function MountainBikeRide({ allTimeStats, yearlyStats }: Props) {
       <TabPanels>
         <TabPanel>
           <StatsRow
-            title="elevations"
-            subTitle={'foo'}
             messageBlocks={[
               {
                 id: 'total_activities',
@@ -59,34 +66,30 @@ export function MountainBikeRide({ allTimeStats, yearlyStats }: Props) {
               <TotalActivities data={yearlyStats} />
             </div>
           </StatsRow>
-
+          {displayDistance && (
+            <StatsRow
+              messageBlocks={[
+                {
+                  id: 'total_distance',
+                  header: `${toKilometers(allTimeStats.total_distance)}`,
+                  message: 'Total distance'
+                },
+                {
+                  id: 'avg_distance',
+                  header: `${toKilometers(allTimeStats.avg_distance)}`,
+                  message: 'Average distance'
+                },
+                {
+                  id: 'max_distance',
+                  header: `${toKilometers(allTimeStats.max_distance)}`,
+                  message: 'Maximum distance'
+                }
+              ]}
+            >
+              <TotalDistanceSummary data={yearlyStats} />
+            </StatsRow>
+          )}
           <StatsRow
-            title="distance"
-            subTitle={'foo'}
-            messageBlocks={[
-              {
-                id: 'total_distance',
-                header: `${toKilometers(allTimeStats.total_distance)}`,
-                message: 'Total distance'
-              },
-              {
-                id: 'avg_distance',
-                header: `${toKilometers(allTimeStats.avg_distance)}`,
-                message: 'Average distance'
-              },
-              {
-                id: 'max_distance',
-                header: `${toKilometers(allTimeStats.max_distance)}`,
-                message: 'Maximum distance'
-              }
-            ]}
-          >
-            <TotalDistanceSummary data={yearlyStats} />
-          </StatsRow>
-
-          <StatsRow
-            title="distance"
-            subTitle={'foo'}
             messageBlocks={[
               {
                 id: 'total_moving_time',
@@ -107,32 +110,31 @@ export function MountainBikeRide({ allTimeStats, yearlyStats }: Props) {
           >
             <TotalMovingSummary data={yearlyStats} />
           </StatsRow>
+          {displayElevation && (
+            <StatsRow
+              messageBlocks={[
+                {
+                  id: 'total_elevation_gain',
+                  header: `${toMeters(allTimeStats.total_elevation_gain)}`,
+                  message: 'Total elevation gain'
+                },
+                {
+                  id: 'avg_elevation_gain',
+                  header: `${toMeters(allTimeStats.avg_elevation_gain)}`,
+                  message: 'Average elevation'
+                },
+                {
+                  id: 'max_elevation_gain',
+                  header: `${toMeters(allTimeStats.max_elevation_gain)}`,
+                  message: 'Biggest elevation gain'
+                }
+              ]}
+            >
+              <TotalElevationsSummary data={yearlyStats} />
+            </StatsRow>
+          )}
+
           <StatsRow
-            title="elevations"
-            subTitle={'foo'}
-            messageBlocks={[
-              {
-                id: 'total_elevation_gain',
-                header: `${toMeters(allTimeStats.total_elevation_gain)}`,
-                message: 'Total elevation gain'
-              },
-              {
-                id: 'avg_elevation_gain',
-                header: `${toMeters(allTimeStats.avg_elevation_gain)}`,
-                message: 'Average elevation'
-              },
-              {
-                id: 'max_elevation_gain',
-                header: `${toMeters(allTimeStats.max_elevation_gain)}`,
-                message: 'Biggest elevation gain'
-              }
-            ]}
-          >
-            <TotalElevationsSummary data={yearlyStats} />
-          </StatsRow>
-          <StatsRow
-            title="elevations"
-            subTitle={'foo'}
             messageBlocks={[
               {
                 id: 'total_kudos',
@@ -145,21 +147,21 @@ export function MountainBikeRide({ allTimeStats, yearlyStats }: Props) {
               <TotalKudosSummary data={yearlyStats} />
             </div>
           </StatsRow>
-          <StatsRow
-            title="elevations"
-            subTitle={'foo'}
-            messageBlocks={[
-              {
-                id: 'total_achievements',
-                header: `${formatter()(allTimeStats.total_achievements)}`,
-                message: 'Total achievements'
-              }
-            ]}
-          >
-            <div className="flex flex-row gap-4">
-              <TotalAchievementsSummary data={yearlyStats} />
-            </div>
-          </StatsRow>
+          {displayAchievements && (
+            <StatsRow
+              messageBlocks={[
+                {
+                  id: 'total_achievements',
+                  header: `${formatter()(allTimeStats.total_achievements)}`,
+                  message: 'Total achievements'
+                }
+              ]}
+            >
+              <div className="flex flex-row gap-4">
+                <TotalAchievementsSummary data={yearlyStats} />
+              </div>
+            </StatsRow>
+          )}
         </TabPanel>
         <TabPanel>Content 2</TabPanel>
         <TabPanel>Content 3</TabPanel>

@@ -13,10 +13,18 @@ import { formatSportsTypeName } from '@/shared/formatting';
 const supportedSports: SportType[] = [
   'MountainBikeRide',
   'AlpineSki',
-  'NordicSki',
+  'BackcountrySki',
   'TrailRun',
   'Run',
-  'Kayaking'
+  'Kayaking',
+  'VirtualRide',
+  'Snowshoe',
+  'Hike',
+  'RockClimbing',
+  'StandUpPaddling',
+  'WeightTraining',
+  'Workout',
+  'Yoga'
 ];
 export function SportsMenu() {
   const { customSession } = useCustomSession();

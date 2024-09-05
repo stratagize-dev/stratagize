@@ -23,7 +23,7 @@ export default async function Page() {
 
   const ActivityListItem = ({ children }: { children: ReactNode }) => {
     return (
-      <li className=" flex w-full min-w-[200px] p-5 gap-4 flex-col items-center rounded-md border-x-2 border-b-[5px] bg-white border-t-2 border-[#EDF1F5]  hover:cursor-pointer hover:shadow-lg">
+      <li className=" flex w-full min-w-[200px] p-5 gap-4 flex-col items-center rounded-md border-x-2 border-b-[5px] bg-purple-50 border-t-2 border-[#EDF1F5]  hover:cursor-pointer hover:shadow-lg">
         {children}
       </li>
     );

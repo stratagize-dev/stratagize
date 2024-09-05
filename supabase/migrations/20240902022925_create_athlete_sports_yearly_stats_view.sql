@@ -20,3 +20,5 @@ SELECT activities.athlete_id,
 FROM activities
 
 group by activities.athlete_id, activities.sport_type, activities.year
+
+ORDER BY year asc;
