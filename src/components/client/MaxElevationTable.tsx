@@ -1,8 +1,5 @@
-import {
-  MaxActivityDistance,
-  MaxActivityElevation
-} from '@/shared/types/Activity';
-import { formatter, metersToKilometers } from '@/shared/formatting';
+import { MaxActivityElevation } from '@/shared/types/Activity';
+import { formatter } from '@/shared/formatting';
 
 interface Props {
   maxActivityElevations: MaxActivityElevation[];
