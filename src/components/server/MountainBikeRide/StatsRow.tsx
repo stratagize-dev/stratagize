@@ -1,5 +1,4 @@
 import MessageBlock from '@/components/MessageBlock';
-import HorizontalSpacer from '@/components/HorizontalSpacer';
 import { ReactNode } from 'react';
 
 interface Props {
@@ -20,10 +19,9 @@ export const StatsRow = ({ messageBlocks, children }: Props) => {
               />
             ))}
           </div>
-          {children}
         </div>
       </div>
-      <HorizontalSpacer />
+      <div className="flex flex-row w-full gap-10 items-center">{children}</div>
     </>
   );
 };

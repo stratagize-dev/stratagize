@@ -1,7 +1,14 @@
 import { SportType } from '@/shared/types/Activity';
 
-const metresToKilometres = (value: number | null): number | null =>
+const metresToKilometresRounded = (value: number | null): number | null =>
   value ? Math.round(value / 1000) : null;
+
+function metersToKilometers(value: number | null): number | null {
+  if (value === null) return null;
+
+  const kilometers = value / 1000;
+  return Math.round(kilometers * 100) / 100; // Rounds to two decimal places
+}
 
 const numberFormat = (num: number) => Intl.NumberFormat().format(num);
 
@@ -38,4 +45,10 @@ const formatter = (
 const formatSportsTypeName = (sportsType: SportType) =>
   splitPascalCase(sportsType);
 
-export { formatter, numberFormat, metresToKilometres, formatSportsTypeName };
+export {
+  formatter,
+  numberFormat,
+  metresToKilometresRounded,
+  metersToKilometers,
+  formatSportsTypeName
+};

@@ -1,5 +1,5 @@
-import { SportType } from '@/shared/types/Activity';
-import { MountainBikeRide } from '@/components/server/MountainBikeRide';
+import { MaxActivityDistance, SportType } from '@/shared/types/Activity';
+import { MountainBikeRide } from '../../client/MountainBikeRide';
 import { Database } from '../../../../database.types';
 
 export type SportsAllTimeStats =
@@ -11,11 +11,13 @@ export type SportsYearlyStats =
 export function SportLoader({
   sportType,
   allTimeStats,
-  yearlyStats
+  yearlyStats,
+  maxActivityDistances
 }: {
   sportType: SportType;
   allTimeStats: SportsAllTimeStats;
   yearlyStats: SportsYearlyStats[];
+  maxActivityDistances: MaxActivityDistance[];
 }) {
   switch (sportType) {
     case 'Yoga':
@@ -25,6 +27,7 @@ export function SportLoader({
           displayElevation={false}
           allTimeStats={allTimeStats}
           yearlyStats={yearlyStats}
+          maxActivityDistances={maxActivityDistances}
         />
       );
     case 'RockClimbing':
@@ -34,6 +37,7 @@ export function SportLoader({
           displayAchievements={false}
           allTimeStats={allTimeStats}
           yearlyStats={yearlyStats}
+          maxActivityDistances={maxActivityDistances}
         />
       );
     case 'Workout':
@@ -45,6 +49,7 @@ export function SportLoader({
           displayAchievements={false}
           allTimeStats={allTimeStats}
           yearlyStats={yearlyStats}
+          maxActivityDistances={maxActivityDistances}
         />
       );
 
@@ -55,6 +60,7 @@ export function SportLoader({
           displayElevation={false}
           allTimeStats={allTimeStats}
           yearlyStats={yearlyStats}
+          maxActivityDistances={maxActivityDistances}
         />
       );
     default:
@@ -62,6 +68,7 @@ export function SportLoader({
         <MountainBikeRide
           allTimeStats={allTimeStats}
           yearlyStats={yearlyStats}
+          maxActivityDistances={maxActivityDistances}
         />
       );
   }

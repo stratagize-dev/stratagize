@@ -8,3 +8,6 @@ export namespace Activity {
 }
 
 export type SportType = Database['public']['Enums']['sport_type'];
+
+export type MaxActivityDistance =
+  Database['public']['Views']['max_activity_distance']['Row'];

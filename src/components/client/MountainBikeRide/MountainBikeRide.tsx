@@ -6,14 +6,16 @@ import {
   SportsYearlyStats
 } from '@/components/server/SportLoader';
 import { time } from '@/shared/types/time';
-import { StatsRow } from '@/components/server/MountainBikeRide/StatsRow';
-import { formatter, metresToKilometres } from '@/shared/formatting';
+import { formatter, metresToKilometresRounded } from '@/shared/formatting';
 import { TotalDistanceSummary } from '@/components/charts/bar/totalDistanceSummary';
 import { TotalMovingSummary } from '@/components/charts/bar/totalMovingSummary';
 import { TotalElevationsSummary } from '@/components/charts/bar/totalElevationsSummary';
 import { TotalKudosSummary } from '@/components/charts/bar/totalKudosSummary';
 import { TotalAchievementsSummary } from '@/components/charts/bar/totalAchievementsSummary';
 import { TotalActivities } from '@/components/charts/bar/totalActivitiesChart';
+import { MaxActivityDistance } from '@/shared/types/Activity';
+import { MaxDistanceTable } from '@/components/client/MaxDistanceTable';
+import { StatsRow } from '@/components/server/MountainBikeRide/StatsRow';
 
 interface Props {
   displayDistance?: boolean;
@@ -21,9 +23,10 @@ interface Props {
   displayAchievements?: boolean;
   allTimeStats: SportsAllTimeStats;
   yearlyStats: SportsYearlyStats[];
+  maxActivityDistances: MaxActivityDistance[];
 }
 
-const toKilometers = formatter(metresToKilometres, '-', 'km');
+const toKilometers = formatter(metresToKilometresRounded, '-', 'km');
 const toHumanTime = (value: number | null): string => time(value ?? 0)().human;
 const toMeters = formatter(
   value => (value ? Math.round(value) : null),
@@ -36,7 +39,8 @@ export function MountainBikeRide({
   displayElevation = true,
   displayAchievements = true,
   allTimeStats,
-  yearlyStats
+  yearlyStats,
+  maxActivityDistances
 }: Props) {
   return (
     <TabGroup>
@@ -62,32 +66,42 @@ export function MountainBikeRide({
               }
             ]}
           >
-            <div className="flex flex-row gap-4">
+            <div className="w-1/2">
               <TotalActivities data={yearlyStats} />
             </div>
           </StatsRow>
+
           {displayDistance && (
-            <StatsRow
-              messageBlocks={[
-                {
-                  id: 'total_distance',
-                  header: `${toKilometers(allTimeStats.total_distance)}`,
-                  message: 'Total distance'
-                },
-                {
-                  id: 'avg_distance',
-                  header: `${toKilometers(allTimeStats.avg_distance)}`,
-                  message: 'Average distance'
-                },
-                {
-                  id: 'max_distance',
-                  header: `${toKilometers(allTimeStats.max_distance)}`,
-                  message: 'Maximum distance'
-                }
-              ]}
-            >
-              <TotalDistanceSummary data={yearlyStats} />
-            </StatsRow>
+            <div>
+              <StatsRow
+                messageBlocks={[
+                  {
+                    id: 'total_distance',
+                    header: `${toKilometers(allTimeStats.total_distance)}`,
+                    message: 'Total distance'
+                  },
+                  {
+                    id: 'avg_distance',
+                    header: `${toKilometers(allTimeStats.avg_distance)}`,
+                    message: 'Average distance'
+                  },
+                  {
+                    id: 'max_distance',
+                    header: `${toKilometers(allTimeStats.max_distance)}`,
+                    message: 'Maximum distance'
+                  }
+                ]}
+              >
+                <div className="w-1/2">
+                  <TotalDistanceSummary data={yearlyStats} />
+                </div>
+                <div className="w-1/2">
+                  <MaxDistanceTable
+                    maxActivityDistances={maxActivityDistances}
+                  />
+                </div>
+              </StatsRow>
+            </div>
           )}
           <StatsRow
             messageBlocks={[
@@ -108,30 +122,36 @@ export function MountainBikeRide({
               }
             ]}
           >
-            <TotalMovingSummary data={yearlyStats} />
+            <div className="w-1/2">
+              <TotalMovingSummary data={yearlyStats} />
+            </div>
           </StatsRow>
           {displayElevation && (
-            <StatsRow
-              messageBlocks={[
-                {
-                  id: 'total_elevation_gain',
-                  header: `${toMeters(allTimeStats.total_elevation_gain)}`,
-                  message: 'Total elevation gain'
-                },
-                {
-                  id: 'avg_elevation_gain',
-                  header: `${toMeters(allTimeStats.avg_elevation_gain)}`,
-                  message: 'Average elevation'
-                },
-                {
-                  id: 'max_elevation_gain',
-                  header: `${toMeters(allTimeStats.max_elevation_gain)}`,
-                  message: 'Biggest elevation gain'
-                }
-              ]}
-            >
-              <TotalElevationsSummary data={yearlyStats} />
-            </StatsRow>
+            <>
+              <StatsRow
+                messageBlocks={[
+                  {
+                    id: 'total_elevation_gain',
+                    header: `${toMeters(allTimeStats.total_elevation_gain)}`,
+                    message: 'Total elevation gain'
+                  },
+                  {
+                    id: 'avg_elevation_gain',
+                    header: `${toMeters(allTimeStats.avg_elevation_gain)}`,
+                    message: 'Average elevation'
+                  },
+                  {
+                    id: 'max_elevation_gain',
+                    header: `${toMeters(allTimeStats.max_elevation_gain)}`,
+                    message: 'Biggest elevation gain'
+                  }
+                ]}
+              >
+                <div className="w-1/2">
+                  <TotalElevationsSummary data={yearlyStats} />
+                </div>
+              </StatsRow>
+            </>
           )}
 
           <StatsRow
@@ -143,7 +163,7 @@ export function MountainBikeRide({
               }
             ]}
           >
-            <div className="flex flex-row gap-4">
+            <div className="w-1/2">
               <TotalKudosSummary data={yearlyStats} />
             </div>
           </StatsRow>
@@ -157,7 +177,7 @@ export function MountainBikeRide({
                 }
               ]}
             >
-              <div className="flex flex-row gap-4">
+              <div className="w-1/2">
                 <TotalAchievementsSummary data={yearlyStats} />
               </div>
             </StatsRow>

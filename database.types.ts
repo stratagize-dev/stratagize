@@ -243,6 +243,21 @@ export type Database = {
           },
         ]
       }
+      athlete_sport_types: {
+        Row: {
+          athlete_id: number | null
+          sport_type: Database["public"]["Enums"]["sport_type"] | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "activities_athlete_id_fkey"
+            columns: ["athlete_id"]
+            isOneToOne: false
+            referencedRelation: "athletes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       athlete_sport_yearly_stats: {
         Row: {
           athlete_id: number | null
@@ -287,6 +302,25 @@ export type Database = {
           total_elevation_gain: number | null
           total_kudos: number | null
           total_moving_time: number | null
+          year: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "activities_athlete_id_fkey"
+            columns: ["athlete_id"]
+            isOneToOne: false
+            referencedRelation: "athletes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      max_activity_distance: {
+        Row: {
+          athlete_id: number | null
+          distance: number | null
+          id: number | null
+          name: string | null
+          sport_type: Database["public"]["Enums"]["sport_type"] | null
           year: number | null
         }
         Relationships: [
