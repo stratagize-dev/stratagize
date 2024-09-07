@@ -1,4 +1,8 @@
-import { MaxActivityDistance, SportType } from '@/shared/types/Activity';
+import {
+  MaxActivityDistance,
+  MaxActivityElevation,
+  SportType
+} from '@/shared/types/Activity';
 import { MountainBikeRide } from '../../client/MountainBikeRide';
 import { Database } from '../../../../database.types';
 
@@ -12,12 +16,14 @@ export function SportLoader({
   sportType,
   allTimeStats,
   yearlyStats,
-  maxActivityDistances
+  maxActivityDistances,
+  maxActivityElevations
 }: {
   sportType: SportType;
   allTimeStats: SportsAllTimeStats;
   yearlyStats: SportsYearlyStats[];
   maxActivityDistances: MaxActivityDistance[];
+  maxActivityElevations: MaxActivityElevation[];
 }) {
   switch (sportType) {
     case 'Yoga':
@@ -28,6 +34,7 @@ export function SportLoader({
           allTimeStats={allTimeStats}
           yearlyStats={yearlyStats}
           maxActivityDistances={maxActivityDistances}
+          maxActivityElevations={maxActivityElevations}
         />
       );
     case 'RockClimbing':
@@ -38,6 +45,7 @@ export function SportLoader({
           allTimeStats={allTimeStats}
           yearlyStats={yearlyStats}
           maxActivityDistances={maxActivityDistances}
+          maxActivityElevations={maxActivityElevations}
         />
       );
     case 'Workout':
@@ -50,6 +58,7 @@ export function SportLoader({
           allTimeStats={allTimeStats}
           yearlyStats={yearlyStats}
           maxActivityDistances={maxActivityDistances}
+          maxActivityElevations={maxActivityElevations}
         />
       );
 
@@ -61,6 +70,7 @@ export function SportLoader({
           allTimeStats={allTimeStats}
           yearlyStats={yearlyStats}
           maxActivityDistances={maxActivityDistances}
+          maxActivityElevations={maxActivityElevations}
         />
       );
     default:
@@ -69,6 +79,7 @@ export function SportLoader({
           allTimeStats={allTimeStats}
           yearlyStats={yearlyStats}
           maxActivityDistances={maxActivityDistances}
+          maxActivityElevations={maxActivityElevations}
         />
       );
   }

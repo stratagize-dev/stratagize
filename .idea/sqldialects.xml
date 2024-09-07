@@ -6,6 +6,7 @@
     <file url="file://$PROJECT_DIR$/supabase/migrations/20240902022925_create_athlete_sports_yearly_stats_view.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/supabase/migrations/20240904213430_athlete_sport_all_time_stats_view.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/supabase/migrations/20240905040716_create_max_distance_activity_view.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/supabase/migrations/20240907040716_create_max_elevation_activity_view.sql" dialect="PostgreSQL" />
     <file url="PROJECT" dialect="PostgreSQL" />
   </component>
 </project>

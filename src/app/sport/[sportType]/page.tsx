@@ -1,6 +1,10 @@
 import { getAuthDetails } from '@/shared/auth';
 import { Suspense } from 'react';
-import { MaxActivityDistance, SportType } from '@/shared/types/Activity';
+import {
+  MaxActivityDistance,
+  MaxActivityElevation,
+  SportType
+} from '@/shared/types/Activity';
 import {
   SportLoader,
   SportsAllTimeStats,
@@ -29,6 +33,17 @@ export default async function Page({
     ? []
     : (maxActivityDistanceData as unknown as MaxActivityDistance[]);
 
+  const { data: maxActivityElevationData } = await client
+    .from('max_activity_elevation')
+    .select('*')
+    .eq('athlete_id', athleteId)
+    .eq('sport_type', params.sportType);
+
+  const maxActivityElevations: MaxActivityElevation[] =
+    !maxActivityElevationData
+      ? []
+      : (maxActivityElevationData as unknown as MaxActivityElevation[]);
+
   const { data } = await client
     .from('athlete_sport_all_time_stats')
     .select('*')
@@ -54,6 +69,7 @@ export default async function Page({
           yearlyStats={yearlyData as SportsYearlyStats[]}
           sportType={params.sportType}
           maxActivityDistances={maxActivityDistances}
+          maxActivityElevations={maxActivityElevations}
         />
       </div>
     </Suspense>

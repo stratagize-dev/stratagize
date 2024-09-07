@@ -13,9 +13,13 @@ import { TotalElevationsSummary } from '@/components/charts/bar/totalElevationsS
 import { TotalKudosSummary } from '@/components/charts/bar/totalKudosSummary';
 import { TotalAchievementsSummary } from '@/components/charts/bar/totalAchievementsSummary';
 import { TotalActivities } from '@/components/charts/bar/totalActivitiesChart';
-import { MaxActivityDistance } from '@/shared/types/Activity';
+import {
+  MaxActivityDistance,
+  MaxActivityElevation
+} from '@/shared/types/Activity';
 import { MaxDistanceTable } from '@/components/client/MaxDistanceTable';
 import { StatsRow } from '@/components/server/MountainBikeRide/StatsRow';
+import { MaxElevationTable } from '@/components/client/MaxElevationTable';
 
 interface Props {
   displayDistance?: boolean;
@@ -24,6 +28,7 @@ interface Props {
   allTimeStats: SportsAllTimeStats;
   yearlyStats: SportsYearlyStats[];
   maxActivityDistances: MaxActivityDistance[];
+  maxActivityElevations: MaxActivityElevation[];
 }
 
 const toKilometers = formatter(metresToKilometresRounded, '-', 'km');
@@ -40,7 +45,8 @@ export function MountainBikeRide({
   displayAchievements = true,
   allTimeStats,
   yearlyStats,
-  maxActivityDistances
+  maxActivityDistances,
+  maxActivityElevations
 }: Props) {
   return (
     <TabGroup>
@@ -149,6 +155,11 @@ export function MountainBikeRide({
               >
                 <div className="w-1/2">
                   <TotalElevationsSummary data={yearlyStats} />
+                </div>
+                <div className="w-1/2">
+                  <MaxElevationTable
+                    maxActivityElevations={maxActivityElevations}
+                  />
                 </div>
               </StatsRow>
             </>

@@ -28,7 +28,10 @@ function MaxDistanceTable({ maxActivityDistances }: Props) {
               <td className="px-1">{index + 1}</td>
               <td>{value.year}</td>
               <td>
-                <a href={`https://www.strava.com/activities/${value.id}`}>
+                <a
+                  href={`https://www.strava.com/activities/${value.id}`}
+                  target="_blank"
+                >
                   {value.name}
                 </a>
               </td>

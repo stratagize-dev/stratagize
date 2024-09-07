@@ -333,6 +333,25 @@ export type Database = {
           },
         ]
       }
+      max_activity_elevation: {
+        Row: {
+          athlete_id: number | null
+          id: number | null
+          name: string | null
+          sport_type: Database["public"]["Enums"]["sport_type"] | null
+          total_elevation_gain: number | null
+          year: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "activities_athlete_id_fkey"
+            columns: ["athlete_id"]
+            isOneToOne: false
+            referencedRelation: "athletes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       [_ in never]: never
