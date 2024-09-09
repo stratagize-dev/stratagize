@@ -11,18 +11,19 @@ import { SportType } from '@/shared/types/Activity';
 import { formatSportsTypeName } from '@/shared/formatting';
 
 const supportedSports: SportType[] = [
-  'MountainBikeRide',
   'AlpineSki',
   'BackcountrySki',
-  'TrailRun',
-  'Run',
-  'Kayaking',
-  'VirtualRide',
-  'Snowshoe',
   'Hike',
+  'Kayaking',
+  'MountainBikeRide',
   'RockClimbing',
+  'Run',
+  'Snowshoe',
   'StandUpPaddling',
+  'TrailRun',
+  'VirtualRide',
   'WeightTraining',
+  'Walk',
   'Workout',
   'Yoga'
 ];

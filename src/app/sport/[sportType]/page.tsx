@@ -12,7 +12,6 @@ import {
 } from '@/components/server/SportLoader';
 import { createClient } from '@/shared/repository/utils';
 import { formatSportsTypeName } from '@/shared/formatting';
-import HorizontalSpacer from '@/components/HorizontalSpacer';
 
 export default async function Page({
   params
@@ -63,7 +62,6 @@ export default async function Page({
         <h1 className="text-center text-3xl font-extrabold text-gray-500">
           {formatSportsTypeName(params.sportType)}
         </h1>
-        <HorizontalSpacer />
         <SportLoader
           allTimeStats={data as SportsAllTimeStats}
           yearlyStats={yearlyData as SportsYearlyStats[]}

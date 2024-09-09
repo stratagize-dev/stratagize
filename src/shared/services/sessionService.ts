@@ -1,23 +1,6 @@
 import { createAthletesRepository } from '@/shared/repository/athleteRepository';
-import { Athlete } from '@/shared/types/Athlete';
 import CustomSession from '@/shared/types/auth/CustomSession';
 import { db } from '@/shared/db';
-
-import { jobQueueService } from '@/shared/services/jobQueue';
-
-export async function onboardAthlete(athlete: Athlete.Row) {
-  const result = await jobQueueService().createOnboardingJob(athlete.id);
-
-  const athleteRepository = await createAthletesRepository();
-
-  if (result?.data) {
-    await athleteRepository.update(athlete.id, {
-      onboarding_status: 'in-progress'
-    });
-  } else {
-    await athleteRepository.update(athlete.id, { onboarding_status: 'error' });
-  }
-}
 
 const beginSession = async (
   athleteId: number,
