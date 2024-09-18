@@ -46,5 +46,7 @@ function calculate(
   };
 }
 
+// function calculateCurrentAnnualTotals
 const statisticsService = { calculate };
+
 export default statisticsService;

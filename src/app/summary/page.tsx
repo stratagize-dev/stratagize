@@ -8,6 +8,11 @@ import { TotalElevationsSummary } from '@/components/charts/bar/totalElevationsS
 import { TotalKudosSummary } from '@/components/charts/bar/totalKudosSummary';
 import { TotalAchievementsSummary } from '@/components/charts/bar/totalAchievementsSummary';
 import { TotalActivities } from '@/components/charts/bar/totalActivitiesChart';
+import SportsBreakdown from '@/components/client/components/components/components/components/components/SportsBreakdown';
+import { getTheStartOfTheYear } from '@/shared/utils';
+import { endOfYear, getYear } from 'date-fns';
+import { activityService } from '@/shared/services/activityService';
+import { calculateAnnualTotals } from '@/shared/services/statistics/v2/calculateAnnualTotals';
 
 export default async function Page() {
   const { athleteId } = await getAuthDetails();
@@ -20,6 +25,21 @@ export default async function Page() {
     .eq('athlete_id', athleteId);
 
   const data = result.data ? (result.data as AthleteYearlySummary[]) : [];
+
+  const today = new Date();
+  const theStartOfTheYear = getTheStartOfTheYear(getYear(today));
+  const theEndOfTheYear = endOfYear(theStartOfTheYear);
+
+  const { data: activities } = await activityService().getActivitiesForAthlete(
+    athleteId,
+    theStartOfTheYear,
+    theEndOfTheYear
+  );
+
+  const { sportStatistics } = calculateAnnualTotals(
+    getYear(today),
+    activities ?? []
+  );
 
   const ActivityListItem = ({ children }: { children: ReactNode }) => {
     return (
@@ -50,6 +70,9 @@ export default async function Page() {
           <TotalAchievementsSummary data={data} />
         </ActivityListItem>
       </ul>
+      <div className="flex  justify-center">
+        <SportsBreakdown sportStatistics={sportStatistics} />
+      </div>
     </Suspense>
   );
 }
