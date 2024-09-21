@@ -1,5 +1,6 @@
 import { SportType } from '@/shared/types/Activity';
 import * as StravaApi from '@/shared/strava-client';
+import { getYear } from 'date-fns';
 const defaultDate = (date?: string) => date ?? new Date().toISOString();
 
 export const mapCommonFields = (
@@ -13,5 +14,8 @@ export const mapCommonFields = (
       : 'Unknown',
   start_date: defaultDate(detailedActivity.start_date),
   start_date_local: defaultDate(detailedActivity.start_date_local),
-  detailed_event: JSON.stringify(detailedActivity)
+  detailed_event: JSON.stringify(detailedActivity),
+  year: detailedActivity.start_date_local
+    ? getYear(detailedActivity.start_date_local)
+    : getYear(new Date())
 });
