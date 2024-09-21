@@ -40,7 +40,7 @@ function useAthleteNotifications(
       channel.current?.unsubscribe();
       channel.current = null;
     };
-  }, [customSession, athleteId]);
+  }, [customSession, athleteId, notificationAction]);
 }
 
 export { useAthleteNotifications };
