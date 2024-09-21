@@ -60,14 +60,10 @@ export const loadActivitiesFromStrava = inngest.createFunction(
       );
 
       if (activitiesForPage.length === pageSize) {
-        await step.sendEvent(
-          // `load-strava-activities-${athleteId}`,
-          `load-strava-activities`,
-          {
-            name: 'activity/load',
-            data: { ...event.data, pageNumber: pageNumber + 1 }
-          }
-        );
+        await step.sendEvent(`load-strava-activities`, {
+          name: 'activity/load',
+          data: { ...event.data, pageNumber: pageNumber + 1 }
+        });
       } else {
         await step.sendEvent('finalize-athlete-onboarding', {
           name: 'athlete/finalize-onboarding',
