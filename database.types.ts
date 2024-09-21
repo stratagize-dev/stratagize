@@ -166,6 +166,7 @@ export type Database = {
           is_delivered: boolean | null
           message: string
           notification_id: number
+          type: Database["public"]["Enums"]["notification_type"] | null
         }
         Insert: {
           athlete_id: number
@@ -173,6 +174,7 @@ export type Database = {
           is_delivered?: boolean | null
           message: string
           notification_id?: number
+          type?: Database["public"]["Enums"]["notification_type"] | null
         }
         Update: {
           athlete_id?: number
@@ -180,6 +182,7 @@ export type Database = {
           is_delivered?: boolean | null
           message?: string
           notification_id?: number
+          type?: Database["public"]["Enums"]["notification_type"] | null
         }
         Relationships: [
           {
@@ -357,6 +360,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
+      notification_type: "onboarding-completed"
       onboarding_status:
         | "not-started"
         | "in-progress"

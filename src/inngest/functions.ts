@@ -1,6 +1,7 @@
 import { inngest } from './client';
 import { createAthletesRepository } from '@/shared/repository/athleteRepository';
 import serviceRoleDb from '@/shared/serviceRoleDb';
+import { createNotification } from '@/shared/services/notification/notification';
 
 export const beginAthleteOnboarding = inngest.createFunction(
   { id: 'begin-athlete-onboarding' },
@@ -12,6 +13,15 @@ export const beginAthleteOnboarding = inngest.createFunction(
 
     await athleteRepository.update(athleteId, {
       onboarding_status: 'in-progress'
+    });
+
+    await step.run(`sending notification for onboarding complete`, async () => {
+      return await createNotification(
+        athleteId,
+        'Beginning athlete onboarding',
+        undefined,
+        serviceRoleDb
+      );
     });
 
     await step.sendEvent(
@@ -34,7 +44,7 @@ export const beginAthleteOnboarding = inngest.createFunction(
 export const finalizeAthleteOnboarding = inngest.createFunction(
   { id: 'finalize-athlete-onboarding' },
   { event: 'athlete/finalize-onboarding' },
-  async ({ event }) => {
+  async ({ event, step }) => {
     const athleteId = event.data.athleteId;
 
     const athleteRepository = await createAthletesRepository(serviceRoleDb);
@@ -43,6 +53,14 @@ export const finalizeAthleteOnboarding = inngest.createFunction(
       onboarding_status: 'complete'
     });
 
+    await step.run(`sending notification for onboarding complete`, async () => {
+      return await createNotification(
+        athleteId,
+        'Activities have  completed loading',
+        'onboarding-completed',
+        serviceRoleDb
+      );
+    });
     return {
       status: 'ok',
       athleteId,

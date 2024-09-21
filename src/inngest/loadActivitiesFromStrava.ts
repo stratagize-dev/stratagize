@@ -4,6 +4,7 @@ import serviceRoleDb from '@/shared/serviceRoleDb';
 import { refreshToken } from '@/shared/external/Strava/token/refreshToken';
 import summaryActivityService from '@/shared/external/Strava/services/summaryActivityService';
 import { activityService } from '@/shared/services/activityService';
+import { createNotification } from '@/shared/services/notification/notification';
 
 export const loadActivitiesFromStrava = inngest.createFunction(
   { id: 'load-strava-activities' },
@@ -43,6 +44,21 @@ export const loadActivitiesFromStrava = inngest.createFunction(
         );
       }
 
+      const totalRecordsLoaded =
+        activitiesForPage.length + (pageNumber - 1) * pageSize;
+
+      await step.run(
+        `sending notification for total records loaded ${totalRecordsLoaded}`,
+        async () => {
+          return await createNotification(
+            athleteId,
+            `${totalRecordsLoaded} activities loaded...`,
+            undefined,
+            serviceRoleDb
+          );
+        }
+      );
+
       if (activitiesForPage.length === pageSize) {
         await step.sendEvent(
           // `load-strava-activities-${athleteId}`,
@@ -53,7 +69,6 @@ export const loadActivitiesFromStrava = inngest.createFunction(
           }
         );
       } else {
-        console.log({ activitiesForPage: activitiesForPage.length, pageSize });
         await step.sendEvent('finalize-athlete-onboarding', {
           name: 'athlete/finalize-onboarding',
           data: { athleteId }

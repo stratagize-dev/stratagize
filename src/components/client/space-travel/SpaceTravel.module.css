@@ -1,0 +1,57 @@
+@keyframes starTravel {
+    0% {
+        transform: translate(0, 0) scale(0.5);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(var(--translate-x), var(--translate-y)) scale(1);
+        opacity: 0;
+    }
+}
+
+@keyframes messageTravel {
+    0% {
+        transform: translate(-50%, -50%) scale(0.1); /* Start very small */
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50%, 200%) scale(3); /* Grow larger and move down */
+        opacity: 0;
+    }
+}
+
+.star {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border-radius: 50%;
+    background-color: rgb(168, 85, 247);
+    width: 15px;
+    height: 15px;
+    opacity: 0;
+    box-shadow: 0 0 8px 3px rgba(255, 255, 255, 0.9);
+    animation: starTravel 2s linear infinite;
+}
+
+.message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2rem;
+    color: rgb(168, 85, 247);
+    opacity: 0;
+    animation: messageTravel 5s linear forwards; /* Slow move forward and grow */
+}
+
+.message-2 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2rem;
+    color: rgb(37, 99, 235); /* A different color for the second message */
+    opacity: 0;
+    animation: messageTravel 5s linear forwards;
+    animation-delay: 5s; /* Appear after the first message finishes */
+}
