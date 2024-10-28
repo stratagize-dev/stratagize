@@ -17,7 +17,7 @@ const beginSession = async (
   } else {
     await athleteRepository.insert({
       id: athleteId,
-      hour_goal: 365,
+      hour_goal: 366,
       is_onboarded: false,
       onboarding_status: 'not-started',
       refresh_token: customSession.refreshToken
