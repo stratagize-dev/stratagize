@@ -14,7 +14,19 @@ export default async function OnboardingScreen({
   session: CustomSession;
 }) {
   const athleteRepository = await createAthletesRepository();
-  const { data: athlete } = await athleteRepository.get(athleteId);
+  let { data: athlete } = await athleteRepository.get(athleteId);
+
+  if (!athlete) {
+    const x = await athleteRepository.insert({
+      id: athleteId,
+      hour_goal: 365,
+      is_onboarded: false,
+      onboarding_status: 'not-started',
+      refresh_token: session.refreshToken
+    });
+
+    athlete = x.data?.[0] ?? null;
+  }
 
   if (!athlete) throw new Error('Athlete not found');
 
